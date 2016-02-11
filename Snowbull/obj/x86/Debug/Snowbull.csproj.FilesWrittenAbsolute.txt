@@ -1,0 +1,13 @@
+/home/lewis/Snowbull/Snowbull/obj/x86/Debug/.NETFramework,Version=v4.5.1.AssemblyAttribute.cs
+/home/lewis/Snowbull/Snowbull/bin/Debug/Snowbull.exe.mdb
+/home/lewis/Snowbull/Snowbull/bin/Debug/Snowbull.exe
+/home/lewis/Snowbull/Snowbull/obj/x86/Debug/Snowbull.exe
+/home/lewis/Snowbull/Snowbull/obj/x86/Debug/Snowbull.exe.mdb
+/home/lewis/Snowbull/Snowbull/bin/Debug/Newtonsoft.Json.dll
+/home/lewis/Snowbull/Snowbull/bin/Debug/Akka.dll
+/home/lewis/Snowbull/Snowbull/bin/Debug/log4net.dll
+/home/lewis/Snowbull/Snowbull/bin/Debug/Akka.Logger.log4net.dll
+/home/lewis/Snowbull/Snowbull/bin/Debug/Antlr3.Runtime.dll
+/home/lewis/Snowbull/Snowbull/bin/Debug/Iesi.Collections.dll
+/home/lewis/Snowbull/Snowbull/bin/Debug/Remotion.Linq.dll
+/home/lewis/Snowbull/Snowbull/bin/Debug/NHibernate.dll
