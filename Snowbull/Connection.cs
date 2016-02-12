@@ -3,28 +3,30 @@ using Akka;
 using Akka.Actor;
 using Akka.IO;
 using System.Text;
-using System.Collections.Generic;
+using Akka.Event;
 
 namespace Snowbull {
     public class Connection : ReceiveActor {
+        private readonly IActorRef server;
         private readonly IActorRef socket;
-        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType); //< log4net logger.
+        private readonly ILoggingAdapter logger = Logging.GetLogger(Context);
 
-        public static Props Props(IActorRef socket) {
-            return Akka.Actor.Props.Create(() => new Connection(socket));
+        public static Props Props(IActorRef server, IActorRef socket) {
+            return Akka.Actor.Props.Create(() => new Connection(server, socket));
         }
 
-        public Connection(IActorRef socket) {
+        public Connection(IActorRef server, IActorRef socket) {
+            this.server = server;
             this.socket = socket;
             Receive<Tcp.Received>(Received);
             Receive<Send>(Send);
-            Receive<Tcp.ConnectionClosed>(Closed);
+            Receive<Tcp.PeerClosed>(Closed);
+            ReceiveAny(o => Console.WriteLine(o.ToString()));
         }
 
         private void Received(Tcp.Received received) {
             string packet = Encoding.UTF8.GetString(received.Data.ToArray());
             #if DEBUG
-            Console.WriteLine("Received: " + packet);
             logger.Debug("Received: " + packet);
             #endif
         }
@@ -33,8 +35,14 @@ namespace Snowbull {
             socket.Tell(Tcp.Write.Create(send.Data));
         }
 
-        private void Closed(Tcp.ConnectionClosed closed) {
-            Console.WriteLine("Disconnected.");
+        private void Closed(Tcp.PeerClosed closed) {
+            logger.Info("Disconnected...");
+            Become(Disconnected);
+            server.Tell(new Disconnected(Self));
+        }
+
+        private void Disconnected() {
+            
         }
     }
 

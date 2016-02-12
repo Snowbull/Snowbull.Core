@@ -11,3 +11,4 @@
 /home/lewis/Snowbull/Snowbull/bin/Debug/Iesi.Collections.dll
 /home/lewis/Snowbull/Snowbull/bin/Debug/Remotion.Linq.dll
 /home/lewis/Snowbull/Snowbull/bin/Debug/NHibernate.dll
+/home/lewis/Snowbull/Snowbull/bin/Debug/Snowbull.exe.config
