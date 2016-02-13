@@ -12,3 +12,8 @@
 /home/lewis/Snowbull/Snowbull/bin/Debug/Remotion.Linq.dll
 /home/lewis/Snowbull/Snowbull/bin/Debug/NHibernate.dll
 /home/lewis/Snowbull/Snowbull/bin/Debug/Snowbull.exe.config
+/home/lewis/Snowbull/Snowbull/bin/Debug/EntityFramework.dll
+/home/lewis/Snowbull/Snowbull/bin/Debug/EntityFramework.SqlServer.dll
+/home/lewis/Snowbull/Snowbull/bin/Debug/MySql.Data.Entity.EF6.dll
+/home/lewis/Snowbull/Snowbull/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/lewis/Snowbull/Snowbull/bin/Debug/MySql.Data.dll

@@ -2,9 +2,12 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Snowbull/Program.cs">
     <Files>
-      <File FileName="Snowbull/Program.cs" Line="6" Column="44" />
-      <File FileName="Snowbull/Snowbull.cs" Line="12" Column="50" />
-      <File FileName="Snowbull/Server.cs" Line="11" Column="38" />
+      <File FileName="Snowbull/Program.cs" Line="9" Column="1" />
+      <File FileName="Snowbull/Snowbull.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Server.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/app.config" Line="10" Column="15" />
+      <File FileName="Snowbull/Data/SnowbullContext.cs" Line="11" Column="53" />
+      <File FileName="Snowbull/Data/Models/User.cs" Line="40" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
