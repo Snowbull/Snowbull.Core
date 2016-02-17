@@ -4,10 +4,14 @@ using Akka.IO;
 using Akka.Actor;
 using System.Net;
 using Akka.Event;
+using System.Collections.Immutable;
+using System.Xml;
+using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.API.Packets.Xml.XmlPacket>>;
 
 namespace Snowbull {
     public class Server : ReceiveActor {
         private readonly ILoggingAdapter logger = Logging.GetLogger(Context);
+        private readonly XmlMap xmlMap = API.Packets.PacketMapper.XmlMap();
 
         public static Props Props(IPAddress host, int port) {
             return Akka.Actor.Props.Create(() => new Server(host, port));
@@ -26,7 +30,7 @@ namespace Snowbull {
 
         private void Connected(Tcp.Connected connected) {
             logger.Info("New client at " + connected.RemoteAddress + " connected!");
-            IActorRef connection = Context.ActorOf(Connection.Props(Self, Sender));
+            IActorRef connection = Context.ActorOf(Connection.Props(Self, Sender, xmlMap));
             Sender.Tell(new Tcp.Register(connection));
         }
 

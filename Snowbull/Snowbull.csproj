@@ -66,6 +66,13 @@
     <Reference Include="MySql.Data.Entity.EF6">
       <HintPath>..\packages\MySql.Data.Entity.6.9.8\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
     </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Snowbull.API">
+      <HintPath>..\..\Snowbull.API\Snowbull.API\bin\Debug\Snowbull.API.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -75,6 +82,8 @@
     <Compile Include="Server.cs" />
     <Compile Include="Data\Models\User.cs" />
     <Compile Include="Data\SnowbullContext.cs" />
+    <Compile Include="Zone.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -84,5 +93,7 @@
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Data\Models\" />
+    <Folder Include="Game\" />
+    <Folder Include="Login\" />
   </ItemGroup>
 </Project>
