@@ -84,6 +84,8 @@
     <Compile Include="Data\SnowbullContext.cs" />
     <Compile Include="Zone.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="Data\Models\Credentials.cs" />
+    <Compile Include="Data\Models\Immutable\ImmutableCredentials.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -95,5 +97,6 @@
     <Folder Include="Data\Models\" />
     <Folder Include="Game\" />
     <Folder Include="Login\" />
+    <Folder Include="Data\Models\Immutable\" />
   </ItemGroup>
 </Project>
