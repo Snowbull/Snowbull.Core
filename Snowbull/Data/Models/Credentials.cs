@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Snowbull {
+namespace Snowbull.Data.Models {
     [Table("users")]
     public class Credentials {
         [Key]

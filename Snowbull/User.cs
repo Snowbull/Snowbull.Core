@@ -3,6 +3,7 @@ using Akka;
 using Akka.Actor;
 using Akka.Event;
 using Snowbull.API.Packets.Xml.Receive.Authentication;
+using System.Data.Entity;
 
 namespace Snowbull {
     public class User : ReceiveActor {
@@ -81,8 +82,49 @@ namespace Snowbull {
         /// </summary>
         /// <param name="login">Login request packet.</param>
         private void Login(Login login) {
-            logger.Debug(login.Username + ":" + login.Password);
+			Data.SnowbullContext db = new Data.SnowbullContext();
+			Become(Authenticating);
+			db.Credentials.FirstAsync<Data.Models.Credentials>(c => c.Username == login.Username).ContinueWith(
+				t => {
+					Data.Models.Credentials c = t.Result;
+					Data.Models.Immutable.ImmutableCredentials credentials = new Data.Models.Immutable.ImmutableCredentials(c.Id, c.Username, c.Password);
+					Self.Tell(new Authenticate(login, credentials));
+				}
+			);
         }
+
+		private void Authenticating() {
+			Receive<Authenticate>(Authenticate);
+		}
+
+		private void Authenticate(Authenticate auth) {
+			string hash = API.Cryptography.Hashing.HashPassword(auth.Credentials.Password, key);
+			if(auth.Request.Password == hash) {
+				Become(Authenticated);
+				logger.Debug("Authenticated!");
+			}
+		}
+
+		private void Authenticated() {
+
+		}
     }
+
+	class Authenticate {
+		public Login Request {
+			get;
+			private set;
+		}
+
+		public Data.Models.Immutable.ImmutableCredentials Credentials {
+			get;
+			private set;
+		}
+
+		public Authenticate(Login request, Data.Models.Immutable.ImmutableCredentials credentials) {
+			Request = request;
+			Credentials = credentials;
+		}
+	}
 }
 
