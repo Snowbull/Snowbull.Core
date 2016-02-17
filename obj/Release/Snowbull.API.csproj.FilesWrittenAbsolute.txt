@@ -1,0 +1,6 @@
+/home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/obj/Release/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Release/Snowbull.API.dll.mdb
+/home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Release/Snowbull.API.dll
+/home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/obj/Release/Snowbull.API.dll
+/home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/obj/Release/Snowbull.API.dll.mdb
+/home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Release/System.Collections.Immutable.dll

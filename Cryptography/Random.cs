@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 namespace Snowbull.API.Cryptography {
-    public class Random {
+    public static class Random {
         public static string GenerateRandomKey(int length) {
             char[] characters = { 'a', 'b' ,'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'o', 'p', 'q', 'r',
                 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J',
