@@ -13,9 +13,10 @@ namespace Snowbull.API.Cryptography {
 		/// </summary>
 		/// <returns>The hashed and swapped password.</returns>
 		/// <param name="password">The password to hash.</param>
-		private static string SwapMD5(string password) {
-			string hash = Hash<MD5CryptoServiceProvider>(password);
-			return hash.Substring(16, 16) + hash.Substring(0, 16);
+        /// <param name="hash">Whether to hash in md5 or not (if using a password from the database, md5 is already applied.)</param>
+        private static string SwapMD5(string password, bool hash) {
+			string md5 = hash ? Hash<MD5CryptoServiceProvider>(password) : password;
+			return md5.Substring(16, 16) + md5.Substring(0, 16);
 		}
 
 		/// <summary>
@@ -25,10 +26,10 @@ namespace Snowbull.API.Cryptography {
 		/// <param name="password">The plaintext password.</param>
 		/// <param name="rndk">The random key.</param>
 		public static string HashPassword(string password, string rndk) {
-			string key = SwapMD5(password).ToUpper();
+			string key = SwapMD5(password, false).ToUpper();
 			key += rndk;
 			key += salt;
-			key = SwapMD5(key);
+			key = SwapMD5(key, true);
 			return key;
 		}
 
