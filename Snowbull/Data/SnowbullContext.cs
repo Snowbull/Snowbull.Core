@@ -15,11 +15,6 @@ namespace Snowbull.Data {
             get;
             set;
         }
-
-		public DbSet<Models.Credentials> Credentials {
-			get;
-			set;
-		}
     }
 }
 

@@ -84,27 +84,39 @@ namespace Snowbull {
         private void Login(Login login) {
 			Data.SnowbullContext db = new Data.SnowbullContext();
 			Become(Authenticating);
-			db.Credentials.FirstAsync<Data.Models.Credentials>(c => c.Username == login.Username).ContinueWith(
-				t => {
-					Data.Models.Credentials c = t.Result;
-					Data.Models.Immutable.ImmutableCredentials credentials = new Data.Models.Immutable.ImmutableCredentials(c.Id, c.Username, c.Password);
-					Self.Tell(new Authenticate(login, credentials));
-				}
-			);
+            db.Users.FirstAsync<Data.Models.User>(u => u.Username == login.Username).ContinueWith<Authenticate>(
+                t => {
+                    Data.Models.Immutable.ImmutableUser user = new Data.Models.Immutable.ImmutableUser(t.Result);
+                    return new Authenticate(login, user);
+                }
+            ).PipeTo(Self);
         }
 
+        /// <summary>
+        /// Sets the actor to an authenticating state.
+        /// </summary>
 		private void Authenticating() {
 			Receive<Authenticate>(Authenticate);
 		}
 
+        /// <summary>
+        /// Authenticate the user.
+        /// </summary>
+        /// <param name="auth">Authentication message.</param>
 		private void Authenticate(Authenticate auth) {
-			string hash = API.Cryptography.Hashing.HashPassword(auth.Credentials.Password, key);
+            Console.WriteLine("Authenticating...");
+			string hash = API.Cryptography.Hashing.HashPassword(auth.User.Password, key);
 			if(auth.Request.Password == hash) {
 				Become(Authenticated);
 				logger.Debug("Authenticated!");
-			}
+            }else{
+                logger.Debug("Nope.");
+            }
 		}
 
+        /// <summary>
+        /// Sets the actor to an authenticated state.
+        /// </summary>
 		private void Authenticated() {
 
 		}
@@ -116,14 +128,14 @@ namespace Snowbull {
 			private set;
 		}
 
-		public Data.Models.Immutable.ImmutableCredentials Credentials {
-			get;
-			private set;
-		}
+        public Data.Models.Immutable.ImmutableUser User {
+            get;
+            private set;
+        }
 
-		public Authenticate(Login request, Data.Models.Immutable.ImmutableCredentials credentials) {
+        public Authenticate(Login request, Data.Models.Immutable.ImmutableUser user) {
 			Request = request;
-			Credentials = credentials;
+            User = user;
 		}
 	}
 }

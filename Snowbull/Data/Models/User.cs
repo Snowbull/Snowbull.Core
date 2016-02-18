@@ -13,12 +13,14 @@ namespace Snowbull.Data.Models {
         }
 
         [Column("username")]
+        [MaxLength(12)]
         public string Username {
             get;
             set;
         }
 
         [Column("password")]
+        [MaxLength(64)]
         public string Password {
             get;
             set;
