@@ -54,6 +54,8 @@
     <Compile Include="Cryptography\Random.cs" />
     <Compile Include="Packets\Xml\Send\Authentication\RandomKey.cs" />
     <Compile Include="Cryptography\Hashing.cs" />
+    <Compile Include="Error.cs" />
+    <Compile Include="Packets\Xt\Send\Error.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -65,6 +67,7 @@
     <Folder Include="Packets\Xml\Send\" />
     <Folder Include="Packets\Xml\Send\Authentication\" />
     <Folder Include="Cryptography\" />
+    <Folder Include="Packets\Xt\Send\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

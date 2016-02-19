@@ -13,12 +13,19 @@ namespace Snowbull.API.Packets.Xml.Receive.Authentication {
             private set;
         }
 
+        public string Zone {
+            get;
+            private set;
+        }
+
         public Login(XmlDocument document) : base(document) {
             XmlElement xml = document.DocumentElement;
             if(!Body.HasChildNodes) throw new MessageParseException("Message body has no child nodes to read.");
             XmlNode login = null;
             foreach(XmlNode node in Body.ChildNodes) if(node.Name == "login") login = node;
             if(login == null) throw new MessageParseException("Message body has no login node to read.");
+            if(login.Attributes["z"] == null) throw new MessageParseException("Login has no zone attribute.");
+            Zone = login.Attributes["z"].Value;
             if(!login.HasChildNodes) throw new MessageParseException("Login node has no nodes to read.");
             XmlNode nick = null;
             XmlNode pword = null;

@@ -52,7 +52,7 @@ namespace Snowbull.API.Packets.Xt {
         /// <param name="command">Command.</param>
         /// <param name="room">Room.</param>
         /// <param name="arguments">Arguments.</param>
-        public XtData(From sender, string command, int room, string[] arguments = null) {
+        public XtData(From sender, string command, string[] arguments = null, int room = -1) {
             if(command == null) throw new ArgumentNullException("command");
             if(arguments == null) arguments = new string[] {};
             Sender = sender;
@@ -86,7 +86,7 @@ namespace Snowbull.API.Packets.Xt {
                 for(int i = argp; i < parts.Length; i++)
                     args[i-argp] = parts[argp];
             }
-            return new XtData(sender, command, room, args);
+            return new XtData(sender, command, args, room);
         }
 
         /// <summary>
