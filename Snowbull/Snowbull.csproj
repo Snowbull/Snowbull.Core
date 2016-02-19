@@ -77,6 +77,10 @@
     <Compile Include="Zone.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Data\Models\Immutable\ImmutableUser.cs" />
+    <Compile Include="Data\Models\Immutable\ImmutableCredentials.cs" />
+    <Compile Include="Game\GameZone.cs" />
+    <Compile Include="Login\LoginZone.cs" />
+    <Compile Include="Login\LoginUser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

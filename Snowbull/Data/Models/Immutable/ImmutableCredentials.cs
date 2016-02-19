@@ -22,6 +22,10 @@ namespace Snowbull.Data.Models.Immutable {
             Username = username;
             Password = password;
         }
+
+        public ImmutableCredentials(User user) : this(user.Id, user.Username, user.Password) {
+
+        }
     }
 }
 

@@ -1,22 +1,7 @@
 ﻿using System;
 
 namespace Snowbull.Data.Models.Immutable {
-    public class ImmutableUser {
-        public int Id {
-            get;
-            private set;
-        }
-
-        public string Username {
-            get;
-            private set;
-        }
-
-        public string Password {
-            get;
-            private set;
-        }
-
+    public class ImmutableUser : ImmutableCredentials {
         public DateTime Creation {
             get;
             private set;
@@ -27,10 +12,7 @@ namespace Snowbull.Data.Models.Immutable {
             private set;
         }
 
-        public ImmutableUser(int id, string username, string password, DateTime creation, TimeSpan played) {
-            Id = id;
-            Username = username;
-            Password = password;
+        public ImmutableUser(int id, string username, string password, DateTime creation, TimeSpan played) : base(id, username, password) {
             Creation = creation;
             Played = played;
         }
