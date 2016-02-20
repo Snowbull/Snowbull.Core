@@ -30,7 +30,13 @@ namespace Snowbull {
             this.server = server;
         }
 
+        protected override void PreStart() {
+            zone.Tell(new UserInitialised(connection, Self));
+        }
 
+        protected override void PostStop() {
+            zone.Tell(new UserStopped(connection, Self));
+        }
     }
 }
 

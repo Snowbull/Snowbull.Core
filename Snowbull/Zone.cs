@@ -1,20 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Akka.Actor;
 using Akka.Event;
 
 namespace Snowbull {
     public abstract class Zone : ReceiveActor {
-        protected readonly Dictionary<IActorRef, IActorRef> users = new Dictionary<IActorRef, IActorRef>();
+        private readonly Dictionary<IActorRef, IActorRef> users = new Dictionary<IActorRef, IActorRef>();
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
         protected readonly IActorRef server;
 
+        protected ReadOnlyDictionary<IActorRef, IActorRef> Users {
+            get {
+                return new ReadOnlyDictionary<IActorRef, IActorRef>(users);
+            }
+        }
+
         protected Zone(IActorRef server) {
             this.server = server;
+            BecomeStacked(Running);
+        }
+
+        protected virtual void Running() {
             Receive<Authenticate>(Authenticate);
+            Receive<UserInitialised>(UserInitialised);
+            Receive<UserStopped>(UserStopped);
         }
 
         protected abstract void Authenticate(Authenticate authenticate);
+
+        private void UserInitialised(UserInitialised ui) {
+            users.Add(ui.Connection, ui.User);
+        }
+
+        private void UserStopped(UserStopped us) {
+            users.Remove(us.Connection);
+        }
     }
 
     public class Authenticate {
@@ -51,6 +72,40 @@ namespace Snowbull {
             Request = request;
             Sender = sender;
             Key = key;
+        }
+    }
+
+    public class UserInitialised {
+        public IActorRef Connection {
+            get;
+            private set;
+        }
+
+        public IActorRef User {
+            get;
+            private set;
+        }
+
+        public UserInitialised(IActorRef connection, IActorRef user) {
+            Connection = connection;
+            User = user;
+        }
+    }
+
+    public class UserStopped {
+        public IActorRef Connection {
+            get;
+            private set;
+        }
+
+        public IActorRef User {
+            get;
+            private set;
+        }
+
+        public UserStopped(IActorRef connection, IActorRef user) {
+            Connection = connection;
+            User = user;
         }
     }
 }

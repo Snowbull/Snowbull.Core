@@ -9,6 +9,10 @@ namespace Snowbull.Login {
         }
 
         public LoginZone(IActorRef server) : base(server) {
+        }
+
+        protected override void Running() {
+            base.Running();
             Receive<Authentication>(Authentication);
         }
 
@@ -32,10 +36,12 @@ namespace Snowbull.Login {
                 }else{
                     logger.Info("Failed to identify as '" + auth.Request.Request.Username + "'.");
                     connection.Tell(new API.Packets.Xt.Send.Error(API.Errors.PASSWORD_WRONG, -1), Self);
+                    connection.Tell(new Disconnect());
                 }
             }else{
                 logger.Info("Attempt to login as non existent user '" + auth.Request.Request.Username + "'.");
                 connection.Tell(new API.Packets.Xt.Send.Error(API.Errors.NAME_NOT_FOUND, -1), Self);
+                connection.Tell(new Disconnect());
             }
         }
     }

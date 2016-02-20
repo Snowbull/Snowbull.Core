@@ -17,6 +17,11 @@ namespace Snowbull.Login {
 
         public LoginUser(int id, string username, IActorRef connection, IActorRef zone, IActorRef server) : base(id, username, connection, zone, server) {
         }
+
+        protected override void PreStart() {
+            base.PreStart();
+            connection.Tell(new API.Packets.Xt.Send.Authentication.Login(id, "", ""));
+        }
     }
 }
 

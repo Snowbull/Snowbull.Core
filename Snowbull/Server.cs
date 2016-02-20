@@ -8,11 +8,13 @@ using System.Collections.Immutable;
 using System.Collections.Generic;
 using System.Xml;
 using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.API.Packets.Xml.XmlPacket>>;
+using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.API.Packets.Xt.XtData, Snowbull.API.Packets.Xt.XtPacket>>;
 
 namespace Snowbull {
     public class Server : ReceiveActor {
         private readonly ILoggingAdapter logger = Logging.GetLogger(Context);
         private readonly XmlMap xmlMap = API.Packets.PacketMapper.XmlMap();
+        private readonly XtMap xtMap = API.Packets.PacketMapper.XtMap();
         private readonly Dictionary<string, IActorRef> zones = new Dictionary<string, IActorRef>();
 
         public static Props Props() {
@@ -37,7 +39,7 @@ namespace Snowbull {
 
         private void Connected(Tcp.Connected connected) {
             logger.Info("New client at " + connected.RemoteAddress + " connected!");
-            IActorRef connection = Context.ActorOf(Connection.Props(Self, Sender, xmlMap));
+            IActorRef connection = Context.ActorOf(Connection.Props(Self, Sender, connected.RemoteAddress, xmlMap, xtMap));
             Sender.Tell(new Tcp.Register(connection));
         }
 
