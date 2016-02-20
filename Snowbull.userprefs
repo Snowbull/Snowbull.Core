@@ -3,12 +3,12 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Snowbull/User.cs">
     <Files>
       <File FileName="Snowbull/Snowbull.cs" Line="1" Column="1" />
-      <File FileName="Snowbull/Server.cs" Line="55" Column="1" />
-      <File FileName="Snowbull/app.config" Line="10" Column="58" />
-      <File FileName="Snowbull/Data/SnowbullContext.cs" Line="17" Column="10" />
-      <File FileName="Snowbull/Data/Models/User.cs" Line="4" Column="1" />
-      <File FileName="Snowbull/User.cs" Line="81" Column="37" />
-      <File FileName="Snowbull/Data/Models/Immutable/ImmutableUser.cs" Line="38" Column="115" />
+      <File FileName="Snowbull/Server.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/app.config" Line="1" Column="1" />
+      <File FileName="Snowbull/Data/SnowbullContext.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Data/Models/User.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/User.cs" Line="34" Column="22" />
+      <File FileName="Snowbull/Data/Models/Immutable/ImmutableUser.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
