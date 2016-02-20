@@ -57,6 +57,17 @@
     <Compile Include="Error.cs" />
     <Compile Include="Packets\Xt\Send\Error.cs" />
     <Compile Include="Packets\Xt\Send\Authentication\Login.cs" />
+    <Compile Include="IPlugin.cs" />
+    <Compile Include="Game\IGameZone.cs" />
+    <Compile Include="Login\ILoginZone.cs" />
+    <Compile Include="IZone.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="Events\IEvent.cs" />
+    <Compile Include="Events\Event.cs" />
+    <Compile Include="Events\ICancellableEvent.cs" />
+    <Compile Include="Events\CancellableEvent.cs" />
+    <Compile Include="IContext.cs" />
+    <Compile Include="Events\Authentication\Authenticated.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -70,6 +81,10 @@
     <Folder Include="Cryptography\" />
     <Folder Include="Packets\Xt\Send\" />
     <Folder Include="Packets\Xt\Send\Authentication\" />
+    <Folder Include="Game\" />
+    <Folder Include="Login\" />
+    <Folder Include="Events\" />
+    <Folder Include="Events\Authentication\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

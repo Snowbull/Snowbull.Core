@@ -6,7 +6,7 @@ namespace Snowbull.API.Cryptography {
 		/// <summary>
 		/// The hashing salt.
 		/// </summary>
-		private static string salt = "Y(02.>'H}t\":E1";
+		private const string salt = "Y(02.>'H}t\":E1";
 
 		/// <summary>
 		/// Hashes a password in MD5 and swaps the two halves.
