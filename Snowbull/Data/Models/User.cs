@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using System.Collections.Generic;
 namespace Snowbull.Data.Models {
     [Table("users")]
     public class User {
@@ -37,6 +37,16 @@ namespace Snowbull.Data.Models {
             get;
             set;
         }
+
+		public virtual ICollection<Item> Inventory {
+			get;
+			set;
+		}
+
+		public virtual ICollection<Ignore> Ignores {
+			get;
+			set;
+		}
     }
 }
 
