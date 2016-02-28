@@ -9,6 +9,7 @@ namespace Snowbull {
         private readonly Dictionary<IActorRef, IActorRef> users = new Dictionary<IActorRef, IActorRef>();
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
         protected readonly IActorRef server;
+		private API.Plugin<API.IZone>[] plugins;
 
         protected ReadOnlyDictionary<IActorRef, IActorRef> Users {
             get {
@@ -16,8 +17,9 @@ namespace Snowbull {
             }
         }
 
-        protected Zone(IActorRef server) {
+		internal Zone(IActorRef server, API.Plugins<API.IZone> plugins) {
             this.server = server;
+			this.plugins = plugins.Initialise();
             BecomeStacked(Running);
         }
 

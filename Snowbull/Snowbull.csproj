@@ -54,18 +54,16 @@
     </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Package>monodevelop</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -84,8 +82,9 @@
     <Compile Include="Login\LoginZone.cs" />
     <Compile Include="Login\LoginUser.cs" />
     <Compile Include="Data\Models\Item.cs" />
-    <Compile Include="Data\Models\Immutable\Ignore.cs" />
     <Compile Include="Data\Models\Furniture.cs" />
+    <Compile Include="Data\Models\Ignore.cs" />
+    <Compile Include="Data\Models\Immutable\ImmutableIgnore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

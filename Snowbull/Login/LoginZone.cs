@@ -4,11 +4,14 @@ using System.Data.Entity;
 
 namespace Snowbull.Login {
     public class LoginZone : Zone {
-        public static Props Props(IActorRef server) {
-            return Akka.Actor.Props.Create(() => new LoginZone(server));
+		private API.Plugin<API.Login.ILoginZone>[] plugins;
+
+		internal static Props Props(IActorRef server, API.Plugins<API.IZone> basePlugins, API.Plugins<API.Login.ILoginZone> plugins) {
+			return Akka.Actor.Props.Create(() => new LoginZone(server, basePlugins, plugins));
         }
 
-        public LoginZone(IActorRef server) : base(server) {
+		internal LoginZone(IActorRef server, API.Plugins<API.IZone> basePlugins, API.Plugins<API.Login.ILoginZone> plugins) : base(server, basePlugins) {
+			this.plugins = plugins.Initialise();
         }
 
         protected override void Running() {
