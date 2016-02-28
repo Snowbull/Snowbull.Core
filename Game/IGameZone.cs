@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Snowbull.API {
+namespace Snowbull.API.Game {
     public interface IGameZone : IZone {
     }
 }
