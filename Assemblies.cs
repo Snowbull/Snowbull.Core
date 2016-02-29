@@ -31,13 +31,13 @@ namespace Snowbull.API {
 			return assemblies;
 		}
 
-		internal Plugins<T> Get<T>() where T : class, API.IContext {
-			Type t = typeof(Plugin<T>);
-			List<Type> types = new List<Type>();
+		internal Observer[] Get(IServer server) {
+			Type observer = typeof(Observer);
+			List<Observer> observers = new List<Observer>();
 			foreach(Assembly assembly in Loaded)
 				foreach(Type type in assembly.GetTypes())
-					if(t.IsAssignableFrom(type)) types.Add(type);
-			return new Plugins<T>(types.ToArray());
+					if(observer.IsAssignableFrom(type)) observers.Add((Observer) Activator.CreateInstance(type, new object[] { server }));
+			return observers.ToArray();
 		}
 
 	}

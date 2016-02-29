@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Snowbull.API {
-    public interface IZone : IContext {
+    public interface IZone : IObservable {
     }
 }
 

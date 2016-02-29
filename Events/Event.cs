@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Snowbull.API.Events {
-    public abstract class Event {
+	public abstract class Event : IEvent {
         public string Name {
             get;
             private set;

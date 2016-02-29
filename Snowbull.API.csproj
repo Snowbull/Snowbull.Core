@@ -61,15 +61,17 @@
     <Compile Include="Game\IGameZone.cs" />
     <Compile Include="Login\ILoginZone.cs" />
     <Compile Include="IZone.cs" />
-    <Compile Include="Plugin.cs" />
     <Compile Include="Events\IEvent.cs" />
     <Compile Include="Events\Event.cs" />
     <Compile Include="Events\ICancellableEvent.cs" />
     <Compile Include="Events\CancellableEvent.cs" />
-    <Compile Include="IContext.cs" />
     <Compile Include="Events\Authentication\Authenticated.cs" />
-    <Compile Include="Plugins.cs" />
     <Compile Include="Assemblies.cs" />
+    <Compile Include="IObserver.cs" />
+    <Compile Include="IObservable.cs" />
+    <Compile Include="IServer.cs" />
+    <Compile Include="Observer.cs" />
+    <Compile Include="Events\Registered.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
