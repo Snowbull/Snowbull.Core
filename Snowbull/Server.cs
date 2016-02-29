@@ -16,17 +16,23 @@ namespace Snowbull {
         private readonly XmlMap xmlMap = API.Packets.PacketMapper.XmlMap();
         private readonly XtMap xtMap = API.Packets.PacketMapper.XtMap();
         private readonly Dictionary<string, IActorRef> zones = new Dictionary<string, IActorRef>();
+		private readonly ServerContext context;
 
-        public static Props Props() {
+		public static Props Props(string name) {
             return Akka.Actor.Props.Create(() => new Server());
         }
 
-        public Server() {
+		public Server(string name) {
             Receive<Tcp.Bound>(Bound);
             Receive<AddZone>(AddZone);
             Receive<Tcp.Connected>(Connected);
             Receive<Authenticate>(Authenticate);
             Receive<Disconnected>(Disconnected);
+			context = new ServerContext(name);
+			API.IObserver[] observers = API.Assemblies.Load("Plugins/").Get(context);
+			IActorRef[] actors = new IActorRef[observers.Length];
+			for(int i = 0; i < observers.Length; i++)
+				actors[i] = Context.ActorOf(Observer.Props(observers[i]));
         }
 
         private void Bound(Tcp.Bound bound) {

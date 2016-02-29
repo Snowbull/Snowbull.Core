@@ -10,6 +10,7 @@ namespace Snowbull {
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
         protected readonly IActorRef server;
 		private API.Plugin<API.IZone>[] plugins;
+		private ZoneContext context;
 
         protected ReadOnlyDictionary<IActorRef, IActorRef> Users {
             get {
@@ -17,9 +18,10 @@ namespace Snowbull {
             }
         }
 
-		internal Zone(IActorRef server, API.Plugins<API.IZone> plugins) {
+		internal Zone(string name, IActorRef server, API.Plugins<API.IZone> plugins) {
             this.server = server;
 			this.plugins = plugins.Initialise();
+			context = new ZoneContext(name, Self);
             BecomeStacked(Running);
         }
 
@@ -27,17 +29,25 @@ namespace Snowbull {
             Receive<Authenticate>(Authenticate);
             Receive<UserInitialised>(UserInitialised);
             Receive<UserStopped>(UserStopped);
+			Receive<API.Packets.ISendPacket>(SendPacket);
         }
 
         protected abstract void Authenticate(Authenticate authenticate);
 
         private void UserInitialised(UserInitialised ui) {
             users.Add(ui.Connection, ui.User);
+			foreach(API.Plugin<API.IZone> plugin in plugins)
+				plugin.Raise(context, new API.Events.Authentication.Authenticated(ui.Username));
         }
 
         private void UserStopped(UserStopped us) {
             users.Remove(us.Connection);
         }
+
+		private void SendPacket(API.Packets.ISendPacket packet) {
+			foreach(IActorRef user in users.Values)
+				user.Forward(packet);
+		}
     }
 
     public class Authenticate {
@@ -87,10 +97,16 @@ namespace Snowbull {
             get;
             private set;
         }
+		
+		public string Username {
+			get;
+			private set;
+		}
 
-        public UserInitialised(IActorRef connection, IActorRef user) {
+		public UserInitialised(IActorRef connection, IActorRef user, string username) {
             Connection = connection;
             User = user;
+			Username = username;
         }
     }
 

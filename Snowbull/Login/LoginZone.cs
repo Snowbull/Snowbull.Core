@@ -6,11 +6,11 @@ namespace Snowbull.Login {
     public class LoginZone : Zone {
 		private API.Plugin<API.Login.ILoginZone>[] plugins;
 
-		internal static Props Props(IActorRef server, API.Plugins<API.IZone> basePlugins, API.Plugins<API.Login.ILoginZone> plugins) {
-			return Akka.Actor.Props.Create(() => new LoginZone(server, basePlugins, plugins));
+		internal static Props Props(string name, IActorRef server, API.Plugins<API.IZone> basePlugins, API.Plugins<API.Login.ILoginZone> plugins) {
+			return Akka.Actor.Props.Create(() => new LoginZone(name, server, basePlugins, plugins));
         }
 
-		internal LoginZone(IActorRef server, API.Plugins<API.IZone> basePlugins, API.Plugins<API.Login.ILoginZone> plugins) : base(server, basePlugins) {
+		internal LoginZone(string name, IActorRef server, API.Plugins<API.IZone> basePlugins, API.Plugins<API.Login.ILoginZone> plugins) : base(name, server, basePlugins) {
 			this.plugins = plugins.Initialise();
         }
 

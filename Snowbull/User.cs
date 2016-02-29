@@ -31,7 +31,7 @@ namespace Snowbull {
         }
 
         protected override void PreStart() {
-            zone.Tell(new UserInitialised(connection, Self));
+            zone.Tell(new UserInitialised(connection, Self, username));
         }
 
         protected override void PostStop() {
