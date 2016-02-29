@@ -63,31 +63,33 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Package>monodevelop</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Connection.cs" />
     <Compile Include="Snowbull.cs" />
-    <Compile Include="Server.cs" />
     <Compile Include="Data\Models\User.cs" />
     <Compile Include="Data\SnowbullContext.cs" />
-    <Compile Include="Zone.cs" />
-    <Compile Include="User.cs" />
     <Compile Include="Data\Models\Immutable\ImmutableUser.cs" />
     <Compile Include="Data\Models\Immutable\ImmutableCredentials.cs" />
-    <Compile Include="Game\GameZone.cs" />
-    <Compile Include="Login\LoginZone.cs" />
-    <Compile Include="Login\LoginUser.cs" />
     <Compile Include="Data\Models\Item.cs" />
     <Compile Include="Data\Models\Furniture.cs" />
     <Compile Include="Data\Models\Ignore.cs" />
     <Compile Include="Data\Models\Immutable\ImmutableIgnore.cs" />
-    <Compile Include="ZoneContext.cs" />
-    <Compile Include="Observer.cs" />
-    <Compile Include="ServerContext.cs" />
+    <Compile Include="ServerActor.cs" />
+    <Compile Include="ConnectionActor.cs" />
+    <Compile Include="UserActor.cs" />
+    <Compile Include="ZoneActor.cs" />
+    <Compile Include="Zone.cs" />
+    <Compile Include="Server.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="Login\LoginZoneActor.cs" />
+    <Compile Include="Login\LoginUserActor.cs" />
+    <Compile Include="Game\GameZoneActor.cs" />
+    <Compile Include="Login\LoginUser.cs" />
+    <Compile Include="Login\LoginZone.cs" />
+    <Compile Include="Game\GameZone.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

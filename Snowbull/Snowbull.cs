@@ -18,7 +18,7 @@ namespace Snowbull {
         }
 
         public Snowbull(string name, Dictionary<string, ZoneInitialiser> zones) {
-			actor = actors.ActorOf(Server.Props(name));
+			actor = actors.ActorOf(ServerActor.Props(name));
             foreach(KeyValuePair<string, ZoneInitialiser> zone in zones)
                 actor.Tell(new AddZone(zone.Key, zone.Value(actor)));
         }
