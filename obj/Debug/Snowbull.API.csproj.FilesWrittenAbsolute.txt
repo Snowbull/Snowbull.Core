@@ -10,3 +10,5 @@
 /home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/obj/Debug/Snowbull.API.dll
 /home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/obj/Debug/Snowbull.API.dll.mdb
 /home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Debug/System.Collections.Immutable.dll
+/home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Debug/Newtonsoft.Json.dll
+/home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Debug/Akka.dll

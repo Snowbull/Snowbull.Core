@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Snowbull.API {
-	public interface IServer : IObservable {
+	public interface IServer : Observer.IObservable {
 	}
 }
 

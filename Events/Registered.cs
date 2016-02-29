@@ -2,12 +2,12 @@
 
 namespace Snowbull.API.Events {
 	public class Registered : Event {
-		public IObservable To {
+		public Observer.IObservable To {
 			get;
 			private set;
 		}
 
-		public Registered(IObservable observable) {
+		public Registered(Observer.IObservable observable) {
 			To = observable;
 		}
 	}
