@@ -10,12 +10,12 @@ namespace Snowbull.API.Observer {
 
 		internal IActorRef Actor {
 			get;
-			private set;
+			set;
 		}
 
-		public Observable(string name, IActorRef actor) {
+		public Observable(string name, IActorContext context) {
 			Name = name;
-			Actor = actor;
+			Actor = context.ActorOf(API.Observer.ObservableActor.Props(this));
 		}
 
 		public void Send(Packets.ISendPacket packet) {

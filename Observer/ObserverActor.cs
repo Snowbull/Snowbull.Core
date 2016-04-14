@@ -19,8 +19,11 @@ namespace Snowbull.API.Observer {
 				observable.Actor.Tell(new RegisterObserver((IObserver) observer));
 		}
 
-		private void HandleEvent(EventHappened e) {
-			observer.Notify(e.Source, e.Event);
+		private void HandleNotification(Notification n) {
+			if(n.Event is Events.ICancellableEvent)
+				Sender.Tell(new CancellableEventResponse(observer.Notify(n.Source, (Events.ICancellableEvent) n.Event)));
+			else
+				observer.Notify(n.Source, n.Event);
 		}
 	}
 
@@ -35,7 +38,7 @@ namespace Snowbull.API.Observer {
 		}
 	}
 
-	internal class EventHappened {
+	internal class Notification {
 		public IObservable Source {
 			get;
 			private set;
@@ -46,20 +49,9 @@ namespace Snowbull.API.Observer {
 			private set;
 		}
 
-		public EventHappened(IObservable source, Events.IEvent e) {
+		public Notification(IObservable source, Events.IEvent e) {
 			Source = source;
 			Event = e;
-		}
-	}
-
-	internal class RegisterObserver {
-		public IObserver Observer {
-			get;
-			private set;
-		}
-
-		public RegisterObserver(IObserver observer) {
-			Observer = observer;
 		}
 	}
 }
