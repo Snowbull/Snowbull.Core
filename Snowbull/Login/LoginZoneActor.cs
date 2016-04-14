@@ -5,11 +5,11 @@ using System.Data.Entity;
 namespace Snowbull.Login {
     sealed class LoginZoneActor : ZoneActor {
 
-		internal static Props Props(string name, IActorRef server) {
+		public static Props Props(string name, IActorRef server) {
 			return Akka.Actor.Props.Create(() => new LoginZoneActor(name, server));
         }
 
-		internal LoginZoneActor(string name, IActorRef server) : base(name, (n, a) => new LoginZone(n, a), server) {
+		public LoginZoneActor(string name, IActorRef server) : base(name, (n, a) => new LoginZone(n, a), server) {
         }
 
         protected override void Running() {

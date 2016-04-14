@@ -11,17 +11,19 @@ using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.F
 using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.API.Packets.Xt.XtData, Snowbull.API.Packets.Xt.XtPacket>>;
 
 namespace Snowbull {
-	sealed class ServerActor : API.Observer.ObservableActor {
+	sealed class ServerActor : ReceiveActor {
         private readonly ILoggingAdapter logger = Logging.GetLogger(Context);
         private readonly XmlMap xmlMap = API.Packets.PacketMapper.XmlMap();
         private readonly XtMap xtMap = API.Packets.PacketMapper.XtMap();
         private readonly Dictionary<string, IActorRef> zones = new Dictionary<string, IActorRef>();
+		private readonly Server Observable;
 
 		public static Props Props(string name) {
             return Akka.Actor.Props.Create(() => new ServerActor(name));
         }
 
-		public ServerActor(string name) : base(name, (n, a) => new Server(n, a)) {
+		public ServerActor(string name) {
+			Observable = new Server(name, Context);
             Receive<Tcp.Bound>(Bound);
             Receive<AddZone>(AddZone);
             Receive<Tcp.Connected>(Connected);

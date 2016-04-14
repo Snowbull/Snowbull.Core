@@ -5,7 +5,7 @@ using Akka.Actor;
 using Akka.Event;
 
 namespace Snowbull {
-	abstract class ZoneActor : API.Observer.ObservableActor {
+	abstract class ZoneActor : ReceiveActor {
         private readonly Dictionary<IActorRef, IActorRef> users = new Dictionary<IActorRef, IActorRef>();
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
         protected readonly IActorRef server;
@@ -16,7 +16,7 @@ namespace Snowbull {
             }
         }
 
-		internal ZoneActor(string name, Func<string, IActorRef, API.Observer.Observable> creator, IActorRef server) : base(name, creator) {
+		public ZoneActor(string name, Func<string, IActorContext, API.Observer.Observable> creator, IActorRef server) {
             this.server = server;
             BecomeStacked(Running);
         }
