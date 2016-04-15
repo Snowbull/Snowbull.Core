@@ -1,27 +1,31 @@
 ﻿using System;
 using Akka.Actor;
+using Akka.Event;
 
 namespace Snowbull.API.Observer {
 	internal class ObserverActor : ReceiveActor {
 		private Observer observer;
 
-		public static Props Props(Observer observer) {
-			return Akka.Actor.Props.Create(() => new ObserverActor(observer));
+		public static Props Props(IServer server, Func<Context, Observer> creator) {
+			return Akka.Actor.Props.Create(() => new ObserverActor(server, creator));
 		}
 
-		public ObserverActor(Observer observer) {
-			this.observer = observer;
+		public ObserverActor(IServer server, Func<Context, Observer> creator) {
+			observer = creator(new Context(Self, server, Context.System.Log));
+			Receive<Notification>(HandleNotification);
+			Receive<Observe>(Observe);
 		}
 
 		private void Observe(Observe observe) {
 			Observable observable = (observe.Observable as Observable);
 			if(observable != null)
-				observable.Actor.Tell(new RegisterObserver((IObserver) observer));
+				observable.Actor.Tell(new RegisterObserver(Self));
 		}
 
 		private void HandleNotification(Notification n) {
-			if(n.Event is Events.ICancellableEvent)
-				Sender.Tell(new CancellableEventResponse(observer.Notify(n.Source, (Events.ICancellableEvent) n.Event)));
+			Events.CancellableEvent c = n.Event as Events.CancellableEvent;
+			if(c != null)
+				Sender.Tell(new CancellableEventResponse(c, observer.Notify(n.Source, c)));
 			else
 				observer.Notify(n.Source, n.Event);
 		}

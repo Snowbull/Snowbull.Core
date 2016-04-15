@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Akka.Actor;
+using Akka.Event;
 
 namespace Snowbull.API.Observer {
 	public abstract class Observer : IObserver {
@@ -18,6 +19,16 @@ namespace Snowbull.API.Observer {
 			get {
 				return observing.ToImmutableArray();
 			}
+		}
+
+		protected ILoggingAdapter Logger {
+			get;
+			private set;
+		}
+
+		public Observer(Context context) {
+			Actor = context.Actor;
+			Logger = context.Logger;
 		}
 
 		public bool Notify(IObservable source, Events.ICancellableEvent e) {
@@ -42,8 +53,8 @@ namespace Snowbull.API.Observer {
 
 		protected abstract bool Notified(IObservable source, Events.ICancellableEvent e);
 
-		protected void Observe(Observable observable) {
-			observable.Actor.Tell(new RegisterObserver(this));
+		protected void Observe(IObservable observable) {
+			(observable as Observable).Actor.Tell(new RegisterObserver(Actor));
 			observing.Add(observable);
 		}
 	}

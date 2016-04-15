@@ -85,6 +85,11 @@
     <Compile Include="Observer\ObserverActor.cs" />
     <Compile Include="Observer\IObserver.cs" />
     <Compile Include="Observer\ObservableActor.cs" />
+    <Compile Include="Observer\Poll.cs" />
+    <Compile Include="Observer\Consensus.cs" />
+    <Compile Include="Events\Notifications\Registered.cs" />
+    <Compile Include="IConnection.cs" />
+    <Compile Include="Context.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
