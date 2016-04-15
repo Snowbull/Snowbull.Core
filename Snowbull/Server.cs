@@ -4,7 +4,7 @@ using Akka.Actor;
 namespace Snowbull {
 	class Server : API.Observer.Observable, API.IServer {
 
-		public Server(string name, IActorContext context) : base(name, context) {
+		public Server(string name, IActorContext context) : base(name, context, null) {
 		}
 	}
 }

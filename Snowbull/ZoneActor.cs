@@ -5,7 +5,7 @@ using Akka.Actor;
 using Akka.Event;
 
 namespace Snowbull {
-	abstract class ZoneActor : ReceiveActor {
+	abstract class ZoneActor : SnowbullActor {
         private readonly Dictionary<IActorRef, IActorRef> users = new Dictionary<IActorRef, IActorRef>();
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
         protected readonly IActorRef server;
@@ -16,7 +16,7 @@ namespace Snowbull {
             }
         }
 
-		public ZoneActor(string name, Func<string, IActorContext, API.Observer.Observable> creator, IActorRef server) {
+		public ZoneActor(string name, Func<string, IActorContext, API.Observer.Observable> creator, IActorRef server) : base(creator(name, Context)) {
             this.server = server;
             BecomeStacked(Running);
         }
@@ -32,8 +32,6 @@ namespace Snowbull {
 
         private void UserInitialised(UserInitialised ui) {
             users.Add(ui.Connection, ui.User);
-			//foreach(API.Plugin<API.IZone> plugin in plugins)
-			//	plugin.Raise(context, new API.Events.Authentication.Authenticated(ui.Username));
         }
 
         private void UserStopped(UserStopped us) {

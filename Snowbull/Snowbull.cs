@@ -5,7 +5,7 @@ using Akka.IO;
 using System.Collections.Generic;
 
 namespace Snowbull {
-    public delegate Props ZoneInitialiser(IActorRef server);
+	public delegate Props ZoneInitialiser(IActorRef server, IActorRef oparent);
 
     public class Snowbull {
         private readonly ActorSystem actors = ActorSystem.Create("Snowbull");
@@ -20,7 +20,7 @@ namespace Snowbull {
         public Snowbull(string name, Dictionary<string, ZoneInitialiser> zones) {
 			actor = actors.ActorOf(ServerActor.Props(name));
             foreach(KeyValuePair<string, ZoneInitialiser> zone in zones)
-                actor.Tell(new AddZone(zone.Key, zone.Value(actor)));
+                actor.Tell(new AddZone(zone.Key, zone.Value));
         }
 
         public void Bind(IPAddress host, int port) {

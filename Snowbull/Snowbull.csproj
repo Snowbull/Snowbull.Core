@@ -58,11 +58,11 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Akka">
-      <HintPath>..\packages\Akka.1.0.7\lib\net45\Akka.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Akka">
+      <HintPath>..\packages\Akka.1.0.7\lib\net45\Akka.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -90,12 +90,13 @@
     <Compile Include="Login\LoginUser.cs" />
     <Compile Include="Login\LoginZone.cs" />
     <Compile Include="Game\GameZone.cs" />
+    <Compile Include="SnowbullActor.cs" />
+    <Compile Include="Connection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />

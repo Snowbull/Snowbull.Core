@@ -35,3 +35,4 @@
 /home/lewis/Documents/Projects/cs/Snowbull/Snowbull/bin/Debug/EntityFramework.dll
 /home/lewis/Documents/Projects/cs/Snowbull/Snowbull/bin/Debug/EntityFramework.SqlServer.dll
 /home/lewis/Documents/Projects/cs/Snowbull/Snowbull/bin/Debug/MySql.Data.Entity.EF6.dll
+/home/lewis/Documents/Projects/cs/Snowbull/Snowbull/obj/x86/Debug/.NETFramework,Version=v4.5.1.AssemblyAttribute.cs

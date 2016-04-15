@@ -5,7 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Snowbull.Data.Models {
 	[Table("furniture")]
 	public class Furniture {
-		[ForeignKey("userID")]
+		[Column("userID")]
+		public int OwnerID {
+			get;
+			set;
+		}
+
+		[ForeignKey("OwnerID")]
 		public User Owner {
 			get;
 			set;

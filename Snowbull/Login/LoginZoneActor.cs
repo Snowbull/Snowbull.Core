@@ -5,11 +5,11 @@ using System.Data.Entity;
 namespace Snowbull.Login {
     sealed class LoginZoneActor : ZoneActor {
 
-		public static Props Props(string name, IActorRef server) {
-			return Akka.Actor.Props.Create(() => new LoginZoneActor(name, server));
+		public static Props Props(string name, IActorRef server, IActorRef oparent) {
+			return Akka.Actor.Props.Create(() => new LoginZoneActor(name, server, oparent));
         }
 
-		public LoginZoneActor(string name, IActorRef server) : base(name, (n, a) => new LoginZone(n, a), server) {
+		public LoginZoneActor(string name, IActorRef server, IActorRef oparent) : base(name, (n, a) => new LoginZone(n, a, oparent), server) {
         }
 
         protected override void Running() {
@@ -33,7 +33,7 @@ namespace Snowbull.Login {
                 string hash = API.Cryptography.Hashing.HashPassword(auth.Credentials.Password, auth.Request.Key);
                 if(auth.Request.Request.Password == hash) {
                     logger.Debug("Authenticated as '" + auth.Credentials.Username + "'!");
-                    connection.Tell(new Authenticated(LoginUserActor.Props(auth.Credentials.Id, auth.Credentials.Username, connection, Self, server)), Self);
+                    connection.Tell(new Authenticated(LoginUserActor.Props(auth.Credentials.Id, auth.Credentials.Username, connection, Self, server, Observable.Actor)), Self);
                 }else{
                     logger.Info("Failed to identify as '" + auth.Request.Request.Username + "'.");
                     connection.Tell(new API.Packets.Xt.Send.Error(API.Errors.PASSWORD_WRONG, -1), Self);

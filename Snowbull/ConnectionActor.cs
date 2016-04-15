@@ -11,7 +11,7 @@ using Snowbull.API.Packets.Xml.Receive.Authentication;
 using System.Net;
 
 namespace Snowbull {
-    public sealed class ConnectionActor : ReceiveActor {
+   	internal sealed class ConnectionActor : SnowbullActor {
         private readonly IActorRef server;
         private readonly IActorRef socket;
         private IActorRef user;
@@ -23,11 +23,11 @@ namespace Snowbull {
         private int authenticationPackets = 0;
         private readonly string key = API.Cryptography.Random.GenerateRandomKey(10);
 
-        public static Props Props(IActorRef server, IActorRef socket, EndPoint address, XmlMap xmlMap, XtMap xtMap) {
-            return Akka.Actor.Props.Create(() => new ConnectionActor(server, socket, address, xmlMap, xtMap));
+		public static Props Props(IActorRef server, IActorRef socket, EndPoint address, XmlMap xmlMap, XtMap xtMap, IActorRef oparent) {
+            return Akka.Actor.Props.Create(() => new ConnectionActor(server, socket, address, xmlMap, xtMap, oparent));
         }
 
-        public ConnectionActor(IActorRef server, IActorRef socket, EndPoint address, XmlMap xmlMap, XtMap xtMap) {
+		public ConnectionActor(IActorRef server, IActorRef socket, EndPoint address, XmlMap xmlMap, XtMap xtMap, IActorRef oparent) : base(new Connection(address, Context, oparent)) {
             this.server = server;
             this.socket = socket;
             this.address = address;

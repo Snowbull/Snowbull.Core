@@ -11,41 +11,40 @@ using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.F
 using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.API.Packets.Xt.XtData, Snowbull.API.Packets.Xt.XtPacket>>;
 
 namespace Snowbull {
-	sealed class ServerActor : ReceiveActor {
-        private readonly ILoggingAdapter logger = Logging.GetLogger(Context);
+	sealed class ServerActor : SnowbullActor {
         private readonly XmlMap xmlMap = API.Packets.PacketMapper.XmlMap();
         private readonly XtMap xtMap = API.Packets.PacketMapper.XtMap();
         private readonly Dictionary<string, IActorRef> zones = new Dictionary<string, IActorRef>();
-		private readonly Server Observable;
 
 		public static Props Props(string name) {
             return Akka.Actor.Props.Create(() => new ServerActor(name));
         }
 
-		public ServerActor(string name) {
-			Observable = new Server(name, Context);
+		public ServerActor(string name) : base(new Server(name, Context)) {
             Receive<Tcp.Bound>(Bound);
             Receive<AddZone>(AddZone);
             Receive<Tcp.Connected>(Connected);
             Receive<Authenticate>(Authenticate);
             Receive<Disconnected>(Disconnected);
-			API.Observer.Observer[] observers = API.Assemblies.Load("Plugins/").Get((API.IServer) Observable);
-			IActorRef[] actors = new IActorRef[observers.Length];
-			for(int i = 0; i < observers.Length; i++)
-				actors[i] = Context.ActorOf(API.Observer.ObserverActor.Props(observers[i]));
+			Type[] types = API.Assemblies.Load("Plugins/").Get();
+			IActorRef[] actors = new IActorRef[types.Length];
+			for(int i = 0; i < types.Length; i++) {
+				Type t = types[i];
+				actors[i] = Context.ActorOf(API.Observer.ObserverActor.Props((API.IServer)Observable, c => (API.Observer.Observer)Activator.CreateInstance(t, new object[] { c })));
+			}
         }
 
         private void Bound(Tcp.Bound bound) {
-            logger.Info("Server bound to " + bound.LocalAddress);
+            Logger.Info("Server bound to " + bound.LocalAddress);
         }
 
         private void AddZone(AddZone zone) {
-            zones.Add(zone.Name, Context.ActorOf(zone.Zone));
+			zones.Add(zone.Name, Context.ActorOf(zone.Zone(Self, Observable.Actor)));
         }
 
         private void Connected(Tcp.Connected connected) {
-            logger.Info("New client at " + connected.RemoteAddress + " connected!");
-            IActorRef connection = Context.ActorOf(ConnectionActor.Props(Self, Sender, connected.RemoteAddress, xmlMap, xtMap));
+            Logger.Info("New client at " + connected.RemoteAddress + " connected!");
+            IActorRef connection = Context.ActorOf(ConnectionActor.Props(Self, Sender, connected.RemoteAddress, xmlMap, xtMap, Observable.Actor));
             Sender.Tell(new Tcp.Register(connection));
         }
 
@@ -67,12 +66,12 @@ namespace Snowbull {
             private set;
         }
 
-        public Props Zone {
+        public ZoneInitialiser Zone {
             get;
             private set;
         }
 
-        public AddZone(string name, Props zone) {
+        public AddZone(string name, ZoneInitialiser zone) {
             Name = name;
             Zone = zone;
         }

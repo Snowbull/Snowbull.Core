@@ -6,14 +6,13 @@ using Snowbull.API.Packets.Xml.Receive.Authentication;
 using System.Data.Entity;
 
 namespace Snowbull {
-	abstract class UserActor : ReceiveActor {
+	abstract class UserActor : SnowbullActor {
         protected readonly IActorRef connection;
         protected readonly IActorRef zone;
         protected readonly IActorRef server;
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
         protected readonly int id;
         protected readonly string username;
-		protected readonly User Observable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Snowbull.User"/> class.
@@ -23,8 +22,7 @@ namespace Snowbull {
         /// <param name="zone">The zone the user belongs to.</param> 
         /// <param name="id">The user's id.</param>
         /// <param name="username">The user's username.</param>  
-		public UserActor(int id, string username, Func<string, IActorContext, User> creator, IActorRef connection, IActorRef zone, IActorRef server) {
-			Observable = creator(username, Context);
+		public UserActor(int id, string username, Func<string, IActorContext, User> creator, IActorRef connection, IActorRef zone, IActorRef server) : base(creator(username, Context)) {
             this.id = id;
             this.username = username;
             this.connection = connection;
@@ -34,6 +32,7 @@ namespace Snowbull {
 
         protected override void PreStart() {
             zone.Tell(new UserInitialised(connection, Self, username));
+			Observable.Notify(new API.Events.Authentication.Authenticated(username));
         }
 
         protected override void PostStop() {

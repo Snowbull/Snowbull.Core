@@ -7,9 +7,9 @@ namespace Snowbull {
     class Program {
         public static void Main(string[] args) {
             Dictionary<string, ZoneInitialiser> zones = new Dictionary<string, ZoneInitialiser>();
-			zones.Add("w1", server => Login.LoginZoneActor.Props("w1", server));
+			zones.Add("w1", (server, oparent) => Login.LoginZoneActor.Props("w1", server, oparent));
             Snowbull instance = new Snowbull("Snowbull-Test", zones);
-            instance.Bind(IPAddress.Loopback, 9000);
+			instance.Bind(IPAddress.IPv6Any, 9000);
             Console.ReadLine();
         }
     }
