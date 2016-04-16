@@ -30,7 +30,7 @@ namespace Snowbull {
 			IActorRef[] actors = new IActorRef[types.Length];
 			for(int i = 0; i < types.Length; i++) {
 				Type t = types[i];
-				actors[i] = Context.ActorOf(API.Observer.ObserverActor.Props((API.IServer)Observable, c => (API.Observer.Observer)Activator.CreateInstance(t, new object[] { c })));
+				actors[i] = Context.ActorOf(API.Observer.ObserverActor.Props((API.IServer)Observable, c => (API.Observer.Observer)Activator.CreateInstance(t, new object[] { c })), "plugin(" + i + ")");
 			}
         }
 
@@ -39,12 +39,12 @@ namespace Snowbull {
         }
 
         private void AddZone(AddZone zone) {
-			zones.Add(zone.Name, Context.ActorOf(zone.Zone(Self, Observable.Actor)));
+			zones.Add(zone.Name, Context.ActorOf(zone.Zone(Self, Observable.Actor), "zone(" + zone.Name + ")"));
         }
 
         private void Connected(Tcp.Connected connected) {
             Logger.Info("New client at " + connected.RemoteAddress + " connected!");
-            IActorRef connection = Context.ActorOf(ConnectionActor.Props(Self, Sender, connected.RemoteAddress, xmlMap, xtMap, Observable.Actor));
+			IActorRef connection = Context.ActorOf(ConnectionActor.Props(Self, Sender, connected.RemoteAddress, xmlMap, xtMap, Observable.Actor), "connection(" + connected.RemoteAddress + ")");
             Sender.Tell(new Tcp.Register(connection));
         }
 

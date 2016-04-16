@@ -180,7 +180,7 @@ namespace Snowbull {
         }
 
         private void Authenticate(Authenticated auth) {
-            user = Context.ActorOf(auth.User);
+			user = Context.ActorOf(auth.User, "user(" + auth.Credentials.Username + "@" + address + ")");
             UnbecomeStacked();
             BecomeStacked(Authenticated);
         }
@@ -216,14 +216,37 @@ namespace Snowbull {
         }
     }
 
+	class Authentication {
+		public Data.Models.Immutable.ImmutableCredentials Credentials {
+			get;
+			private set;
+		}
+
+		public Authenticate Request {
+			get;
+			private set;
+		}
+
+		public Authentication(Data.Models.Immutable.ImmutableCredentials credentials, Authenticate request) {
+			Credentials = credentials;
+			Request = request;
+		}
+	}
+
     public class Authenticated {
+		public Data.Models.Immutable.ImmutableCredentials Credentials {
+			get;
+			private set;
+		}
+
         public Props User {
             get;
             private set;
         }
 
-        public Authenticated(Props user) {
+		public Authenticated(Props user, Data.Models.Immutable.ImmutableCredentials credentials) {
             User = user;
+			Credentials = credentials;
         }
     }
 

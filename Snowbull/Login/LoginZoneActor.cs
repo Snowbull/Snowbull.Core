@@ -33,7 +33,7 @@ namespace Snowbull.Login {
                 string hash = API.Cryptography.Hashing.HashPassword(auth.Credentials.Password, auth.Request.Key);
                 if(auth.Request.Request.Password == hash) {
                     logger.Debug("Authenticated as '" + auth.Credentials.Username + "'!");
-                    connection.Tell(new Authenticated(LoginUserActor.Props(auth.Credentials.Id, auth.Credentials.Username, connection, Self, server, Observable.Actor)), Self);
+					connection.Tell(new Authenticated(LoginUserActor.Props(auth.Credentials.Id, auth.Credentials.Username, connection, Self, server, Observable.Actor), auth.Credentials), Self);
                 }else{
                     logger.Info("Failed to identify as '" + auth.Request.Request.Username + "'.");
                     connection.Tell(new API.Packets.Xt.Send.Error(API.Errors.PASSWORD_WRONG, -1), Self);
@@ -44,23 +44,6 @@ namespace Snowbull.Login {
                 connection.Tell(new API.Packets.Xt.Send.Error(API.Errors.NAME_NOT_FOUND, -1), Self);
                 connection.Tell(new Disconnect());
             }
-        }
-    }
-
-    class Authentication {
-        public Data.Models.Immutable.ImmutableCredentials Credentials {
-            get;
-            private set;
-        }
-
-        public Authenticate Request {
-            get;
-            private set;
-        }
-
-        public Authentication(Data.Models.Immutable.ImmutableCredentials credentials, Authenticate request) {
-            Credentials = credentials;
-            Request = request;
         }
     }
 }
