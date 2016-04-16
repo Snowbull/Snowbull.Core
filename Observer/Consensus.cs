@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Snowbull.API.Observer {
-	public class Consensus {
+	internal sealed class Consensus {
 		public Events.CancellableEvent Event {
 			get;
 			private set;

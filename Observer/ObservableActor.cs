@@ -81,7 +81,7 @@ namespace Snowbull.API.Observer {
 	}
 
 
-	internal class RegisterObserver {
+	internal sealed class RegisterObserver {
 		public IActorRef Observer {
 			get;
 			private set;
@@ -92,7 +92,7 @@ namespace Snowbull.API.Observer {
 		}
 	}
 
-	internal class CancellableEventResponse {
+	internal sealed class CancellableEventResponse {
 		public Events.CancellableEvent Event {
 			get;
 			private set;
@@ -109,7 +109,7 @@ namespace Snowbull.API.Observer {
 		}
 	}
 
-	internal class NewChild {
+	internal sealed class NewChild {
 		public Observable Child {
 			get;
 			private set;

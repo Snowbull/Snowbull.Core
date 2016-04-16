@@ -31,7 +31,7 @@ namespace Snowbull.API.Observer {
 		}
 	}
 
-	internal class Observe {
+	internal sealed class Observe {
 		public IObservable Observable {
 			get;
 			private set;
@@ -42,7 +42,7 @@ namespace Snowbull.API.Observer {
 		}
 	}
 
-	internal class Notification {
+	internal sealed class Notification {
 		public IObservable Source {
 			get;
 			private set;
