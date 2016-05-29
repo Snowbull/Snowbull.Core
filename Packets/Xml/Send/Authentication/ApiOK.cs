@@ -2,7 +2,7 @@
 using System.Xml;
 
 namespace Snowbull.API.Packets.Xml.Send.Authentication {
-    public class ApiOK : XmlMessage, ISendPacket {
+    public sealed class ApiOK : XmlMessage, ISendPacket {
         private ApiOK() : base(new XmlDocument(), "apiOK", 0, null) {
         }
 

@@ -12,3 +12,10 @@
 /home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Debug/System.Collections.Immutable.dll
 /home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Debug/Newtonsoft.Json.dll
 /home/lewis/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Debug/Akka.dll
+/home/user/Documents/Projects/cs/Snowbull.API/Snowbull.API/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/user/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Debug/Snowbull.API.dll.mdb
+/home/user/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Debug/Snowbull.API.dll
+/home/user/Documents/Projects/cs/Snowbull.API/Snowbull.API/obj/Debug/Snowbull.API.dll
+/home/user/Documents/Projects/cs/Snowbull.API/Snowbull.API/obj/Debug/Snowbull.API.dll.mdb
+/home/user/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Debug/System.Collections.Immutable.dll
+/home/user/Documents/Projects/cs/Snowbull.API/Snowbull.API/bin/Debug/Newtonsoft.Json.dll

@@ -2,7 +2,7 @@
 using System.Xml;
 
 namespace Snowbull.API.Packets.Xml.Send.Authentication {
-    public class RandomKey: XmlMessage, ISendPacket {
+    public sealed class RandomKey: XmlMessage, ISendPacket {
 
         private RandomKey(XmlDocument document, XmlElement[] inner) : base(document, "rndK", -1, inner) {
         }

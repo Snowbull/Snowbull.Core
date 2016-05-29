@@ -33,12 +33,12 @@
     <Reference Include="System.Collections.Immutable">
       <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
-    <Reference Include="Akka">
-      <HintPath>..\packages\Akka.1.0.7\lib\net45\Akka.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Akka">
+      <HintPath>..\packages\Akka.1.0.8\lib\net45\Akka.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -64,7 +64,6 @@
     <Compile Include="Error.cs" />
     <Compile Include="Packets\Xt\Send\Error.cs" />
     <Compile Include="Packets\Xt\Send\Authentication\Login.cs" />
-    <Compile Include="IPlugin.cs" />
     <Compile Include="Game\IGameZone.cs" />
     <Compile Include="Login\ILoginZone.cs" />
     <Compile Include="IZone.cs" />
@@ -90,6 +89,9 @@
     <Compile Include="Events\Notifications\Registered.cs" />
     <Compile Include="IConnection.cs" />
     <Compile Include="Context.cs" />
+    <Compile Include="Packets\Xml\Send\Policy\XmlPolicyFile.cs" />
+    <Compile Include="Packets\Xml\Send\Policy\Allow.cs" />
+    <Compile Include="Packets\Xml\Send\Policy\Rule.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -109,6 +111,7 @@
     <Folder Include="Events\Authentication\" />
     <Folder Include="Events\Notifications\" />
     <Folder Include="Observer\" />
+    <Folder Include="Packets\Xml\Send\Policy\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
