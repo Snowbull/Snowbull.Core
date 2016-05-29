@@ -20,7 +20,7 @@ namespace Snowbull.Login {
 
         protected override void PreStart() {
             base.PreStart();
-			string key = API.Cryptography.Random.GenerateRandomKey(32); // This should be sent to remote actors with Akka.Remote.
+			string key = API.Cryptography.Random.GenerateRandomKey(32);
 			connection.Tell(new API.Packets.Xt.Send.Authentication.Login(id, key, ""));
         }
     }

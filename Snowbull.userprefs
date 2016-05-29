@@ -1,12 +1,12 @@
 ﻿<Properties StartupItem="Snowbull/Snowbull.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Snowbull/UserActor.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Snowbull/Data/SnowbullContext.cs">
     <Files>
       <File FileName="Snowbull/Data/SnowbullContext.cs" Line="1" Column="1" />
       <File FileName="Snowbull/Data/Models/User.cs" Line="1" Column="1" />
       <File FileName="Snowbull/Data/Models/Item.cs" Line="1" Column="1" />
       <File FileName="Snowbull/User.cs" Line="1" Column="1" />
-      <File FileName="Snowbull/UserActor.cs" Line="18" Column="14" />
+      <File FileName="Snowbull/UserActor.cs" Line="1" Column="1" />
       <File FileName="Snowbull/Login/LoginUser.cs" Line="1" Column="1" />
       <File FileName="Snowbull/Zone.cs" Line="1" Column="1" />
       <File FileName="Snowbull/Login/LoginUserActor.cs" Line="1" Column="1" />
@@ -16,6 +16,14 @@
       <File FileName="Snowbull/Login/LoginZoneActor.cs" Line="1" Column="1" />
       <File FileName="Snowbull/Game/GameZoneActor.cs" Line="1" Column="1" />
       <File FileName="Snowbull/Game/GameZone.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Properties/AssemblyInfo.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Snowbull.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Program.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Server.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Connection.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/app.config" Line="1" Column="1" />
+      <File FileName="Snowbull/SnowbullActor.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/packages.config" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

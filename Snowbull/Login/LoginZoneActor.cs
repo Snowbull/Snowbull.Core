@@ -30,6 +30,7 @@ namespace Snowbull.Login {
         private void Authentication(Authentication auth) {
             IActorRef connection = auth.Request.Sender;
             if(auth.Credentials != null) {
+				logger.Debug("PASSWORD: " + auth.Credentials.Password);
                 string hash = API.Cryptography.Hashing.HashPassword(auth.Credentials.Password, auth.Request.Key);
                 if(auth.Request.Request.Password == hash) {
                     logger.Debug("Authenticated as '" + auth.Credentials.Username + "'!");

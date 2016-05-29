@@ -86,15 +86,22 @@ namespace Snowbull {
             settings.XmlResolver = null;
             using(System.IO.StringReader sreader = new System.IO.StringReader(xml)) {
                 using(XmlReader xreader = XmlReader.Create(sreader, settings)) {
-                    XmlDocument document 
-                    = new XmlDocument();
+                    XmlDocument document = new XmlDocument();
                     document.Load(xreader);
                     XmlElement element = document.DocumentElement;
-                    // We need to get the body node to find the action.
-                    XmlNode body = API.Packets.Xml.XmlMessage.Verify(element);
-                    string action = body.Attributes["action"].Value;
-                    API.Packets.Xml.XmlPacket packet = xmlMap[action](document);
-                    Self.Tell(packet, Self);
+					switch(element.Name) {
+						case "policy-file-request":
+							API.Packets.Xml.Send.Policy.XmlPolicyFile policy = API.Packets.Xml.Send.Policy.XmlPolicyFile.Create(new API.Packets.Xml.Send.Policy.Allow[] { new API.Packets.Xml.Send.Policy.Allow() });
+							Self.Tell(policy, Self);
+						break;
+						case "msg":
+		                    // We need to get the body node to find the action.
+							XmlNode body = API.Packets.Xml.XmlMessage.Verify(element);
+							string action = body.Attributes["action"].Value;
+							API.Packets.Xml.XmlPacket packet = xmlMap[action](document);
+							Self.Tell(packet, Self);
+						break;
+					}
                 }
             }
         }

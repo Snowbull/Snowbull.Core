@@ -2420,9 +2420,9 @@
         </member>
         <member name="M:Akka.Actor.IInboxable.Send(Akka.Actor.IActorRef,System.Object)">
             <summary>
-            Makes an internal actor act as a proxy of given <paramref name="message"/>, 
-            which will be send to given <paramref cref="!:target"/> actor. It means, 
-            that all <paramref name="target"/>'s replies will be sent to current inbox instead.
+            Makes an internal actor act as a proxy of a given <paramref name="message"/>, 
+            which is sent to a given target actor. It means, that all <paramref name="target"/>'s
+            replies will be sent to current inbox instead.
             </summary>
         </member>
         <member name="M:Akka.Actor.Inbox.Watch(Akka.Actor.IActorRef)">
@@ -3884,7 +3884,7 @@
         </member>
         <member name="M:Akka.Actor.ActorNotFoundException.#ctor(System.String,System.Exception)">
             <summary>
-            <see cref="T:Akka.Actor.ActorNotFoundException"/> that takes a descriptive <see cref="!:message"/> and optional <see cref="!:innerException"/>.
+            <see cref="T:Akka.Actor.ActorNotFoundException"/> that takes a descriptive <paramref name="message"/> and optional <paramref name="innerException"/>.
             </summary>
             <param name="message">A user-defined error message.</param>
             <param name="innerException">An inner <see cref="T:System.Exception"/>.</param>
