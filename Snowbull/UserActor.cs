@@ -12,6 +12,7 @@ namespace Snowbull {
         protected readonly IActorRef server;
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
         protected readonly int id;
+		protected readonly int serverId;
         protected readonly string username;
 
         /// <summary>
