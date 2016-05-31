@@ -42,7 +42,7 @@ namespace Snowbull.Configuration {
 		}
 
 		protected override object GetElementKey(ConfigurationElement element) {
-			return (element as Zone).Id;
+			return (element as Zone).Name;
 		}
 	}
 }

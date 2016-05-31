@@ -26,28 +26,22 @@ using System.Configuration;
 
 namespace Snowbull.Configuration {
 	public class Zone : ConfigurationElement {
-		[ConfigurationProperty("id", IsRequired=true)]
-		public int Id {
-			get {
-				return int.Parse(this["id"] as string);
-			}
-		}
 
-		[ConfigurationProperty("name", IsRequired=true)]
+		[ConfigurationProperty("name", IsRequired = true)]
 		public string Name {
 			get {
 				return this["name"] as string;
 			}
 		}
 
-		[ConfigurationProperty("server", IsRequired=true)]
+		[ConfigurationProperty("server", IsRequired = true)]
 		public int Server {
 			get {
 				return int.Parse(this["server"] as string);
 			}
 		}
 
-		[ConfigurationProperty("type", IsRequired=true)]
+		[ConfigurationProperty("type", IsRequired = true)]
 		public Type Type {
 			get {
 				return Type.GetType(this["type"] as string);

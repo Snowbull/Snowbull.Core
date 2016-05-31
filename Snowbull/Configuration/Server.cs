@@ -24,33 +24,34 @@
 using System;
 using System.Configuration;
 
-namespace Snowbull {
-	public class Server {
-		[ConfigurationProperty("id", IsRequired=true)]
+namespace Snowbull.Configuration {
+	public class Server : ConfigurationElement {
+		[ConfigurationProperty("id", IsRequired = true)]
 		public int Id {
 			get {
 				return int.Parse(this["id"] as string);
 			}
 		}
 
-		[ConfigurationProperty("name", IsRequired=true)]
+		[ConfigurationProperty("name", IsRequired = true)]
 		public string Name {
 			get {
 				return this["name"] as string;
 			}
 		}
 
-		[ConfigurationProperty("port", IsRequired=true)]
+		[ConfigurationProperty("port", IsRequired = true)]
 		public int Port {
 			get {
 				return int.Parse(this["port"] as string);
 			}
 		}
 
-		[ConfigurationProperty("type", IsRequired=true)]
-		public Type Type {
+		[ConfigurationProperty("zones")]
+		[ConfigurationCollection(typeof(Zones), AddItemName = "zone")]
+		public Zones Zones {
 			get {
-				return Type.GetType(this["type"] as string);
+				return this["zones"] as Zones;
 			}
 		}
 	}

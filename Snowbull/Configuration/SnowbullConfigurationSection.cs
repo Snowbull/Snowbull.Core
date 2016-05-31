@@ -25,14 +25,17 @@
  * Example
  *	<snowbull>
  *		<servers>
- *			<server id="1" name="Login" port="6112" type="Snowbull.Login.LoginServer" />
- *			<server id="100" name="The Bull" port="9875" type="Snowbull.Game.GameServer" />
+ *			<server id="1" name="Login" port="6112">
+ *				<zones>
+ *					<zone name="w1" type="Snowbull.Login.LoginZone" server="1" />
+ *				</zones>
+ *			</server>
+ *			<server id="100" name="The Bull" port="9875">
+ *				<zones>
+ *					<zone name="w1" type="Snowbull.Game.GameZone" server="100" />
+ *				</zones>
+ *			</server>
  *		</servers>
- *
- *		<zones>
- *			<zone id="1" name="w1" type="Snowbull.Game.GameZone" server="100" />
- *			<zone id="2" name="w1" type="Snowbull.Login.LoginZone" server="1" />
- *		</zones>
  *	</snowbull>
  */
 
@@ -43,14 +46,6 @@ namespace Snowbull.Configuration {
 	public class SnowbullConfigurationSection : ConfigurationSection {
 		public static SnowbullConfigurationSection GetConfiguration() {
 			return (SnowbullConfigurationSection) ConfigurationManager.GetSection("snowbull") ?? new SnowbullConfigurationSection();
-		}
-
-		[ConfigurationProperty("zones")]
-		[ConfigurationCollection(typeof(Zones), AddItemName = "zone")]
-		public Zones Zones {
-			get {
-				return this["zones"] as Zones;
-			}
 		}
 
 		[ConfigurationProperty("servers")]
