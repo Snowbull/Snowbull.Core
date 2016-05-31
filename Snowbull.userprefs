@@ -1,14 +1,21 @@
 ﻿<Properties StartupItem="Snowbull/Snowbull.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Snowbull/Properties/AssemblyInfo.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Snowbull/app.config">
     <Files>
-      <File FileName="Snowbull/Login/LoginUser.cs" Line="2" Column="25" />
-      <File FileName="Snowbull/Login/LoginUserActor.cs" Line="2" Column="20" />
-      <File FileName="Snowbull/Game/GameZoneActor.cs" Line="2" Column="19" />
-      <File FileName="Snowbull/Login/LoginZone.cs" Line="2" Column="25" />
-      <File FileName="Snowbull/Login/LoginZoneActor.cs" Line="2" Column="25" />
-      <File FileName="Snowbull/Properties/AssemblyInfo.cs" Line="12" Column="4" />
+      <File FileName="Snowbull/app.config" Line="8" Column="24" />
+      <File FileName="Snowbull/Program.cs" Line="26" Column="34" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Snowbull" expanded="True">
+            <Node name="Snowbull" expanded="True">
+              <Node name="app.config" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

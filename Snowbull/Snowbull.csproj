@@ -17,8 +17,8 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
     <PlatformTarget>x86</PlatformTarget>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>full</DebugType>
@@ -26,8 +26,8 @@
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
     <PlatformTarget>x86</PlatformTarget>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -58,6 +58,7 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -86,6 +87,11 @@
     <Compile Include="Game\GameZone.cs" />
     <Compile Include="SnowbullActor.cs" />
     <Compile Include="Connection.cs" />
+    <Compile Include="Configuration\SnowbullConfigurationSection.cs" />
+    <Compile Include="Configuration\Zones.cs" />
+    <Compile Include="Configuration\Zone.cs" />
+    <Compile Include="Configuration\Server.cs" />
+    <Compile Include="Configuration\Servers.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -98,5 +104,6 @@
     <Folder Include="Game\" />
     <Folder Include="Login\" />
     <Folder Include="Data\Models\Immutable\" />
+    <Folder Include="Configuration\" />
   </ItemGroup>
 </Project>
