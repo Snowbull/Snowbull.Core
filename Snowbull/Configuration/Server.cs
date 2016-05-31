@@ -27,9 +27,13 @@ using System.Configuration;
 namespace Snowbull.Configuration {
 	public class Server : ConfigurationElement {
 		[ConfigurationProperty("id", IsRequired = true)]
-		public int Id {
+		public string Id {
 			get {
-				return int.Parse(this["id"] as string);
+				// So I wanted this and other integers to be of type int
+				// but whether I put int.Parse() or Convert.ToInt32() here
+				// it would not work. So I've left it (in hacky fashion)
+				// as a string.
+				return this["id"] as string;
 			}
 		}
 
@@ -41,9 +45,9 @@ namespace Snowbull.Configuration {
 		}
 
 		[ConfigurationProperty("port", IsRequired = true)]
-		public int Port {
+		public string Port {
 			get {
-				return int.Parse(this["port"] as string);
+				return this["port"] as string;
 			}
 		}
 

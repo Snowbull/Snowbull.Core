@@ -34,17 +34,10 @@ namespace Snowbull.Configuration {
 			}
 		}
 
-		[ConfigurationProperty("server", IsRequired = true)]
-		public int Server {
-			get {
-				return int.Parse(this["server"] as string);
-			}
-		}
-
 		[ConfigurationProperty("type", IsRequired = true)]
-		public Type Type {
+		public string Type {
 			get {
-				return Type.GetType(this["type"] as string);
+				return this["type"] as string;
 			}
 		}
 	}

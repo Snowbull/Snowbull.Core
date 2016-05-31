@@ -27,12 +27,12 @@
  *		<servers>
  *			<server id="1" name="Login" port="6112">
  *				<zones>
- *					<zone name="w1" type="Snowbull.Login.LoginZone" server="1" />
+ *					<zone name="w1" type="Snowbull.Login.LoginZone" />
  *				</zones>
  *			</server>
  *			<server id="100" name="The Bull" port="9875">
  *				<zones>
- *					<zone name="w1" type="Snowbull.Game.GameZone" server="100" />
+ *					<zone name="w1" type="Snowbull.Game.GameZone" />
  *				</zones>
  *			</server>
  *		</servers>
