@@ -31,22 +31,28 @@ namespace Snowbull.API.Observer {
 			private set;
 		}
 
-		internal IActorRef Actor {
+		internal IActorRef ObservableActor {
 			get;
-			set;
+			private set;
 		}
 
-		public Observable(string name, IActorContext context, IActorRef parent) {
+        internal IActorRef InternalActor {
+            get;
+            private set;
+        }
+
+		public Observable(string name, IActorContext context, Observable parent) {
 			Name = name;
-			Actor = context.ActorOf(API.Observer.ObservableActor.Props(this, parent));
+			ObservableActor = context.ActorOf(API.Observer.ObservableActor.Props(this, parent));
+            InternalActor = context.Self;
 		}
 
 		public void Send(Packets.ISendPacket packet) {
-			Actor.Tell(packet);
+			InternalActor.Tell(packet);
 		}
 
 		internal void Notify(Events.Event e) {
-			Actor.Tell(e);
+			ObservableActor.Tell(e);
 		}
 	}
 }

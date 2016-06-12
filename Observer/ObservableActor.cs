@@ -27,34 +27,30 @@ using System.Collections.Generic;
 
 namespace Snowbull.API.Observer {
 	internal sealed class ObservableActor : ReceiveActor {
-		private IActorRef oparent;
-		private List<IActorRef> observers = new List<IActorRef>();
-		private Dictionary<Events.CancellableEvent, Poll> polls = new Dictionary<Events.CancellableEvent, Poll>();
-		private Dictionary<IActorRef, IObservable> children = new Dictionary<IActorRef, IObservable>();
+        private readonly Observable Parent;
+        private readonly Observable Observable;
+		private readonly List<IActorRef> observers = new List<IActorRef>();
+		private readonly Dictionary<Events.CancellableEvent, Poll> polls = new Dictionary<Events.CancellableEvent, Poll>();
+		private readonly Dictionary<IActorRef, IObservable> children = new Dictionary<IActorRef, IObservable>();
 
-		private Observable Observable {
-			get;
-			set;
-		}
-
-		public static Props Props(Observable observable, IActorRef parent) {
+        public static Props Props(Observable observable, Observable parent) {
 			return Akka.Actor.Props.Create(() => new ObservableActor(observable, parent));
 		}
 
 		protected override void PreStart() {
 			base.PreStart();
-			if(oparent != null)
-				oparent.Tell(new NewChild(Observable));
+			if(Parent != null)
+				Parent.ObservableActor.Tell(new Born(Observable));
 		}
 
-		public ObservableActor(Observable observable, IActorRef parent) {
+		public ObservableActor(Observable observable, Observable parent) {
 			Observable = observable;
-			oparent = parent;
+			Parent = parent;
 			Receive<Events.IEvent>(Event);
 			Receive<RegisterObserver>(RegisterObserver);
 			Receive<CancellableEventResponse>(Vote);
 			Receive<Terminated>(Terminated);
-			Receive<NewChild>(NewChild);
+			Receive<Born>(Born);
 		}
 
 		private void RegisterObserver(RegisterObserver ro) {
@@ -88,9 +84,9 @@ namespace Snowbull.API.Observer {
 						ReturnConsensus(poll);
 		}
 
-		private void NewChild(NewChild nc) {
-			children.Add(nc.Child.Actor, nc.Child);
-			Context.Watch(nc.Child.Actor);
+		private void Born(Born nc) {
+			children.Add(nc.Child.ObservableActor, nc.Child);
+			Context.Watch(nc.Child.ObservableActor);
 			Events.Notifications.NewObservable n = new Events.Notifications.NewObservable(Observable, nc.Child);
 			foreach(IActorRef observer in observers)
 				observer.Tell(new Notification(Observable, n));
@@ -132,13 +128,13 @@ namespace Snowbull.API.Observer {
 		}
 	}
 
-	internal sealed class NewChild {
+	internal sealed class Born {
 		public Observable Child {
 			get;
 			private set;
 		}
 
-		public NewChild(Observable child) {
+		public Born(Observable child) {
 			Child = child;
 		}
 	}

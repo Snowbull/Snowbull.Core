@@ -25,6 +25,13 @@ using System;
 
 namespace Snowbull.API {
 	public interface IUser : Observer.IObservable {
+        IConnection Connection {
+            get;
+        }
+
+        IZone Zone {
+            get;
+        }
 	}
 }
 

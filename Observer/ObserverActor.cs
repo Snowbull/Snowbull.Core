@@ -42,7 +42,7 @@ namespace Snowbull.API.Observer {
 		private void Observe(Observe observe) {
 			Observable observable = (observe.Observable as Observable);
 			if(observable != null)
-				observable.Actor.Tell(new RegisterObserver(Self));
+				observable.ObservableActor.Tell(new RegisterObserver(Self));
 		}
 
 		private void HandleNotification(Notification n) {

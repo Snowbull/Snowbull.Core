@@ -26,6 +26,10 @@ using System.Net;
 
 namespace Snowbull.API {
 	public interface IConnection : Observer.IObservable {
+        IServer Server {
+            get;
+        }
+
 		EndPoint Address {
 			get;
 		}

@@ -77,7 +77,7 @@ namespace Snowbull.API.Observer {
 		protected abstract bool Notified(IObservable source, Events.ICancellableEvent e);
 
 		protected void Observe(IObservable observable) {
-			(observable as Observable).Actor.Tell(new RegisterObserver(Actor));
+			(observable as Observable).ObservableActor.Tell(new RegisterObserver(Actor));
 			observing.Add(observable);
 		}
 	}

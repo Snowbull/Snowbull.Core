@@ -25,6 +25,9 @@ using System;
 
 namespace Snowbull.API {
     public interface IZone : Observer.IObservable {
+        IServer Server {
+            get;
+        }
     }
 }
 
