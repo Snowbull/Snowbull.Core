@@ -18,7 +18,7 @@
       <File FileName="Snowbull/Login/LoginZoneActor.cs" Line="1" Column="1" />
       <File FileName="Snowbull/Login/LoginUser.cs" Line="1" Column="1" />
       <File FileName="Snowbull/Login/LoginZone.cs" Line="1" Column="1" />
-      <File FileName="Snowbull/Game/GameZoneActor.cs" Line="30" Column="100" />
+      <File FileName="Snowbull/Game/GameZoneActor.cs" Line="30" Column="74" />
       <File FileName="Snowbull/Game/GameZone.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
