@@ -27,12 +27,18 @@ using Akka.Actor;
 
 namespace Snowbull {
 	internal class Connection : API.Observer.Observable, API.IConnection {
+		public API.IServer Server {
+			get;
+			private set;
+		}
+
 		public EndPoint Address {
 			get;
 			private set;
 		}
 
-		public Connection(EndPoint address, IActorContext context, IActorRef parent) : base(address.ToString(), context, parent) {
+		public Connection(EndPoint address, IActorContext context, Server server) : base(address.ToString(), context, server) {
+			Server = server;
 			Address = address;
 		}
 	}

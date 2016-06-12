@@ -1,21 +1,26 @@
 ﻿<Properties StartupItem="Snowbull/Snowbull.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Snowbull/app.config">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Snowbull/Game/GameZoneActor.cs">
     <Files>
-      <File FileName="Snowbull/app.config" Line="8" Column="24" />
-      <File FileName="Snowbull/Program.cs" Line="26" Column="34" />
+      <File FileName="Snowbull/app.config" Line="1" Column="1" />
+      <File FileName="Snowbull/Program.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Server.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/ServerActor.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Login/LoginUserActor.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/UserActor.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/SnowbullActor.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Snowbull.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Connection.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/User.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Zone.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/ZoneActor.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/ConnectionActor.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Login/LoginZoneActor.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Login/LoginUser.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Login/LoginZone.cs" Line="1" Column="1" />
+      <File FileName="Snowbull/Game/GameZoneActor.cs" Line="30" Column="100" />
+      <File FileName="Snowbull/Game/GameZone.cs" Line="1" Column="1" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="Snowbull" expanded="True">
-            <Node name="Snowbull" expanded="True">
-              <Node name="app.config" selected="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

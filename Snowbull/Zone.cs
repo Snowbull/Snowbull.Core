@@ -26,8 +26,13 @@ using Akka.Actor;
 
 namespace Snowbull {
 	abstract class Zone : API.Observer.Observable, API.IZone {
+		public API.IServer Server {
+			get;
+			private set;
+		}
 
-		public Zone(string name, IActorContext context, IActorRef parent) : base(name, context, parent) {
+		public Zone(string name, IActorContext context, Server server) : base(name, context, server) {
+			Server = server;
 		}
 	}
 }

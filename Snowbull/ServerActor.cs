@@ -62,12 +62,12 @@ namespace Snowbull {
         }
 
         private void AddZone(AddZone zone) {
-			zones.Add(zone.Name, Context.ActorOf(zone.Zone(Self, Observable.Actor), "zone(" + zone.Name + ")"));
+			zones.Add(zone.Name, Context.ActorOf(zone.Zone((Server) Observable), "zone(" + zone.Name + ")"));
         }
 
         private void Connected(Tcp.Connected connected) {
             Logger.Info("New client at " + connected.RemoteAddress + " connected!");
-			IActorRef connection = Context.ActorOf(ConnectionActor.Props(Self, Sender, connected.RemoteAddress, xmlMap, xtMap, Observable.Actor), "connection(" + connected.RemoteAddress + ")");
+			IActorRef connection = Context.ActorOf(ConnectionActor.Props((Server) Observable, Sender, connected.RemoteAddress, xmlMap, xtMap), "connection(" + connected.RemoteAddress + ")");
             Sender.Tell(new Tcp.Register(connection));
         }
 
@@ -83,7 +83,7 @@ namespace Snowbull {
 
     }
 
-    public class AddZone {
+    class AddZone {
         public string Name {
             get;
             private set;

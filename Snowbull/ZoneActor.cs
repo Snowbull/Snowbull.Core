@@ -29,17 +29,17 @@ using Akka.Event;
 
 namespace Snowbull {
 	abstract class ZoneActor : SnowbullActor {
-        private readonly Dictionary<IActorRef, IActorRef> users = new Dictionary<IActorRef, IActorRef>();
+        private readonly Dictionary<IActorRef, User> users = new Dictionary<IActorRef, User>();
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
-        protected readonly IActorRef server;
+        protected readonly Server server;
 
-        protected ReadOnlyDictionary<IActorRef, IActorRef> Users {
+        protected ReadOnlyDictionary<IActorRef, User> Users {
             get {
-                return new ReadOnlyDictionary<IActorRef, IActorRef>(users);
+                return new ReadOnlyDictionary<IActorRef, User>(users);
             }
         }
 
-		public ZoneActor(string name, Func<string, IActorContext, API.Observer.Observable> creator, IActorRef server) : base(creator(name, Context)) {
+		public ZoneActor(string name, Func<string, IActorContext, API.Observer.Observable> creator, Server server) : base(creator(name, Context)) {
             this.server = server;
             BecomeStacked(Running);
         }
@@ -47,32 +47,34 @@ namespace Snowbull {
         protected virtual void Running() {
             Receive<Authenticate>(Authenticate);
             Receive<UserInitialised>(UserInitialised);
-            Receive<UserStopped>(UserStopped);
 			Receive<API.Packets.ISendPacket>(SendPacket);
+			Receive<Terminated>(Terminated);
         }
 
         protected abstract void Authenticate(Authenticate authenticate);
 
         private void UserInitialised(UserInitialised ui) {
-            users.Add(ui.Connection, ui.User);
-        }
-
-        private void UserStopped(UserStopped us) {
-            users.Remove(us.Connection);
+			users.Add(ui.User.InternalActor, ui.User);
+			Context.Watch(ui.User.InternalActor);
         }
 
 		private void SendPacket(API.Packets.ISendPacket packet) {
 			foreach(IActorRef user in users.Values)
 				user.Forward(packet);
 		}
+
+		private void Terminated(Terminated t) {
+			if(users.ContainsKey(t.ActorRef))
+				users.Remove(t.ActorRef);
+		}
     }
 
-    public class Authenticate {
+    internal class Authenticate {
         /// <summary>
         /// Gets the sender.
         /// </summary>
         /// <value>The sender.</value>
-        public IActorRef Sender {
+        public Connection Sender {
             get;
             private set;
         }
@@ -97,20 +99,20 @@ namespace Snowbull {
         /// <param name="request">Request.</param>
         /// <param name="sender">Sender.</param>
         /// <param name="key">Random key.</param> 
-        public Authenticate(API.Packets.Xml.Receive.Authentication.Login request, IActorRef sender, string key) {
+        public Authenticate(API.Packets.Xml.Receive.Authentication.Login request, Connection sender, string key) {
             Request = request;
             Sender = sender;
             Key = key;
         }
     }
 
-    public class UserInitialised {
-        public IActorRef Connection {
+    internal class UserInitialised {
+		public Connection Connection {
             get;
             private set;
         }
 
-        public IActorRef User {
+        public User User {
             get;
             private set;
         }
@@ -120,27 +122,10 @@ namespace Snowbull {
 			private set;
 		}
 
-		public UserInitialised(IActorRef connection, IActorRef user, string username) {
+		public UserInitialised(Connection connection, User user, string username) {
             Connection = connection;
             User = user;
 			Username = username;
-        }
-    }
-
-    public class UserStopped {
-        public IActorRef Connection {
-            get;
-            private set;
-        }
-
-        public IActorRef User {
-            get;
-            private set;
-        }
-
-        public UserStopped(IActorRef connection, IActorRef user) {
-            Connection = connection;
-            User = user;
         }
     }
 }

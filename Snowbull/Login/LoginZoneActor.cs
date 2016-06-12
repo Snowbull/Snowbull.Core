@@ -28,11 +28,11 @@ using System.Data.Entity;
 namespace Snowbull.Login {
     sealed class LoginZoneActor : ZoneActor {
 
-		public static Props Props(string name, IActorRef server, IActorRef oparent) {
-			return Akka.Actor.Props.Create(() => new LoginZoneActor(name, server, oparent));
+		public static Props Props(string name, Server server) {
+			return Akka.Actor.Props.Create(() => new LoginZoneActor(name, server));
         }
 
-		public LoginZoneActor(string name, IActorRef server, IActorRef oparent) : base(name, (n, a) => new LoginZone(n, a, oparent), server) {
+		public LoginZoneActor(string name, Server server) : base(name, (n, a) => new LoginZone(n, a, server), server) {
         }
 
         protected override void Running() {
@@ -51,22 +51,22 @@ namespace Snowbull.Login {
         }
 
         private void Authentication(Authentication auth) {
-            IActorRef connection = auth.Request.Sender;
+            Connection connection = auth.Request.Sender;
             if(auth.Credentials != null) {
 				logger.Debug("PASSWORD: " + auth.Credentials.Password);
                 string hash = API.Cryptography.Hashing.HashPassword(auth.Credentials.Password, auth.Request.Key);
                 if(auth.Request.Request.Password == hash) {
                     logger.Debug("Authenticated as '" + auth.Credentials.Username + "'!");
-					connection.Tell(new Authenticated(LoginUserActor.Props(auth.Credentials.Id, auth.Credentials.Username, connection, Self, server, Observable.Actor), auth.Credentials), Self);
+					connection.InternalActor.Tell(new Authenticated(LoginUserActor.Props(auth.Credentials.Id, auth.Credentials.Username, connection, (Zone) Observable), auth.Credentials), Self);
                 }else{
                     logger.Info("Failed to identify as '" + auth.Request.Request.Username + "'.");
-                    connection.Tell(new API.Packets.Xt.Send.Error(API.Errors.PASSWORD_WRONG, -1), Self);
-                    connection.Tell(new Disconnect());
+					connection.InternalActor.Tell(new API.Packets.Xt.Send.Error(API.Errors.PASSWORD_WRONG, -1), Self);
+					connection.InternalActor.Tell(new Disconnect());
                 }
             }else{
                 logger.Info("Attempt to login as non existent user '" + auth.Request.Request.Username + "'.");
-                connection.Tell(new API.Packets.Xt.Send.Error(API.Errors.NAME_NOT_FOUND, -1), Self);
-                connection.Tell(new Disconnect());
+				connection.InternalActor.Tell(new API.Packets.Xt.Send.Error(API.Errors.NAME_NOT_FOUND, -1), Self);
+				connection.InternalActor.Tell(new Disconnect());
             }
         }
     }

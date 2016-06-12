@@ -28,9 +28,9 @@ using Akka.IO;
 using System.Collections.Generic;
 
 namespace Snowbull {
-	public delegate Props ZoneInitialiser(IActorRef server, IActorRef oparent);
+	delegate Props ZoneInitialiser(Server server);
 
-    public class Snowbull {
+    class Snowbull {
         private readonly ActorSystem actors = ActorSystem.Create("Snowbull");
         private readonly IActorRef actor;
 

@@ -25,8 +25,20 @@ using System;
 using Akka.Actor;
 
 namespace Snowbull {
-	class User : API.Observer.Observable, API.IUser {
-		public User(string name, IActorContext context, IActorRef parent) : base(name, context, parent) {
+	abstract class User : API.Observer.Observable, API.IUser {
+		public API.IConnection Connection {
+			get;
+			private set;
+		}
+
+		public API.IZone Zone {
+			get;
+			private set;
+		}
+
+		public User(string name, IActorContext context, Connection connection, Zone zone) : base(name, context, zone) {
+			Connection = connection;
+			Zone = zone;
 		}
 	}
 }
