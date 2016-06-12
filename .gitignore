@@ -1,4 +1,4 @@
-Snowbull/bin/Debug/*
 *.dll
 *.exe
 *.mdb
+*.userprefs
