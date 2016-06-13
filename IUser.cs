@@ -24,7 +24,15 @@
 using System;
 
 namespace Snowbull.API {
-	public interface IUser : Observer.IObservable {
+    public interface IUser : IContext {
+        int Id {
+            get;
+        }
+
+        string Username {
+            get;
+        }
+
         IConnection Connection {
             get;
         }
