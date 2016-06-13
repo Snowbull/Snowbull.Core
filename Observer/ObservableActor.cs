@@ -63,10 +63,15 @@ namespace Snowbull.API.Observer {
 
 		private void Event(Events.IEvent e) {
 			Events.CancellableEvent c = e as Events.CancellableEvent;
-			if(c != null)
-				polls.Add(c, new Poll(c, observers.ToArray()));
-			foreach(IActorRef observer in observers)
-				observer.Tell(new Notification(Observable, e), Self);
+            if(observers.Count != 0) {
+                if(c != null)
+                    polls.Add(c, new Poll(c, observers.ToArray()));
+                foreach(IActorRef observer in observers)
+                    observer.Tell(new Notification(Observable, e), Self);
+            }else{
+                if(c != null)
+                    Context.Parent.Tell(c);
+            }
 		}
 
 		private void Vote(CancellableEventResponse response) {
@@ -76,12 +81,14 @@ namespace Snowbull.API.Observer {
 		}
 
 		private void Terminated(Terminated t) {
-			if(children.ContainsKey(t.ActorRef))
-				children.Remove(t.ActorRef);
-			else
-				foreach(Poll poll in polls.Values)
-					if(poll.Left(t.ActorRef))
-						ReturnConsensus(poll);
+            if(children.ContainsKey(t.ActorRef)) {
+                children.Remove(t.ActorRef);
+            }else{
+                foreach(Poll poll in polls.Values)
+                    if(poll.Left(t.ActorRef))
+                        ReturnConsensus(poll);
+                observers.Remove(t.ActorRef);
+            }
 		}
 
 		private void Born(Born nc) {
@@ -95,7 +102,7 @@ namespace Snowbull.API.Observer {
 		private void ReturnConsensus(Poll poll) {
 			Consensus consensus = poll.Consensus();
 			polls.Remove(poll.Event);
-			Context.Parent.Tell(consensus);
+            if(!consensus.Cancelled) Context.Parent.Tell(poll.Event);
 		}
 	}
 
