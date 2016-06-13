@@ -28,27 +28,22 @@ using Akka.IO;
 using System.Collections.Generic;
 
 namespace Snowbull {
-	delegate Props ZoneInitialiser(Server server);
+	delegate Zone ZoneInitialiser(IActorContext context, Server server);
 
     class Snowbull {
         private readonly ActorSystem actors = ActorSystem.Create("Snowbull");
-        private readonly IActorRef actor;
+        private readonly Server server;
 
-        public IActorRef Actor {
+		public Server Server {
             get {
-                return actor;
+                return server;
             }
         }
 
         public Snowbull(string name, Dictionary<string, ZoneInitialiser> zones) {
-			actor = actors.ActorOf(ServerActor.Props(name), "server(" + name + ")");
+			server = new Server(name, actors);
             foreach(KeyValuePair<string, ZoneInitialiser> zone in zones)
-                actor.Tell(new AddZone(zone.Key, zone.Value));
-        }
-
-        public void Bind(IPAddress host, int port) {
-            if(host == null) throw new ArgumentNullException("host");
-            actors.Tcp().Tell(new Tcp.Bind(actor, new IPEndPoint(host, port)), actor);
+				server.ActorRef.Tell(new AddZone(zone.Key, zone.Value));
         }
     }
 }

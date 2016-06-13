@@ -7,12 +7,18 @@ using System.Data.Entity;
 
 namespace Snowbull {
 	abstract class UserActor : SnowbullActor {
-        protected readonly Connection connection;
-        protected readonly Zone zone;
-        protected readonly Server server;
+		protected readonly User user;
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
-        protected readonly int id;
-        protected readonly string username;
+
+		protected int Id {
+			get { return user.Id; }
+		}
+
+		protected string Username {
+			get { return user.Username; }
+		}
+
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Snowbull.User"/> class.
@@ -22,17 +28,8 @@ namespace Snowbull {
         /// <param name="zone">The zone the user belongs to.</param> 
         /// <param name="id">The user's id.</param>
         /// <param name="username">The user's username.</param>  
-		public UserActor(int id, string username, Func<string, IActorContext, User> creator, Connection connection, Zone zone, Server server) : base(creator(username, Context)) {
-            this.id = id;
-            this.username = username;
-            this.connection = connection;
-            this.zone = zone;
-            this.server = server;
-        }
-
-        protected override void PreStart() {
-			zone.InternalActor.Tell(new UserInitialised(connection, (User) Observable, username));
-			Observable.Notify(new API.Events.Authentication.Authenticated(username));
+		public UserActor(User user) : base() {
+			this.user = user;
         }
     }
 }

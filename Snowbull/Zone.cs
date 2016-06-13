@@ -25,13 +25,24 @@ using System;
 using Akka.Actor;
 
 namespace Snowbull {
-	abstract class Zone : API.Observer.Observable, API.IZone {
+	abstract class Zone : API.IZone, IContext {
+		public string Name {
+			get;
+			private set;
+		}
+
+		public IActorRef ActorRef {
+			get;
+			protected set;
+		}
+
 		public API.IServer Server {
 			get;
 			private set;
 		}
 
-		public Zone(string name, IActorContext context, Server server) : base(name, context, server) {
+		public Zone(string name, Server server) {
+			Name = name;
 			Server = server;
 		}
 	}

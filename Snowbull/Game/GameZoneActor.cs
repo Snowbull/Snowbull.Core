@@ -26,11 +26,11 @@ using Akka.Actor;
 
 namespace Snowbull.Game {
     sealed class GameZoneActor : ZoneActor {
-		public static Props Props(string name, Server server) {
-			return Akka.Actor.Props.Create(() => new GameZoneActor(name, server));
+		public static Props Props(GameZone zone) {
+			return Akka.Actor.Props.Create(() => new GameZoneActor(zone));
 		}
 
-		public GameZoneActor(string name, Server server) : base(name, (n, a) => new GameZone(n, a, server), server) {
+		public GameZoneActor(GameZone zone) : base(zone) {
 
         }
 

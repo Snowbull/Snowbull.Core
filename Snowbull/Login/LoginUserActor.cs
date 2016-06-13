@@ -34,17 +34,17 @@ namespace Snowbull.Login {
         /// <param name="zone">The zone the user is in.</param> 
         /// <param name="id">The user's id.</param>
         /// <param name="username">The user's username.</param>  
-		public static Props Props(int id, string username, Connection connection, Zone zone) {
-			return Akka.Actor.Props.Create(() => new LoginUserActor(id, username, connection, zone));
+		public static Props Props(LoginUser user) {
+			return Akka.Actor.Props.Create(() => new LoginUserActor(user));
         }
 
-		public LoginUserActor(int id, string username, Connection connection, Zone zone) : base(id, username, (n, a) => new LoginUser(n, a, connection, (LoginZone) zone), connection, zone, (Server) zone.Server) {
+		public LoginUserActor(LoginUser user) : base(user) {
         }
 
         protected override void PreStart() {
             base.PreStart();
 			string key = API.Cryptography.Random.GenerateRandomKey(32);
-			connection.InternalActor.Tell(new API.Packets.Xt.Send.Authentication.Login(id, key, ""));
+			((Connection) user.Connection).ActorRef.Tell(new API.Packets.Xt.Send.Authentication.Login(user.Id, key, ""));
         }
     }
 }

@@ -27,12 +27,11 @@ using System.Data.Entity;
 
 namespace Snowbull.Login {
     sealed class LoginZoneActor : ZoneActor {
-
-		public static Props Props(string name, Server server) {
-			return Akka.Actor.Props.Create(() => new LoginZoneActor(name, server));
+		public static Props Props(LoginZone zone) {
+			return Akka.Actor.Props.Create(() => new LoginZoneActor(zone));
         }
 
-		public LoginZoneActor(string name, Server server) : base(name, (n, a) => new LoginZone(n, a, server), server) {
+		public LoginZoneActor(LoginZone zone) : base(zone) {
         }
 
         protected override void Running() {
@@ -53,20 +52,20 @@ namespace Snowbull.Login {
         private void Authentication(Authentication auth) {
             Connection connection = auth.Request.Sender;
             if(auth.Credentials != null) {
-				logger.Debug("PASSWORD: " + auth.Credentials.Password);
                 string hash = API.Cryptography.Hashing.HashPassword(auth.Credentials.Password, auth.Request.Key);
                 if(auth.Request.Request.Password == hash) {
                     logger.Debug("Authenticated as '" + auth.Credentials.Username + "'!");
-					connection.InternalActor.Tell(new Authenticated(LoginUserActor.Props(auth.Credentials.Id, auth.Credentials.Username, connection, (Zone) Observable), auth.Credentials), Self);
+					LoginUser user = new LoginUser(auth.Credentials.Id, auth.Credentials.Username, Context, connection, (LoginZone) zone);
+					connection.ActorRef.Tell(new Authenticated(user, auth.Credentials), Self);
                 }else{
                     logger.Info("Failed to identify as '" + auth.Request.Request.Username + "'.");
-					connection.InternalActor.Tell(new API.Packets.Xt.Send.Error(API.Errors.PASSWORD_WRONG, -1), Self);
-					connection.InternalActor.Tell(new Disconnect());
+					connection.ActorRef.Tell(new API.Packets.Xt.Send.Error(API.Errors.PASSWORD_WRONG, -1), Self);
+					connection.ActorRef.Tell(new Disconnect());
                 }
             }else{
                 logger.Info("Attempt to login as non existent user '" + auth.Request.Request.Username + "'.");
-				connection.InternalActor.Tell(new API.Packets.Xt.Send.Error(API.Errors.NAME_NOT_FOUND, -1), Self);
-				connection.InternalActor.Tell(new Disconnect());
+				connection.ActorRef.Tell(new API.Packets.Xt.Send.Error(API.Errors.NAME_NOT_FOUND, -1), Self);
+				connection.ActorRef.Tell(new Disconnect());
             }
         }
     }

@@ -23,40 +23,27 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Akka.Actor;
 using Akka.Event;
 
 namespace Snowbull {
 	abstract class ZoneActor : SnowbullActor {
-        private readonly Dictionary<IActorRef, User> users = new Dictionary<IActorRef, User>();
+        protected readonly Dictionary<IActorRef, User> users = new Dictionary<IActorRef, User>();
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
-        protected readonly Server server;
+		protected readonly Zone zone;
 
-        protected ReadOnlyDictionary<IActorRef, User> Users {
-            get {
-                return new ReadOnlyDictionary<IActorRef, User>(users);
-            }
-        }
-
-		public ZoneActor(string name, Func<string, IActorContext, API.Observer.Observable> creator, Server server) : base(creator(name, Context)) {
-            this.server = server;
+		public ZoneActor(Zone zone) {
+			this.zone = zone;
             BecomeStacked(Running);
         }
 
         protected virtual void Running() {
             Receive<Authenticate>(Authenticate);
-            Receive<UserInitialised>(UserInitialised);
 			Receive<API.Packets.ISendPacket>(SendPacket);
 			Receive<Terminated>(Terminated);
         }
 
         protected abstract void Authenticate(Authenticate authenticate);
-
-        private void UserInitialised(UserInitialised ui) {
-			users.Add(ui.User.InternalActor, ui.User);
-			Context.Watch(ui.User.InternalActor);
-        }
 
 		private void SendPacket(API.Packets.ISendPacket packet) {
 			foreach(IActorRef user in users.Values)
@@ -103,29 +90,6 @@ namespace Snowbull {
             Request = request;
             Sender = sender;
             Key = key;
-        }
-    }
-
-    internal class UserInitialised {
-		public Connection Connection {
-            get;
-            private set;
-        }
-
-        public User User {
-            get;
-            private set;
-        }
-		
-		public string Username {
-			get;
-			private set;
-		}
-
-		public UserInitialised(Connection connection, User user, string username) {
-            Connection = connection;
-            User = user;
-			Username = username;
         }
     }
 }

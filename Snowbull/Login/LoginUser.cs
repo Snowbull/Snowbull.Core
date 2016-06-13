@@ -26,7 +26,7 @@ using Akka.Actor;
 
 namespace Snowbull.Login {
 	class LoginUser : User, API.Login.ILoginUser {
-		public LoginUser(string name, IActorContext context, Connection connection, LoginZone zone) : base(name, context, connection, zone) {
+		public LoginUser(int id, string name, IActorContext c, Connection connection, LoginZone zone) : base(id, name, connection, zone) {
 		}
 	}
 }

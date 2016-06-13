@@ -35,46 +35,43 @@ using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Fu
 
 namespace Snowbull {
 	sealed class ServerActor : SnowbullActor {
+		private readonly Server server;
         private readonly XmlMap xmlMap = API.Packets.PacketMapper.XmlMap();
         private readonly XtMap xtMap = API.Packets.PacketMapper.XtMap();
-        private readonly Dictionary<string, IActorRef> zones = new Dictionary<string, IActorRef>();
+        private readonly Dictionary<string, Zone> zones = new Dictionary<string, Zone>();
 
-		public static Props Props(string name) {
-            return Akka.Actor.Props.Create(() => new ServerActor(name));
+		public static Props Props(Server server) {
+            return Akka.Actor.Props.Create(() => new ServerActor(server));
         }
 
-		public ServerActor(string name) : base(new Server(name, Context)) {
+		public ServerActor(Server server) : base() {
+			this.server = server;
             Receive<Tcp.Bound>(Bound);
             Receive<AddZone>(AddZone);
             Receive<Tcp.Connected>(Connected);
             Receive<Authenticate>(Authenticate);
             Receive<Disconnected>(Disconnected);
-			Type[] types = API.Assemblies.Load("Plugins/").Get();
-			IActorRef[] actors = new IActorRef[types.Length];
-			for(int i = 0; i < types.Length; i++) {
-				Type t = types[i];
-				actors[i] = Context.ActorOf(API.Observer.ObserverActor.Props((API.IServer)Observable, c => (API.Observer.Observer)Activator.CreateInstance(t, new object[] { c })), "plugin(" + i + ")");
-			}
         }
 
         private void Bound(Tcp.Bound bound) {
             Logger.Info("Server bound to " + bound.LocalAddress);
         }
 
-        private void AddZone(AddZone zone) {
-			zones.Add(zone.Name, Context.ActorOf(zone.Zone((Server) Observable), "zone(" + zone.Name + ")"));
+        private void AddZone(AddZone az) {
+			Zone zone = az.Zone(Context, server);
+			zones.Add(zone.Name, zone);
         }
 
         private void Connected(Tcp.Connected connected) {
             Logger.Info("New client at " + connected.RemoteAddress + " connected!");
-			IActorRef connection = Context.ActorOf(ConnectionActor.Props((Server) Observable, Sender, connected.RemoteAddress, xmlMap, xtMap), "connection(" + connected.RemoteAddress + ")");
-            Sender.Tell(new Tcp.Register(connection));
+			Connection connection = new Connection(Context, Sender, connected.RemoteAddress, server, xmlMap, xtMap);
+			Sender.Tell(new Tcp.Register(connection.ActorRef));
         }
 
         private void Authenticate(Authenticate authenticate) {
-            IActorRef zone = zones[authenticate.Request.Zone];
+            Zone zone = zones[authenticate.Request.Zone];
             if(zone != null)
-                zone.Forward(authenticate);
+                zone.ActorRef.Forward(authenticate);
         }
 
         private void Disconnected(Disconnected disconnected) {

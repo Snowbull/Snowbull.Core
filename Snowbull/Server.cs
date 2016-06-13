@@ -22,12 +22,32 @@
  */
 
 using System;
+using System.Net;
 using Akka.Actor;
+using Akka.IO;
 
 namespace Snowbull {
-	sealed class Server : API.Observer.Observable, API.IServer {
+	internal sealed class Server : API.IServer, IContext {
+		private IActorRef tcp;
 
-		public Server(string name, IActorContext context) : base(name, context, null) {
+		public string Name {
+			get;
+			private set;
+		}
+
+		public IActorRef ActorRef {
+			get;
+			private set;
+		}
+
+		public Server(string name, ActorSystem s) {
+			tcp = s.Tcp();
+			Name = name;
+			ActorRef = s.ActorOf(ServerActor.Props(this), "server(" + name + ")");
+		}
+
+		public void Bind(IPEndPoint ep) {
+			tcp.Tell(new Tcp.Bind(ActorRef, ep), ActorRef);
 		}
 	}
 }

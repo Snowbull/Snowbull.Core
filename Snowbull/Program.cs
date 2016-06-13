@@ -36,12 +36,12 @@ namespace Snowbull {
 				Configuration.Server s = config.Servers[i];
 				Dictionary<string, ZoneInitialiser> zones = new Dictionary<string, ZoneInitialiser>();
 				foreach(Configuration.Zone zone in s.Zones) {
-					Type za = Type.GetType(zone.Type + "Actor");
-					MethodInfo props = za.GetMethod("Props");
-					zones.Add(zone.Name, (server) => (Props)props.Invoke(null, new object[] { zone.Name, server }));
+					Type za = Type.GetType(zone.Type);
+					ConstructorInfo constructor = za.GetConstructor(new Type[] { typeof(string), typeof(IActorContext), typeof(Server) });
+					zones.Add(zone.Name, (context, server) => (Zone) constructor.Invoke(new object[] { zone.Name, context, server }));
 				}
 				Snowbull instance = new Snowbull(s.Name, zones);
-				instance.Bind(IPAddress.IPv6Any, int.Parse(s.Port));
+				instance.Server.Bind(new IPEndPoint(IPAddress.IPv6Any, int.Parse(s.Port)));
 				instances[i] = instance;
 			}
 			Console.ReadLine();

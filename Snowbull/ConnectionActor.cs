@@ -35,25 +35,23 @@ using System.Net;
 
 namespace Snowbull {
    	internal sealed class ConnectionActor : SnowbullActor {
-        private readonly Server server;
+		private readonly Connection connection;
         private readonly IActorRef socket;
-        private IActorRef user;
+        private User user;
         private readonly ILoggingAdapter logger = Logging.GetLogger(Context);
-        private readonly EndPoint address;
         private readonly XmlMap xmlMap;
         private readonly XtMap xtMap;
         private string buffer = "";
         private int authenticationPackets = 0;
         private readonly string key = API.Cryptography.Random.GenerateRandomKey(10);
 
-		public static Props Props(Server server, IActorRef socket, EndPoint address, XmlMap xmlMap, XtMap xtMap) {
-            return Akka.Actor.Props.Create(() => new ConnectionActor(server, socket, address, xmlMap, xtMap));
+		public static Props Props(Connection connection, IActorRef socket, XmlMap xmlMap, XtMap xtMap) {
+			return Akka.Actor.Props.Create(() => new ConnectionActor(connection, socket, xmlMap, xtMap));
         }
 
-		public ConnectionActor(Server server, IActorRef socket, EndPoint address, XmlMap xmlMap, XtMap xtMap) : base(new Connection(address, Context, server)) {
-            this.server = server;
+		public ConnectionActor(Connection connection, IActorRef socket, XmlMap xmlMap, XtMap xtMap) : base() {
+			this.connection = connection;
             this.socket = socket;
-            this.address = address;
             this.xmlMap = xmlMap;
             this.xtMap = xtMap;
             BecomeStacked(APICheck);
@@ -86,7 +84,7 @@ namespace Snowbull {
                 if(packet.StartsWith("<")) // Better than throwing it at a parser to determine it.
                     ProcessXml(packet);
             }else{
-                logger.Info("Client at '" + address + "' disconnected for sending too many authentication packets.");
+				logger.Info("Client at '" + connection.Address + "' disconnected for sending too many authentication packets.");
                 Disconnect();
             }
             authenticationPackets++;
@@ -201,7 +199,7 @@ namespace Snowbull {
         private void Login(API.Packets.Xml.Receive.Authentication.Login login) {
             UnbecomeStacked();
             BecomeStacked(Authenticating);
-			server.InternalActor.Tell(new Authenticate(login, (Connection) Observable, key), Self);
+			((Server) connection.Server).ActorRef.Tell(new Authenticate(login, connection, key), Self);
         }
 
         private void Authenticating() {
@@ -210,9 +208,10 @@ namespace Snowbull {
         }
 
         private void Authenticate(Authenticated auth) {
-			user = Context.ActorOf(auth.User, "user(" + auth.Credentials.Username + "@" + address + ")");
+			user = auth.User;
             UnbecomeStacked();
             BecomeStacked(Authenticated);
+			Self.Tell(new API.Packets.Xt.Send.Authentication.Login(user.Id, API.Cryptography.Random.GenerateRandomKey(32), ""));
         }
 
         private void Authenticated() {
@@ -221,7 +220,7 @@ namespace Snowbull {
 
         private void Disconnect() {
             UnbecomeStacked();
-            server.InternalActor.Tell(new Disconnected(Self));
+			((Server) connection.Server).ActorRef.Tell(new Disconnected(Self));
         }
 
         private void Disconnect(Disconnect dis) {
@@ -229,9 +228,9 @@ namespace Snowbull {
         }
 
         private void Closed(Tcp.PeerClosed closed) {
-            logger.Info("Peer at '" + address + "' closed the connection.");
+            logger.Info("Peer at '" + connection.Address + "' closed the connection.");
             UnbecomeStacked();
-            server.InternalActor.Tell(new Disconnected(Self));
+			((Server) connection.Server).ActorRef.Tell(new Disconnected(Self));
         }
     }
 
@@ -263,18 +262,18 @@ namespace Snowbull {
 		}
 	}
 
-    public class Authenticated {
+    internal class Authenticated {
 		public Data.Models.Immutable.ImmutableCredentials Credentials {
 			get;
 			private set;
 		}
 
-        public Props User {
+        public User User {
             get;
             private set;
         }
 
-		public Authenticated(Props user, Data.Models.Immutable.ImmutableCredentials credentials) {
+		public Authenticated(User user, Data.Models.Immutable.ImmutableCredentials credentials) {
             User = user;
 			Credentials = credentials;
         }
