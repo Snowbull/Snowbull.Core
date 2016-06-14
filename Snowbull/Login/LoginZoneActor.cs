@@ -36,7 +36,6 @@ namespace Snowbull.Login {
 
         protected override void Running() {
             base.Running();
-            Receive<Authentication>(Authentication);
         }
 
         protected override void Authenticate(Authenticate auth) {
@@ -49,23 +48,17 @@ namespace Snowbull.Login {
             ).PipeTo(Self);
         }
 
-        private void Authentication(Authentication auth) {
-            Connection connection = auth.Request.Sender;
-            if(auth.Credentials != null) {
-                string hash = API.Cryptography.Hashing.HashPassword(auth.Credentials.Password, auth.Request.Key);
-                if(auth.Request.Request.Password == hash) {
-                    logger.Debug("Authenticated as '" + auth.Credentials.Username + "'!");
-					LoginUser user = new LoginUser(auth.Credentials.Id, auth.Credentials.Username, Context, connection, (LoginZone) zone);
-					connection.ActorRef.Tell(new Authenticated(user, auth.Credentials), Self);
+		protected override User Authentication(Authenticate request, Data.Models.Immutable.ImmutableCredentials credentials) {
+            if(credentials != null) {
+				string hash = API.Cryptography.Hashing.HashPassword(credentials.Password, request.Key);
+                if(request.Request.Password == hash) {
+                    logger.Debug("Authenticated as '" + credentials.Username + "'!");
+					return new LoginUser(credentials.Id, credentials.Username, Context, request.Sender, (LoginZone) zone, credentials);
                 }else{
-                    logger.Info("Failed to identify as '" + auth.Request.Request.Username + "'.");
-					connection.ActorRef.Tell(new API.Packets.Xt.Send.Error(API.Errors.PASSWORD_WRONG, -1), Self);
-					connection.ActorRef.Tell(new Disconnect());
+					throw new API.IncorrectPasswordException(request.Sender, string.Format("Peer at {0} failed to identify as '{1}'.", request.Sender.Address, credentials.Username));
                 }
             }else{
-                logger.Info("Attempt to login as non existent user '" + auth.Request.Request.Username + "'.");
-				connection.ActorRef.Tell(new API.Packets.Xt.Send.Error(API.Errors.NAME_NOT_FOUND, -1), Self);
-				connection.ActorRef.Tell(new Disconnect());
+				throw new API.NameNotFoundException(request.Sender, credentials.Username, string.Format("Attempt to login as non existent user '{0}'.", credentials.Username));
             }
         }
     }

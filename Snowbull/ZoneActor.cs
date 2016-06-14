@@ -23,14 +23,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Akka.Actor;
 using Akka.Event;
 
 namespace Snowbull {
 	abstract class ZoneActor : SnowbullActor {
-        protected readonly Dictionary<IActorRef, User> users = new Dictionary<IActorRef, User>();
+        private readonly Dictionary<IActorRef, User> users = new Dictionary<IActorRef, User>();
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
 		protected readonly Zone zone;
+
+		protected ImmutableDictionary<IActorRef, User> Users {
+			get { return users.ToImmutableDictionary(); }
+		}
 
 		public ZoneActor(Zone zone) {
 			this.zone = zone;
@@ -38,12 +43,21 @@ namespace Snowbull {
         }
 
         protected virtual void Running() {
-            Receive<Authenticate>(Authenticate);
+			Receive<Authenticate>(Authenticate);
+			Receive<Authentication>(Authentication);
 			Receive<API.Packets.ISendPacket>(SendPacket);
 			Receive<Terminated>(Terminated);
         }
 
         protected abstract void Authenticate(Authenticate authenticate);
+
+		private void Authentication(Authentication auth) {
+			User user = Authentication(auth.Request, auth.Credentials);
+			users.Add(user.ActorRef, user);
+			Context.Watch(user.ActorRef);
+		}
+
+		protected abstract User Authentication(Authenticate request, Data.Models.Immutable.ImmutableCredentials credentials);
 
 		private void SendPacket(API.Packets.ISendPacket packet) {
 			foreach(IActorRef user in users.Values)
@@ -54,6 +68,7 @@ namespace Snowbull {
 			if(users.ContainsKey(t.ActorRef))
 				users.Remove(t.ActorRef);
 		}
+			
     }
 
     internal class Authenticate {

@@ -37,6 +37,10 @@ namespace Snowbull.Game {
 		protected override void Authenticate(Authenticate authenticate) {
 
         }
+
+		protected override User Authentication(Authenticate request, Data.Models.Immutable.ImmutableCredentials credentials) {
+			return default(User); // TODO
+		}
     }
 }
 

@@ -8,6 +8,7 @@ using System.Data.Entity;
 namespace Snowbull {
 	abstract class UserActor : SnowbullActor {
 		protected readonly User user;
+		protected readonly Connection connection;
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
 
 		protected int Id {
@@ -28,8 +29,10 @@ namespace Snowbull {
         /// <param name="zone">The zone the user belongs to.</param> 
         /// <param name="id">The user's id.</param>
         /// <param name="username">The user's username.</param>  
-		public UserActor(User user) : base() {
+		public UserActor(User user, Data.Models.Immutable.ImmutableCredentials credentials) : base() {
 			this.user = user;
+			connection = (Connection) user.Connection;
+			connection.ActorRef.Tell(new Authenticated(user, credentials), Self);
         }
     }
 }

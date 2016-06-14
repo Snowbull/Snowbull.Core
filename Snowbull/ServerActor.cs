@@ -53,6 +53,26 @@ namespace Snowbull {
             Receive<Disconnected>(Disconnected);
         }
 
+		protected override SupervisorStrategy SupervisorStrategy() {
+			return new OneForOneStrategy(
+				Decider.From(ex => {
+					if(ex is API.IncorrectPasswordException) {
+						API.IConnection connection = ((API.IncorrectPasswordException) ex).Connection;
+						connection.Send(new API.Packets.Xt.Send.Error(API.Errors.PASSWORD_WRONG, -1));
+						connection.Close();
+						return Directive.Resume;
+					}else if(ex is API.NameNotFoundException) {
+						API.IConnection connection = ((API.NameNotFoundException) ex).Connection;
+						connection.Send(new API.Packets.Xt.Send.Error(API.Errors.NAME_NOT_FOUND, -1));
+						connection.Close();
+						return Directive.Resume;
+					}else{
+						return Directive.Restart;
+					}
+				})
+			);
+		}
+
         private void Bound(Tcp.Bound bound) {
             Logger.Info("Server bound to " + bound.LocalAddress);
         }

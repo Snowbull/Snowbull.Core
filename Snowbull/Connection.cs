@@ -49,6 +49,18 @@ namespace Snowbull {
 			Address = address;
 			ActorRef = c.ActorOf(ConnectionActor.Props(this, socket, xmlMap, xtMap));
 		}
+
+		internal void Send(API.Packets.ISendPacket packet, IActorRef sender) {
+			ActorRef.Tell(packet, sender);
+		}
+
+		public void Send(API.Packets.ISendPacket packet) {
+			ActorRef.Tell(packet);
+		}
+
+		public void Close() {
+			ActorRef.Tell(new Disconnect());
+		}
 	}
 }
 
