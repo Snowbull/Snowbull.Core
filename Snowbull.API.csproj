@@ -68,6 +68,8 @@
     <Compile Include="Packets\Xml\Send\Policy\Allow.cs" />
     <Compile Include="Packets\Xml\Send\Policy\Rule.cs" />
     <Compile Include="IContext.cs" />
+    <Compile Include="IncorrectPasswordException.cs" />
+    <Compile Include="NameNotFoundException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

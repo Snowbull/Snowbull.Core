@@ -33,6 +33,10 @@ namespace Snowbull.API {
 		EndPoint Address {
 			get;
 		}
+
+        void Send(Packets.ISendPacket packet);
+
+        void Close();
 	}
 }
 
