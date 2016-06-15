@@ -47,7 +47,7 @@ namespace Snowbull {
 		public Connection(IActorContext c, IActorRef socket, EndPoint address, Server server, XmlMap xmlMap, XtMap xtMap) {
 			Server = server;
 			Address = address;
-			ActorRef = c.ActorOf(ConnectionActor.Props(this, socket, xmlMap, xtMap));
+			ActorRef = c.ActorOf(ConnectionActor.Props(this, socket, xmlMap, xtMap), string.Format("connection(Server={0},Address={1})", Server.Name, Address));
 		}
 
 		internal void Send(API.Packets.ISendPacket packet, IActorRef sender) {

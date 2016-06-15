@@ -31,7 +31,7 @@ namespace Snowbull {
 	delegate Zone ZoneInitialiser(IActorContext context, Server server);
 
     class Snowbull {
-        private readonly ActorSystem actors = ActorSystem.Create("Snowbull");
+        private readonly ActorSystem actors = ActorSystem.Create("snowbull");
         private readonly Server server;
 
 		public Server Server {

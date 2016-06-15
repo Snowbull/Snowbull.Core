@@ -29,11 +29,20 @@ namespace Snowbull {
         /// <param name="zone">The zone the user belongs to.</param> 
         /// <param name="id">The user's id.</param>
         /// <param name="username">The user's username.</param>  
-		public UserActor(User user, Data.Models.Immutable.ImmutableCredentials credentials) : base() {
+		public UserActor(User user) : base() {
 			this.user = user;
 			connection = (Connection) user.Connection;
-			connection.ActorRef.Tell(new Authenticated(user, credentials), Self);
+
         }
+
+		protected virtual void Running() {
+			Receive<Terminated>(Terminated);
+		}
+
+		protected virtual void Terminated(Terminated t) {
+			if(t.ActorRef == connection.ActorRef)
+				Self.Tell(new Disconnect());
+		}
     }
 }
 

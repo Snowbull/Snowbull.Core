@@ -43,7 +43,7 @@ namespace Snowbull {
 		public Server(string name, ActorSystem s) {
 			tcp = s.Tcp();
 			Name = name;
-			ActorRef = s.ActorOf(ServerActor.Props(this), "server(" + name + ")");
+			ActorRef = s.ActorOf(ServerActor.Props(this), string.Format("server(Name={0})", Name));
 		}
 
 		public void Bind(IPEndPoint ep) {

@@ -34,11 +34,11 @@ namespace Snowbull.Login {
         /// <param name="zone">The zone the user is in.</param> 
         /// <param name="id">The user's id.</param>
         /// <param name="username">The user's username.</param>  
-		public static Props Props(LoginUser user, Data.Models.Immutable.ImmutableCredentials credentials) {
-			return Akka.Actor.Props.Create(() => new LoginUserActor(user, credentials));
+		public static Props Props(LoginUser user) {
+			return Akka.Actor.Props.Create(() => new LoginUserActor(user));
         }
 
-		public LoginUserActor(LoginUser user, Data.Models.Immutable.ImmutableCredentials credentials) : base(user, credentials) {
+		public LoginUserActor(LoginUser user) : base(user) {
         }
 
         protected override void PreStart() {

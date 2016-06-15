@@ -233,6 +233,12 @@ namespace Snowbull {
             UnbecomeStacked();
 			((Server) connection.Server).ActorRef.Tell(new Disconnected(Self));
         }
+
+		protected override void PostStop() {
+			base.PostStop();
+			if(user != null)
+				user.ActorRef.Tell(PoisonPill.Instance);
+		}
     }
 
     public class RawPacketReceived {
@@ -264,19 +270,13 @@ namespace Snowbull {
 	}
 
     internal class Authenticated {
-		public Data.Models.Immutable.ImmutableCredentials Credentials {
-			get;
-			private set;
-		}
-
         public User User {
             get;
             private set;
         }
 
-		public Authenticated(User user, Data.Models.Immutable.ImmutableCredentials credentials) {
+		public Authenticated(User user) {
             User = user;
-			Credentials = credentials;
         }
     }
 

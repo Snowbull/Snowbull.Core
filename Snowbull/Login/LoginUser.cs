@@ -26,8 +26,9 @@ using Akka.Actor;
 
 namespace Snowbull.Login {
 	class LoginUser : User, API.Login.ILoginUser {
-		public LoginUser(int id, string name, IActorContext c, Connection connection, LoginZone zone, Data.Models.Immutable.ImmutableCredentials credentials) : base(id, name, connection, zone) {
-			ActorRef = c.ActorOf(LoginUserActor.Props(this, credentials));
+		public LoginUser(int id, string name, IActorContext c, Connection connection, LoginZone zone) : base(id, name, connection, zone) {
+			ActorRef = c.ActorOf(LoginUserActor.Props(this), string.Format("user(Id={0},Username={1})", Id, Username));
+			connection.ActorRef.Tell(new Authenticated(this), ActorRef);
 		}
 	}
 }
