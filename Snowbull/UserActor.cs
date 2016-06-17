@@ -32,16 +32,10 @@ namespace Snowbull {
 		public UserActor(User user) : base() {
 			this.user = user;
 			connection = (Connection) user.Connection;
-
+			BecomeStacked(Running);
         }
 
 		protected virtual void Running() {
-			Receive<Terminated>(Terminated);
-		}
-
-		protected virtual void Terminated(Terminated t) {
-			if(t.ActorRef == connection.ActorRef)
-				Self.Tell(new Disconnect());
 		}
     }
 }

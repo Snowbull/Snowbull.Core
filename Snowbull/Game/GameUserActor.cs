@@ -9,6 +9,24 @@ namespace Snowbull.Game {
 
 		public GameUserActor(GameUser user) : base(user) {
 		}
+
+		protected override void Running() {
+			base.Running();
+			Receive<API.Packets.Xt.Receive.Authentication.JoinServer>(JoinServer);
+		}
+
+		private void JoinServer(API.Packets.Xt.Receive.Authentication.JoinServer js) {
+			// We'll check the login key again I GUESS
+			// But for now let's just accept it.
+			connection.ActorRef.Tell(
+				new API.Packets.Xt.Send.Authentication.JoinServer(
+					agent: true, 
+					guide: true,
+					moderator: false, 
+					modifiedStampCover: true
+				)
+			, Self);
+		}
 	}
 }
 

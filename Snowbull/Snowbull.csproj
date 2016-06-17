@@ -65,11 +65,11 @@
     <Reference Include="Google.ProtocolBuffers.Serialization">
       <HintPath>..\packages\Google.ProtocolBuffers.2.4.1.555\lib\net40\Google.ProtocolBuffers.Serialization.dll</HintPath>
     </Reference>
-    <Reference Include="Helios">
-      <HintPath>..\packages\Helios.1.4.1\lib\net45\Helios.dll</HintPath>
-    </Reference>
     <Reference Include="Akka.Remote">
       <HintPath>..\packages\Akka.Remote.1.0.8\lib\net45\Akka.Remote.dll</HintPath>
+    </Reference>
+    <Reference Include="Helios">
+      <HintPath>..\packages\Helios.2.1.1\lib\net45\Helios.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

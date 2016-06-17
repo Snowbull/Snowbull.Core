@@ -63,6 +63,7 @@ namespace Snowbull {
             Receive<API.Packets.ISendPacket>(Send);
             Receive<RawPacketReceived>(user == null ? new Action<RawPacketReceived>(ProcessUnauthenticatedPacket) : new Action<RawPacketReceived>(ProcessAuthenticatedPacket));
             Receive<Disconnect>(Disconnect);
+			Receive<Terminated>(Terminated);
         }
 
         private void Received(Tcp.Received received) {
@@ -128,9 +129,16 @@ namespace Snowbull {
         }
 
         private void ProcessXt(string xt) {
-            API.Packets.Xt.XtData parser = API.Packets.Xt.XtData.Parse(xt, API.Packets.Xt.From.Client);
-            API.Packets.Xt.XtPacket packet = xtMap[parser.Command](parser);
-            Self.Tell(packet, Self);
+			if(user != null) {
+				API.Packets.Xt.XtData parser = API.Packets.Xt.XtData.Parse(xt, API.Packets.Xt.From.Client);
+				Func<API.Packets.Xt.XtData, API.Packets.Xt.XtPacket> processor;
+				if(xtMap.TryGetValue(parser.Command, out processor)) {
+					API.Packets.Xt.XtPacket packet = processor(parser);
+					user.ActorRef.Tell(packet, Self);
+				} else {
+					Logger.Warning("Unhandled extension packet: {0}.", xt);
+				}
+			}
         }
 
         /// <summary>
@@ -217,6 +225,12 @@ namespace Snowbull {
         private void Authenticated() {
             Running();
         }
+
+		private void Terminated(Terminated t) {
+			if(user != null)
+				if(user.ActorRef == t.ActorRef)
+					Self.Tell(new Disconnect());
+		}
 
         private void Disconnect() {
             UnbecomeStacked();
