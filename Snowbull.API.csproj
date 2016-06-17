@@ -70,6 +70,8 @@
     <Compile Include="IContext.cs" />
     <Compile Include="IncorrectPasswordException.cs" />
     <Compile Include="NameNotFoundException.cs" />
+    <Compile Include="Packets\Xt\Receive\Authentication\JoinServer.cs" />
+    <Compile Include="Packets\Xt\Send\Authentication\JoinServer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -86,6 +88,8 @@
     <Folder Include="Game\" />
     <Folder Include="Login\" />
     <Folder Include="Packets\Xml\Send\Policy\" />
+    <Folder Include="Packets\Xt\Receive\" />
+    <Folder Include="Packets\Xt\Receive\Authentication\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

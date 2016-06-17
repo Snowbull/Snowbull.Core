@@ -1,5 +1,5 @@
 ﻿/**
- * Base Received Xt Packet for Snowbull's Plugin API ("Snowbull.API").
+ * Join Server Response Packet for Snowbull's Plugin API ("Snowbull.API").
  *
  * Copyright 2016 by Lewis Hazell <staticabc@live.co.uk>
  *
@@ -23,25 +23,15 @@
 
 using System;
 
-namespace Snowbull.API.Packets.Xt {
-    public abstract class XtPacket : IPacket {
-        public XtData Xt {
-            get;
-            private set;
-        }
-
-        public int Room {
-            get;
-            private set;
-        }
-
-        protected XtPacket(XtData xt) {
-            Room = xt.Room;
-            Xt = xt;
-        }
-
-        public override string ToString() {
-            return Xt.ToString();
+namespace Snowbull.API.Packets.Xt.Send.Authentication {
+    public class JoinServer : XtPacket, ISendPacket {
+        public JoinServer(bool agent, bool guide, bool moderator, bool modifiedStampCover) : base(
+            new XtData(
+                From.Server,
+                "js",
+                new string[] { agent ? "1" : "0", guide ? "1" : "0", moderator ? "1" : "0", modifiedStampCover ? "1" : "0" }
+            )
+        ) {
         }
     }
 }

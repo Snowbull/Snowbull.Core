@@ -30,6 +30,7 @@ namespace Snowbull.API.Packets {
     public static class PacketMapper {
         public static ImmutableDictionary<string, Func<Xt.XtData, Xt.XtPacket>> XtMap() {
             Dictionary<string, Func<Xt.XtData, Xt.XtPacket>> map = new Dictionary<string, Func<Xt.XtData, Xt.XtPacket>>();
+            map.Add("j#js", xt => new Xt.Receive.Authentication.JoinServer(xt));
             return map.ToImmutableDictionary();
         }
 

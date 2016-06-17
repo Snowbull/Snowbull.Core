@@ -104,10 +104,10 @@ namespace Snowbull.API.Packets.Xt {
                 room = int.Parse(parts[roomp]);
             else
                 throw new ParseException("Packet has no room.");
-            if(parts.Length > argp) {
-                args = new string[parts.Length - argp];
-                for(int i = argp; i < parts.Length; i++)
-                    args[i-argp] = parts[argp];
+            if(parts.Length - 1 > argp) {
+                args = new string[parts.Length - 1 - argp];
+                for(int i = argp; i < parts.Length - 1; i++)
+                    args[i-argp] = parts[i];
             }
             return new XtData(sender, command, args, room);
         }
