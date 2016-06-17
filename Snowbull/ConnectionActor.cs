@@ -212,7 +212,6 @@ namespace Snowbull {
 			Context.Watch(user.ActorRef);
             UnbecomeStacked();
             BecomeStacked(Authenticated);
-			Self.Tell(new API.Packets.Xt.Send.Authentication.Login(user.Id, API.Cryptography.Random.GenerateRandomKey(32), ""));
         }
 
         private void Authenticated() {

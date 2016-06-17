@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Data.Entity;
 using Akka.Actor;
 
 namespace Snowbull.Game {
@@ -34,12 +35,29 @@ namespace Snowbull.Game {
 
         }
 
-		protected override void Authenticate(Authenticate authenticate) {
-
+		protected override void Authenticate(Authenticate auth) {
+			// Temporary, the login key will be fetched from the login server. TODO
+			Data.SnowbullContext db = new Data.SnowbullContext();
+			db.Users.FirstAsync<Data.Models.User>(u => u.Username == auth.Request.Username).ContinueWith<Authentication>(
+				t => {
+					Data.Models.Immutable.ImmutableCredentials credentials = t.IsFaulted ? null : new Data.Models.Immutable.ImmutableCredentials(t.Result);
+					return new Authentication(credentials, auth);
+				}
+			).PipeTo(Self);
         }
 
 		protected override User Authentication(Authenticate request, Data.Models.Immutable.ImmutableCredentials credentials) {
-			return default(User); // TODO
+			// TEMPORARY: GAME SERVER DOES *NOT* CURRENTLY CHECK CREDENTIALS: TODO
+			if(credentials != null) {
+				// if(login key is correct) {
+					logger.Info("Sucessfully authenticated as '{0}'!", credentials.Username);
+					return new GameUser(credentials.Id, credentials.Username, Context, request.Sender, zone);
+				// }else{
+				//     throw new API.IncorrectPasswordException ...
+				// }
+			} else {
+				throw new API.NameNotFoundException(request.Sender, request.Request.Username, string.Format("User '{0}' was not found!", request.Request.Username));
+			}
 		}
     }
 }

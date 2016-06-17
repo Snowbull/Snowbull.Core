@@ -40,12 +40,6 @@ namespace Snowbull.Login {
 
 		public LoginUserActor(LoginUser user) : base(user) {
         }
-
-        protected override void PreStart() {
-            base.PreStart();
-			string key = API.Cryptography.Random.GenerateRandomKey(32);
-			((Connection) user.Connection).ActorRef.Tell(new API.Packets.Xt.Send.Authentication.Login(user.Id, key, ""));
-        }
     }
 }
 

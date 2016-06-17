@@ -54,3 +54,7 @@
 /home/user/Documents/Projects/cs/Snowbull/Snowbull/bin/Debug/Newtonsoft.Json.dll
 /home/user/Documents/Projects/cs/Snowbull/Snowbull/bin/Debug/NLog.dll
 /home/user/Documents/Projects/cs/Snowbull/Snowbull/bin/Debug/Akka.Logger.NLog.dll
+/home/user/Documents/Projects/cs/Snowbull/Snowbull/bin/Debug/Google.ProtocolBuffers.dll
+/home/user/Documents/Projects/cs/Snowbull/Snowbull/bin/Debug/Google.ProtocolBuffers.Serialization.dll
+/home/user/Documents/Projects/cs/Snowbull/Snowbull/bin/Debug/Helios.dll
+/home/user/Documents/Projects/cs/Snowbull/Snowbull/bin/Debug/Akka.Remote.dll
