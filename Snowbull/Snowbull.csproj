@@ -34,8 +34,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Xml" />
-    <Reference Include="Snowbull.API">
-      <HintPath>..\..\Snowbull.API\Snowbull.API\bin\Debug\Snowbull.API.dll</HintPath>
+    <Reference Include="Snowbull">
+      <HintPath>..\..\Snowbull\Snowbull.API\bin\Debug\Snowbull.API.dll</HintPath>
     </Reference>
     <Reference Include="System.Collections.Immutable">
       <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Snowbull.API {
+namespace Snowbull {
     public interface IContext {
 
     }

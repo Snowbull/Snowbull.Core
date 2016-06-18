@@ -1,22 +1,22 @@
 ﻿/**
- * Xt Parser for Snowbull's Plugin API ("Snowbull.API").
+ * Xt Parser for Snowbull's Plugin API ("Snowbull").
  *
  * Copyright 2016 by Lewis Hazell <staticabc@live.co.uk>
  *
- * This file is part of "Snowbull.API".
+ * This file is part of "Snowbull".
  * 
- * "Snowbull.API" is free software: you can redistribute it and/or
+ * "Snowbull" is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version
  * 3 of the License, or (at your option) any later version.
  * 
- * "Snowbull.API" is distributed in the hope that it will be useful,
+ * "Snowbull" is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty 
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
  * the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with "Snowbull.API". If not, see <http://www.gnu.org/licenses/>.
+ * along with "Snowbull". If not, see <http://www.gnu.org/licenses/>.
  *
  * License: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>
  */
@@ -25,7 +25,7 @@ using System;
 using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 
-namespace Snowbull.API.Packets.Xt {
+namespace Snowbull.Packets.Xt {
     public enum From {
         Client,
         Server
@@ -69,7 +69,7 @@ namespace Snowbull.API.Packets.Xt {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Snowbull.API.XtData"/> class.
+        /// Initializes a new instance of the <see cref="Snowbull.XtData"/> class.
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="command">Command.</param>
@@ -113,9 +113,9 @@ namespace Snowbull.API.Packets.Xt {
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="Snowbull.API.XtData"/>.
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="Snowbull.XtData"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="Snowbull.API.XtData"/>.</returns>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="Snowbull.XtData"/>.</returns>
         public override string ToString() {
             string data = "%xt%" + (Sender == From.Client ? "s" : Command) + "%" + Room + (Sender == From.Client ? "%" + Command : "");
             foreach(string arg in Arguments) data += "%" + arg;

@@ -27,10 +27,10 @@ using Akka.Actor;
 using Akka.IO;
 using System.Text;
 using Akka.Event;
-using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.API.Packets.Xml.XmlPacket>>;
-using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.API.Packets.Xt.XtData, Snowbull.API.Packets.Xt.XtPacket>>;
+using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.Packets.Xml.XmlPacket>>;
+using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Packets.Xt.XtData, Snowbull.API.Packets.Xt.XtPacket>>;
 using System.Xml;
-using Snowbull.API.Packets.Xml.Receive.Authentication;
+using Snowbull.Packets.Xml.Receive.Authentication;
 using System.Net;
 
 namespace Snowbull {

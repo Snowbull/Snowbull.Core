@@ -2,7 +2,7 @@
 using Akka;
 using Akka.Actor;
 using Akka.Event;
-using Snowbull.API.Packets.Xml.Receive.Authentication;
+using Snowbull.Packets.Xml.Receive.Authentication;
 using System.Data.Entity;
 
 namespace Snowbull {
