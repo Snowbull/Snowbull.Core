@@ -107,6 +107,43 @@
     <Compile Include="IContext.cs" />
     <Compile Include="Game\GameUser.cs" />
     <Compile Include="Game\GameUserActor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SnowbullException.cs" />
+    <Compile Include="Packets\Xt\XtData.cs" />
+    <Compile Include="Packets\Xt\XtPacket.cs" />
+    <Compile Include="Packets\Xt\ParseException.cs" />
+    <Compile Include="Packets\ISendPacket.cs" />
+    <Compile Include="Packets\IReceivePacket.cs" />
+    <Compile Include="Packets\IPacket.cs" />
+    <Compile Include="Packets\Xml\MessageParseException.cs" />
+    <Compile Include="Packets\Xml\XmlMessage.cs" />
+    <Compile Include="Packets\Xml\XmlPacket.cs" />
+    <Compile Include="Packets\PacketMapper.cs" />
+    <Compile Include="Packets\Xml\Receive\Authentication\Login.cs" />
+    <Compile Include="Packets\Xml\Receive\Authentication\RandomKey.cs" />
+    <Compile Include="Packets\Xml\Receive\Authentication\VersionCheck.cs" />
+    <Compile Include="Packets\Xml\Send\Authentication\ApiOK.cs" />
+    <Compile Include="Cryptography\Random.cs" />
+    <Compile Include="Packets\Xml\Send\Authentication\RandomKey.cs" />
+    <Compile Include="Cryptography\Hashing.cs" />
+    <Compile Include="Error.cs" />
+    <Compile Include="Packets\Xt\Send\Error.cs" />
+    <Compile Include="Packets\Xt\Send\Authentication\Login.cs" />
+    <Compile Include="Game\IGameZone.cs" />
+    <Compile Include="Login\ILoginZone.cs" />
+    <Compile Include="IZone.cs" />
+    <Compile Include="IServer.cs" />
+    <Compile Include="IUser.cs" />
+    <Compile Include="Login\ILoginUser.cs" />
+    <Compile Include="IConnection.cs" />
+    <Compile Include="Packets\Xml\Send\Policy\XmlPolicyFile.cs" />
+    <Compile Include="Packets\Xml\Send\Policy\Allow.cs" />
+    <Compile Include="Packets\Xml\Send\Policy\Rule.cs" />
+    <Compile Include="IContext.cs" />
+    <Compile Include="IncorrectPasswordException.cs" />
+    <Compile Include="NameNotFoundException.cs" />
+    <Compile Include="Packets\Xt\Receive\Authentication\JoinServer.cs" />
+    <Compile Include="Packets\Xt\Send\Authentication\JoinServer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -116,9 +153,20 @@
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Data\Models\" />
-    <Folder Include="Game\" />
-    <Folder Include="Login\" />
     <Folder Include="Data\Models\Immutable\" />
     <Folder Include="Configuration\" />
+    <Folder Include="Packets\" />
+    <Folder Include="Packets\Xt\" />
+    <Folder Include="Packets\Xml\" />
+    <Folder Include="Packets\Xml\Receive\" />
+    <Folder Include="Packets\Xml\Receive\Authentication\" />
+    <Folder Include="Packets\Xml\Send\" />
+    <Folder Include="Packets\Xml\Send\Authentication\" />
+    <Folder Include="Cryptography\" />
+    <Folder Include="Packets\Xt\Send\" />
+    <Folder Include="Packets\Xt\Send\Authentication\" />
+    <Folder Include="Packets\Xml\Send\Policy\" />
+    <Folder Include="Packets\Xt\Receive\" />
+    <Folder Include="Packets\Xt\Receive\Authentication\" />
   </ItemGroup>
 </Project>
