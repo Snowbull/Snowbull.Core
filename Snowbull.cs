@@ -28,9 +28,9 @@ using Akka.IO;
 using System.Collections.Generic;
 
 namespace Snowbull {
-	delegate Zone ZoneInitialiser(IActorContext context, Server server);
+	public delegate Zone ZoneInitialiser(IActorContext context, Server server);
 
-    class Snowbull {
+    public class Snowbull {
         private readonly ActorSystem actors = ActorSystem.Create("snowbull");
         private readonly Server server;
 

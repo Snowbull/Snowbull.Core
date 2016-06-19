@@ -28,7 +28,7 @@ using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.F
 using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Packets.Xt.XtData, Snowbull.Packets.Xt.XtPacket>>;
 
 namespace Snowbull {
-	internal class Connection : IConnection, IContext {
+	public class Connection : IConnection, IContext {
 		public IActorRef ActorRef {
 			get;
 			private set;
@@ -50,7 +50,7 @@ namespace Snowbull {
 			ActorRef = c.ActorOf(ConnectionActor.Props(this, socket, xmlMap, xtMap), string.Format("connection(Server={0},Address={1})", Server.Name, Address));
 		}
 
-		internal void Send(Packets.ISendPacket packet, IActorRef sender) {
+		public void Send(Packets.ISendPacket packet, IActorRef sender) {
 			ActorRef.Tell(packet, sender);
 		}
 

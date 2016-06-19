@@ -26,7 +26,7 @@ using Akka.Actor;
 using Akka.Event;
 
 namespace Snowbull {
-	internal abstract class SnowbullActor : ReceiveActor {
+	public abstract class SnowbullActor : ReceiveActor {
 		protected readonly ILoggingAdapter Logger;
 
 		public SnowbullActor() {

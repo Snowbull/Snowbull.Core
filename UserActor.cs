@@ -6,7 +6,7 @@ using Snowbull.Packets.Xml.Receive.Authentication;
 using System.Data.Entity;
 
 namespace Snowbull {
-	abstract class UserActor : SnowbullActor {
+	public abstract class UserActor : SnowbullActor {
 		protected readonly User user;
 		protected readonly Connection connection;
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);

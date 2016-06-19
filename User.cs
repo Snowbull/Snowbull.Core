@@ -25,7 +25,7 @@ using System;
 using Akka.Actor;
 
 namespace Snowbull {
-	internal abstract class User : IUser, IContext {
+	public abstract class User : IUser, IContext {
 		public int Id {
 			get;
 			private set;

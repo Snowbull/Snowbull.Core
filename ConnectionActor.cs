@@ -34,7 +34,7 @@ using Snowbull.Packets.Xml.Receive.Authentication;
 using System.Net;
 
 namespace Snowbull {
-   	internal sealed class ConnectionActor : SnowbullActor {
+   	public sealed class ConnectionActor : SnowbullActor {
 		private readonly Connection connection;
         private readonly IActorRef socket;
         private User user;
@@ -282,7 +282,7 @@ namespace Snowbull {
 		}
 	}
 
-    internal class Authenticated {
+    public class Authenticated {
         public User User {
             get;
             private set;

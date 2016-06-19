@@ -71,7 +71,7 @@ namespace Snowbull {
 			
     }
 
-    internal class Authenticate {
+    public class Authenticate {
         /// <summary>
         /// Gets the sender.
         /// </summary>

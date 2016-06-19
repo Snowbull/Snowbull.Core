@@ -24,7 +24,7 @@
 using System;
 
 namespace Snowbull.Packets.Xml.Send.Policy {
-	internal sealed class Allow : Rule {
+	public sealed class Allow : Rule {
 		public Allow() : base("allow-access-from") {
 		}
 
