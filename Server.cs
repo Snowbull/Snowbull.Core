@@ -26,7 +26,7 @@ using System.Net;
 using Akka.Actor;
 using Akka.IO;
 
-namespace Snowbull {
+namespace Snowbull.Core {
 	public sealed class Server : IServer, IContext {
 		private IActorRef tcp;
 

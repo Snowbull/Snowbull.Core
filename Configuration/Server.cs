@@ -24,7 +24,7 @@
 using System;
 using System.Configuration;
 
-namespace Snowbull.Configuration {
+namespace Snowbull.Core.Configuration {
 	public class Server : ConfigurationElement {
 		[ConfigurationProperty("id", IsRequired = true)]
 		public string Id {

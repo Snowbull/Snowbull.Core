@@ -30,10 +30,10 @@ using Akka.Event;
 using System.Collections.Immutable;
 using System.Collections.Generic;
 using System.Xml;
-using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.Packets.Xml.XmlPacket>>;
-using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Packets.Xt.XtData, Snowbull.Packets.Xt.XtPacket>>;
+using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.Core.Packets.Xml.XmlPacket>>;
+using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Core.Packets.Xt.XtData, Snowbull.Core.Packets.Xt.XtPacket>>;
 
-namespace Snowbull {
+namespace Snowbull.Core {
 	sealed class ServerActor : SnowbullActor {
 		private readonly Server server;
         private readonly XmlMap xmlMap = Packets.PacketMapper.XmlMap();

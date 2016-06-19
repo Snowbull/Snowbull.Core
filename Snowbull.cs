@@ -27,7 +27,7 @@ using System.Net;
 using Akka.IO;
 using System.Collections.Generic;
 
-namespace Snowbull {
+namespace Snowbull.Core {
 	public delegate Zone ZoneInitialiser(IActorContext context, Server server);
 
     public class Snowbull {

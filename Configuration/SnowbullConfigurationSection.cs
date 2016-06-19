@@ -42,7 +42,7 @@
 using System;
 using System.Configuration;
 
-namespace Snowbull.Configuration {
+namespace Snowbull.Core.Configuration {
 	public class SnowbullConfigurationSection : ConfigurationSection {
 		public static SnowbullConfigurationSection GetConfiguration() {
 			return (SnowbullConfigurationSection) ConfigurationManager.GetSection("snowbull") ?? new SnowbullConfigurationSection();

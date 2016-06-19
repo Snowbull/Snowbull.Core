@@ -24,7 +24,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Snowbull {
+namespace Snowbull.Core {
     public abstract class SnowbullException : Exception {
         protected SnowbullException() : base() {}
         protected SnowbullException(string message) : base(message) {}

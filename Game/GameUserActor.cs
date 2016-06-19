@@ -1,7 +1,7 @@
 ﻿using System;
 using Akka.Actor;
 
-namespace Snowbull.Game {
+namespace Snowbull.Core.Game {
 	public class GameUserActor : UserActor {
 		public static Props Props(GameUser user) {
 			return Akka.Actor.Props.Create(() => new GameUserActor(user));

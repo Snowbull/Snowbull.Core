@@ -27,7 +27,7 @@ using System.Collections.Immutable;
 using Akka.Actor;
 using Akka.Event;
 
-namespace Snowbull {
+namespace Snowbull.Core {
 	abstract class ZoneActor : SnowbullActor {
         private readonly Dictionary<IActorRef, User> users = new Dictionary<IActorRef, User>();
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);

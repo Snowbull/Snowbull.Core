@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Login {
+namespace Snowbull.Core.Login {
 	public interface ILoginUser : IUser {
 	}
 }

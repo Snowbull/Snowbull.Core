@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Packets.Xt.Receive.Authentication {
+namespace Snowbull.Core.Packets.Xt.Receive.Authentication {
     public sealed class JoinServer : XtPacket, IReceivePacket {
         public int Id {
             get;

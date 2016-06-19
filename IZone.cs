@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull {
+namespace Snowbull.Core {
     public interface IZone : IContext {
         string Name {
             get;

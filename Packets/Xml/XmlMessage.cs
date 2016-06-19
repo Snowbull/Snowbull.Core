@@ -24,7 +24,7 @@
 using System;
 using System.Xml;
 
-namespace Snowbull.Packets.Xml {
+namespace Snowbull.Core.Packets.Xml {
     public abstract class XmlMessage  : XmlPacket {
         public string Action {
             get;

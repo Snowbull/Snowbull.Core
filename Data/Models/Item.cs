@@ -25,7 +25,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Snowbull.Data.Models {
+namespace Snowbull.Core.Data.Models {
 	[Table("inventory")]
 	public class Item {
 		[Column("userID")]

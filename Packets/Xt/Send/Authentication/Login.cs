@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Packets.Xt.Send.Authentication {
+namespace Snowbull.Core.Packets.Xt.Send.Authentication {
     public class Login : XtPacket, ISendPacket {
         public Login(int id, string key, string populations) : base(new XtData(From.Server, "l", new string[] { id.ToString(), key, "", populations })) {
         }

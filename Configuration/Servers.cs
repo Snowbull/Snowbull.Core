@@ -23,7 +23,7 @@
 
 using System;
 using System.Configuration;
-namespace Snowbull.Configuration {
+namespace Snowbull.Core.Configuration {
 	public class Servers : ConfigurationElementCollection {
 		public Server this[int i] {
 			get {

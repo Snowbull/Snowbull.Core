@@ -23,7 +23,7 @@
 
 using System;
 using System.Security.Cryptography;
-namespace Snowbull.Cryptography {
+namespace Snowbull.Core.Cryptography {
     public static class Random {
         public static string GenerateRandomKey(int length) {
             char[] characters = { 'a', 'b' ,'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'o', 'p', 'q', 'r',

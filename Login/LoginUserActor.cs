@@ -24,7 +24,7 @@
 using System;
 using Akka.Actor;
 
-namespace Snowbull.Login {
+namespace Snowbull.Core.Login {
     sealed class LoginUserActor : UserActor {
         /// <summary>
         /// Creates a user actor with id, username, connection, zone and server props.

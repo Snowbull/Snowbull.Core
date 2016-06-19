@@ -24,7 +24,7 @@
 using System;
 using System.Xml;
 
-namespace Snowbull.Packets.Xml {
+namespace Snowbull.Core.Packets.Xml {
     public class MessageParseException : SnowbullException {
 
         public MessageParseException() : base() {}

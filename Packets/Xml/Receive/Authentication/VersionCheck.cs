@@ -24,7 +24,7 @@
 using System;
 using System.Xml;
 
-namespace Snowbull.Packets.Xml.Receive.Authentication {
+namespace Snowbull.Core.Packets.Xml.Receive.Authentication {
     public class VersionCheck : XmlMessage, IReceivePacket {
         public int Version {
             get;

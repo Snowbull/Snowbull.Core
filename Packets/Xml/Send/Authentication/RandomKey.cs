@@ -24,7 +24,7 @@
 using System;
 using System.Xml;
 
-namespace Snowbull.Packets.Xml.Send.Authentication {
+namespace Snowbull.Core.Packets.Xml.Send.Authentication {
     public sealed class RandomKey: XmlMessage, ISendPacket {
 
         private RandomKey(XmlDocument document, XmlElement[] inner) : base(document, "rndK", -1, inner) {

@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Packets.Xt {
+namespace Snowbull.Core.Packets.Xt {
     public abstract class XtPacket : IPacket {
         public XtData Xt {
             get;

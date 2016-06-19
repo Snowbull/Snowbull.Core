@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Packets.Xt.Send {
+namespace Snowbull.Core.Packets.Xt.Send {
     public class Error : XtPacket, ISendPacket {
         public Error Type {
             get;

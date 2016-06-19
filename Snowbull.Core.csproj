@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{5D6A1CF7-1324-4996-AB04-F446BC5CD73B}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Snowbull</RootNamespace>
+    <RootNamespace>Snowbull.Core</RootNamespace>
     <AssemblyName>Snowbull</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>

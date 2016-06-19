@@ -24,7 +24,7 @@
 using System;
 using Akka.Actor;
 
-namespace Snowbull.Game {
+namespace Snowbull.Core.Game {
 	class GameZone : Zone, Game.IGameZone {
 		public GameZone(string name, IActorContext c, Server server) : base(name, server) {
 			ActorRef = c.ActorOf(GameZoneActor.Props(this));

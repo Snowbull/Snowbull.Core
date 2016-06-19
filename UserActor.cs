@@ -2,10 +2,10 @@
 using Akka;
 using Akka.Actor;
 using Akka.Event;
-using Snowbull.Packets.Xml.Receive.Authentication;
+using Snowbull.Core.Packets.Xml.Receive.Authentication;
 using System.Data.Entity;
 
-namespace Snowbull {
+namespace Snowbull.Core {
 	public abstract class UserActor : SnowbullActor {
 		protected readonly User user;
 		protected readonly Connection connection;

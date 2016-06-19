@@ -1,7 +1,7 @@
 ﻿using System;
 using Akka.Actor;
 
-namespace Snowbull.Game {
+namespace Snowbull.Core.Game {
 	public class GameUser : User {
 		public GameUser(int id, string username, IActorContext c, Connection connection, Zone zone) : base(id, username, connection, zone) {
 			ActorRef = c.ActorOf(GameUserActor.Props(this), string.Format("user(Id={0},Username={1}", id, username));

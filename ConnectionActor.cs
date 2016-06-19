@@ -27,13 +27,13 @@ using Akka.Actor;
 using Akka.IO;
 using System.Text;
 using Akka.Event;
-using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.Packets.Xml.XmlPacket>>;
-using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Packets.Xt.XtData, Snowbull.Packets.Xt.XtPacket>>;
+using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.Core.Packets.Xml.XmlPacket>>;
+using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Core.Packets.Xt.XtData, Snowbull.Core.Packets.Xt.XtPacket>>;
 using System.Xml;
-using Snowbull.Packets.Xml.Receive.Authentication;
+using Snowbull.Core.Packets.Xml.Receive.Authentication;
 using System.Net;
 
-namespace Snowbull {
+namespace Snowbull.Core {
    	public sealed class ConnectionActor : SnowbullActor {
 		private readonly Connection connection;
         private readonly IActorRef socket;

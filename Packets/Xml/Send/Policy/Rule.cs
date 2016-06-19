@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Packets.Xml.Send.Policy {
+namespace Snowbull.Core.Packets.Xml.Send.Policy {
 	public abstract class Rule {
 		internal string Tag {
 			get;

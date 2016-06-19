@@ -25,7 +25,7 @@ using System;
 using Akka.Actor;
 using System.Data.Entity;
 
-namespace Snowbull.Login {
+namespace Snowbull.Core.Login {
     sealed class LoginZoneActor : ZoneActor {
 		public static Props Props(LoginZone zone) {
 			return Akka.Actor.Props.Create(() => new LoginZoneActor(zone));

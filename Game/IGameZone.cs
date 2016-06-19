@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Game {
+namespace Snowbull.Core.Game {
     public interface IGameZone : IZone {
     }
 }

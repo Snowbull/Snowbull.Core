@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull {
+namespace Snowbull.Core {
     public interface IUser : IContext {
         int Id {
             get;

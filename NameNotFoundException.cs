@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Snowbull {
+namespace Snowbull.Core {
     public class NameNotFoundException : SnowbullException {
         public IConnection Connection {
             get;

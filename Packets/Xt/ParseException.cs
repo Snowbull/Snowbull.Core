@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Packets.Xt {
+namespace Snowbull.Core.Packets.Xt {
     public sealed class ParseException : SnowbullException {
         public ParseException() {}
         public ParseException(string message) : base(message) {}

@@ -26,7 +26,7 @@ using System.Collections.Immutable;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace Snowbull.Packets {
+namespace Snowbull.Core.Packets {
     public static class PacketMapper {
         public static ImmutableDictionary<string, Func<Xt.XtData, Xt.XtPacket>> XtMap() {
             Dictionary<string, Func<Xt.XtData, Xt.XtPacket>> map = new Dictionary<string, Func<Xt.XtData, Xt.XtPacket>>();

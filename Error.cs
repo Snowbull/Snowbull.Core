@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull {
+namespace Snowbull.Core {
     public enum Errors {
         NO_CONNECTION = 0,
         CONNECTION_LOST = 1,

@@ -25,7 +25,7 @@ using System;
 using System.Xml;
 using System.Collections.Immutable;
 
-namespace Snowbull.Packets.Xml.Send.Policy {
+namespace Snowbull.Core.Packets.Xml.Send.Policy {
 	public sealed class XmlPolicyFile : XmlPacket, ISendPacket {
 		public ImmutableArray<Rule> Rules {
 			get;

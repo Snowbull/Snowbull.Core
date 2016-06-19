@@ -24,7 +24,7 @@
 using System;
 using System.Configuration;
 
-namespace Snowbull.Configuration {
+namespace Snowbull.Core.Configuration {
 	public class Zones : ConfigurationElementCollection {
 		public Zone this[int i] {
 			get {

@@ -24,7 +24,7 @@
 using System;
 using System.Net;
 
-namespace Snowbull {
+namespace Snowbull.Core {
 	public interface IConnection : IContext {
         IServer Server {
             get;

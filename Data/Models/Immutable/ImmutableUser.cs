@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Data.Models.Immutable {
+namespace Snowbull.Core.Data.Models.Immutable {
     public class ImmutableUser : ImmutableCredentials {
         public DateTime Creation {
             get;

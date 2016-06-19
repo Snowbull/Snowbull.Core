@@ -24,7 +24,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace Snowbull.Cryptography {
+namespace Snowbull.Core.Cryptography {
 	public static class Hashing {
 		/// <summary>
 		/// The hashing salt.

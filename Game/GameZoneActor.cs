@@ -25,7 +25,7 @@ using System;
 using System.Data.Entity;
 using Akka.Actor;
 
-namespace Snowbull.Game {
+namespace Snowbull.Core.Game {
     sealed class GameZoneActor : ZoneActor {
 		public static Props Props(GameZone zone) {
 			return Akka.Actor.Props.Create(() => new GameZoneActor(zone));

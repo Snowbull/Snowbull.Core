@@ -23,7 +23,7 @@
 
 using System;
 using System.Xml;
-namespace Snowbull.Packets.Xml {
+namespace Snowbull.Core.Packets.Xml {
     public abstract class XmlPacket : IPacket {
         private XmlDocument Document {
             get;

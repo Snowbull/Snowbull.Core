@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Packets {
+namespace Snowbull.Core.Packets {
     public interface IPacket {
     }
 }

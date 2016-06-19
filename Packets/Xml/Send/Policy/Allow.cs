@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Packets.Xml.Send.Policy {
+namespace Snowbull.Core.Packets.Xml.Send.Policy {
 	public sealed class Allow : Rule {
 		public Allow() : base("allow-access-from") {
 		}

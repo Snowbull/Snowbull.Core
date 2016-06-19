@@ -24,7 +24,7 @@
 using System;
 using Akka.Actor;
 
-namespace Snowbull {
+namespace Snowbull.Core {
 	public abstract class Zone : IZone, IContext {
 		public string Name {
 			get;

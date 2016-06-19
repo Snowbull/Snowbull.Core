@@ -25,7 +25,7 @@ using System;
 using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 
-namespace Snowbull.Packets.Xt {
+namespace Snowbull.Core.Packets.Xt {
     public enum From {
         Client,
         Server

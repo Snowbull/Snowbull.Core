@@ -25,7 +25,7 @@ using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 
-namespace Snowbull.Data {
+namespace Snowbull.Core.Data {
     public class SnowbullContext : DbContext {
         static SnowbullContext() {
             Database.SetInitializer<SnowbullContext>(null);

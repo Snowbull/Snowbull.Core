@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Snowbull.Packets.Xt.Send.Authentication {
+namespace Snowbull.Core.Packets.Xt.Send.Authentication {
     public class JoinServer : XtPacket, ISendPacket {
         public JoinServer(bool agent, bool guide, bool moderator, bool modifiedStampCover) : base(
             new XtData(
