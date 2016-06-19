@@ -25,7 +25,7 @@ using System;
 using Akka.Actor;
 
 namespace Snowbull {
-	internal abstract class User : API.IUser, IContext {
+	internal abstract class User : IUser, IContext {
 		public int Id {
 			get;
 			private set;
@@ -41,12 +41,12 @@ namespace Snowbull {
 			protected set;
 		}
 
-		public API.IConnection Connection {
+		public IConnection Connection {
 			get;
 			private set;
 		}
 
-		public API.IZone Zone {
+		public IZone Zone {
 			get;
 			private set;
 		}

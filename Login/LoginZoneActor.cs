@@ -50,15 +50,15 @@ namespace Snowbull.Login {
 
 		protected override User Authentication(Authenticate request, Data.Models.Immutable.ImmutableCredentials credentials) {
             if(credentials != null) {
-				string hash = API.Cryptography.Hashing.HashPassword(credentials.Password, request.Key);
+				string hash = Cryptography.Hashing.HashPassword(credentials.Password, request.Key);
                 if(request.Request.Password == hash) {
                     logger.Debug("Authenticated as '" + credentials.Username + "'!");
 					return new LoginUser(credentials.Id, credentials.Username, Context, request.Sender, (LoginZone) zone);
                 }else{
-					throw new API.IncorrectPasswordException(request.Sender, string.Format("Peer at {0} failed to identify as '{1}'.", request.Sender.Address, credentials.Username));
+					throw new IncorrectPasswordException(request.Sender, string.Format("Peer at {0} failed to identify as '{1}'.", request.Sender.Address, credentials.Username));
                 }
             }else{
-				throw new API.NameNotFoundException(request.Sender, request.Request.Username, string.Format("Attempt to login as non existent user '{0}'.", request.Request.Username));
+				throw new NameNotFoundException(request.Sender, request.Request.Username, string.Format("Attempt to login as non existent user '{0}'.", request.Request.Username));
             }
         }
     }

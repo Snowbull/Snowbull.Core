@@ -27,7 +27,7 @@ using Akka.Actor;
 using Akka.IO;
 
 namespace Snowbull {
-	internal sealed class Server : API.IServer, IContext {
+	internal sealed class Server : IServer, IContext {
 		private IActorRef tcp;
 
 		public string Name {

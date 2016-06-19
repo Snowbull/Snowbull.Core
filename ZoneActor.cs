@@ -45,7 +45,7 @@ namespace Snowbull {
         protected virtual void Running() {
 			Receive<Authenticate>(Authenticate);
 			Receive<Authentication>(Authentication);
-			Receive<API.Packets.ISendPacket>(SendPacket);
+			Receive<Packets.ISendPacket>(SendPacket);
 			Receive<Terminated>(Terminated);
         }
 
@@ -59,7 +59,7 @@ namespace Snowbull {
 
 		protected abstract User Authentication(Authenticate request, Data.Models.Immutable.ImmutableCredentials credentials);
 
-		private void SendPacket(API.Packets.ISendPacket packet) {
+		private void SendPacket(Packets.ISendPacket packet) {
 			foreach(IActorRef user in users.Values)
 				user.Forward(packet);
 		}
@@ -85,7 +85,7 @@ namespace Snowbull {
         /// Gets the login request.
         /// </summary>
         /// <value>The login request.</value>
-        public API.Packets.Xml.Receive.Authentication.Login Request {
+        public Packets.Xml.Receive.Authentication.Login Request {
             get;
             private set;
         }
@@ -101,7 +101,7 @@ namespace Snowbull {
         /// <param name="request">Request.</param>
         /// <param name="sender">Sender.</param>
         /// <param name="key">Random key.</param> 
-        public Authenticate(API.Packets.Xml.Receive.Authentication.Login request, Connection sender, string key) {
+        public Authenticate(Packets.Xml.Receive.Authentication.Login request, Connection sender, string key) {
             Request = request;
             Sender = sender;
             Key = key;

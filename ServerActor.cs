@@ -31,13 +31,13 @@ using System.Collections.Immutable;
 using System.Collections.Generic;
 using System.Xml;
 using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.Packets.Xml.XmlPacket>>;
-using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Packets.Xt.XtData, Snowbull.API.Packets.Xt.XtPacket>>;
+using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Packets.Xt.XtData, Snowbull.Packets.Xt.XtPacket>>;
 
 namespace Snowbull {
 	sealed class ServerActor : SnowbullActor {
 		private readonly Server server;
-        private readonly XmlMap xmlMap = API.Packets.PacketMapper.XmlMap();
-        private readonly XtMap xtMap = API.Packets.PacketMapper.XtMap();
+        private readonly XmlMap xmlMap = Packets.PacketMapper.XmlMap();
+        private readonly XtMap xtMap = Packets.PacketMapper.XtMap();
         private readonly Dictionary<string, Zone> zones = new Dictionary<string, Zone>();
 
 		public static Props Props(Server server) {
@@ -56,14 +56,14 @@ namespace Snowbull {
 		protected override SupervisorStrategy SupervisorStrategy() {
 			return new OneForOneStrategy(
 				Decider.From(ex => {
-					if(ex is API.IncorrectPasswordException) {
-						API.IConnection connection = ((API.IncorrectPasswordException) ex).Connection;
-						connection.Send(new API.Packets.Xt.Send.Error(API.Errors.PASSWORD_WRONG, -1));
+					if(ex is IncorrectPasswordException) {
+						IConnection connection = ((IncorrectPasswordException) ex).Connection;
+						connection.Send(new Packets.Xt.Send.Error(Errors.PASSWORD_WRONG, -1));
 						connection.Close();
 						return Directive.Resume;
-					}else if(ex is API.NameNotFoundException) {
-						API.IConnection connection = ((API.NameNotFoundException) ex).Connection;
-						connection.Send(new API.Packets.Xt.Send.Error(API.Errors.NAME_NOT_FOUND, -1));
+					}else if(ex is NameNotFoundException) {
+						IConnection connection = ((NameNotFoundException) ex).Connection;
+						connection.Send(new Packets.Xt.Send.Error(Errors.NAME_NOT_FOUND, -1));
 						connection.Close();
 						return Directive.Resume;
 					}else{

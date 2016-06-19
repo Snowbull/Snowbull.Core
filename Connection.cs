@@ -25,16 +25,16 @@ using System;
 using System.Net;
 using Akka.Actor;
 using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.Packets.Xml.XmlPacket>>;
-using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Packets.Xt.XtData, Snowbull.API.Packets.Xt.XtPacket>>;
+using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Packets.Xt.XtData, Snowbull.Packets.Xt.XtPacket>>;
 
 namespace Snowbull {
-	internal class Connection : API.IConnection, IContext {
+	internal class Connection : IConnection, IContext {
 		public IActorRef ActorRef {
 			get;
 			private set;
 		}
 
-		public API.IServer Server {
+		public IServer Server {
 			get;
 			private set;
 		}
@@ -50,11 +50,11 @@ namespace Snowbull {
 			ActorRef = c.ActorOf(ConnectionActor.Props(this, socket, xmlMap, xtMap), string.Format("connection(Server={0},Address={1})", Server.Name, Address));
 		}
 
-		internal void Send(API.Packets.ISendPacket packet, IActorRef sender) {
+		internal void Send(Packets.ISendPacket packet, IActorRef sender) {
 			ActorRef.Tell(packet, sender);
 		}
 
-		public void Send(API.Packets.ISendPacket packet) {
+		public void Send(Packets.ISendPacket packet) {
 			ActorRef.Tell(packet);
 		}
 

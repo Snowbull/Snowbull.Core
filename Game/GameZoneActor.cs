@@ -56,7 +56,7 @@ namespace Snowbull.Game {
 				//     throw new API.IncorrectPasswordException ...
 				// }
 			} else {
-				throw new API.NameNotFoundException(request.Sender, request.Request.Username, string.Format("User '{0}' was not found!", request.Request.Username));
+				throw new NameNotFoundException(request.Sender, request.Request.Username, string.Format("User '{0}' was not found!", request.Request.Username));
 			}
 		}
     }

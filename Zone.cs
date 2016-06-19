@@ -25,7 +25,7 @@ using System;
 using Akka.Actor;
 
 namespace Snowbull {
-	abstract class Zone : API.IZone, IContext {
+	abstract class Zone : IZone, IContext {
 		public string Name {
 			get;
 			private set;
@@ -36,7 +36,7 @@ namespace Snowbull {
 			protected set;
 		}
 
-		public API.IServer Server {
+		public IServer Server {
 			get;
 			private set;
 		}

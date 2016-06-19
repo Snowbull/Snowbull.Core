@@ -28,7 +28,7 @@ using Akka.IO;
 using System.Text;
 using Akka.Event;
 using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.Packets.Xml.XmlPacket>>;
-using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Packets.Xt.XtData, Snowbull.API.Packets.Xt.XtPacket>>;
+using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Packets.Xt.XtData, Snowbull.Packets.Xt.XtPacket>>;
 using System.Xml;
 using Snowbull.Packets.Xml.Receive.Authentication;
 using System.Net;
@@ -43,7 +43,7 @@ namespace Snowbull {
         private readonly XtMap xtMap;
         private string buffer = "";
         private int authenticationPackets = 0;
-        private readonly string key = API.Cryptography.Random.GenerateRandomKey(10);
+        private readonly string key = Cryptography.Random.GenerateRandomKey(10);
 
 		public static Props Props(Connection connection, IActorRef socket, XmlMap xmlMap, XtMap xtMap) {
 			return Akka.Actor.Props.Create(() => new ConnectionActor(connection, socket, xmlMap, xtMap));
@@ -60,7 +60,7 @@ namespace Snowbull {
         private void Running() {
             Receive<Tcp.Received>(Received);
             Receive<Tcp.PeerClosed>(Closed);
-            Receive<API.Packets.ISendPacket>(Send);
+            Receive<Packets.ISendPacket>(Send);
             Receive<RawPacketReceived>(user == null ? new Action<RawPacketReceived>(ProcessUnauthenticatedPacket) : new Action<RawPacketReceived>(ProcessAuthenticatedPacket));
             Receive<Disconnect>(Disconnect);
 			Receive<Terminated>(Terminated);
@@ -113,14 +113,14 @@ namespace Snowbull {
                     XmlElement element = document.DocumentElement;
 					switch(element.Name) {
 						case "policy-file-request":
-							API.Packets.Xml.Send.Policy.XmlPolicyFile policy = API.Packets.Xml.Send.Policy.XmlPolicyFile.Create(new API.Packets.Xml.Send.Policy.Allow[] { new API.Packets.Xml.Send.Policy.Allow() });
+							Packets.Xml.Send.Policy.XmlPolicyFile policy = Packets.Xml.Send.Policy.XmlPolicyFile.Create(new Packets.Xml.Send.Policy.Allow[] { new Packets.Xml.Send.Policy.Allow() });
 							Self.Tell(policy, Self);
 						break;
 						case "msg":
 		                    // We need to get the body node to find the action.
-							XmlNode body = API.Packets.Xml.XmlMessage.Verify(element);
+							XmlNode body = Packets.Xml.XmlMessage.Verify(element);
 							string action = body.Attributes["action"].Value;
-							API.Packets.Xml.XmlPacket packet = xmlMap[action](document);
+							Packets.Xml.XmlPacket packet = xmlMap[action](document);
 							Self.Tell(packet, Self);
 						break;
 					}
@@ -130,10 +130,10 @@ namespace Snowbull {
 
         private void ProcessXt(string xt) {
 			if(user != null) {
-				API.Packets.Xt.XtData parser = API.Packets.Xt.XtData.Parse(xt, API.Packets.Xt.From.Client);
-				Func<API.Packets.Xt.XtData, API.Packets.Xt.XtPacket> processor;
+				Packets.Xt.XtData parser = Packets.Xt.XtData.Parse(xt, Packets.Xt.From.Client);
+				Func<Packets.Xt.XtData, Packets.Xt.XtPacket> processor;
 				if(xtMap.TryGetValue(parser.Command, out processor)) {
-					API.Packets.Xt.XtPacket packet = processor(parser);
+					Packets.Xt.XtPacket packet = processor(parser);
 					user.ActorRef.Tell(packet, Self);
 				} else {
 					Logger.Warning("Unhandled extension packet: {0}.", xt);
@@ -145,7 +145,7 @@ namespace Snowbull {
         /// Send the specified packet.
         /// </summary>
         /// <param name="packet">Packet.</param>
-        private void Send(API.Packets.ISendPacket packet) {
+        private void Send(Packets.ISendPacket packet) {
             #if DEBUG
             logger.Debug("Sending: " + packet);
             #endif
@@ -170,7 +170,7 @@ namespace Snowbull {
         /// <param name="verChk">Version check packet.</param>
         private void VersionCheck(VersionCheck verChk) {
             // Tell the client that the version is fine.
-            Self.Tell(API.Packets.Xml.Send.Authentication.ApiOK.Create());
+            Self.Tell(Packets.Xml.Send.Authentication.ApiOK.Create());
             // Expect random key request.
             UnbecomeStacked();
             BecomeStacked(KeyAgreement);
@@ -190,7 +190,7 @@ namespace Snowbull {
         /// <param name="rndk">Random key request packet.</param>
         private void RandomKey(RandomKey rndk) {
             // Tell the client the random key.
-            Self.Tell(API.Packets.Xml.Send.Authentication.RandomKey.Create(key));
+            Self.Tell(Packets.Xml.Send.Authentication.RandomKey.Create(key));
             // Expect a login request.
             UnbecomeStacked();
             BecomeStacked(Authentication);
@@ -200,11 +200,11 @@ namespace Snowbull {
         /// Sets the actor to expect an authentication packet.
         /// </summary>
         private void Authentication() {
-            Receive<API.Packets.Xml.Receive.Authentication.Login>(Login);
+            Receive<Packets.Xml.Receive.Authentication.Login>(Login);
             Running();
         }
 
-        private void Login(API.Packets.Xml.Receive.Authentication.Login login) {
+        private void Login(Packets.Xml.Receive.Authentication.Login login) {
             UnbecomeStacked();
             BecomeStacked(Authenticating);
 			((Server) connection.Server).ActorRef.Tell(new Authenticate(login, connection, key), Self);

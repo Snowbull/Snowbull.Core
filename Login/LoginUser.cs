@@ -25,12 +25,12 @@ using System;
 using Akka.Actor;
 
 namespace Snowbull.Login {
-	class LoginUser : User, API.Login.ILoginUser {
+	class LoginUser : User, Login.ILoginUser {
 		public LoginUser(int id, string name, IActorContext c, Connection connection, LoginZone zone) : base(id, name, connection, zone) {
 			ActorRef = c.ActorOf(LoginUserActor.Props(this), string.Format("user(Id={0},Username={1})", Id, Username));
 			connection.ActorRef.Tell(new Authenticated(this), ActorRef);
-			string key = API.Cryptography.Random.GenerateRandomKey(32);
-			connection.ActorRef.Tell(new API.Packets.Xt.Send.Authentication.Login(Id, key, ""));
+			string key = Cryptography.Random.GenerateRandomKey(32);
+			connection.ActorRef.Tell(new Packets.Xt.Send.Authentication.Login(Id, key, ""));
 		}
 	}
 }
