@@ -6,7 +6,7 @@
     <ProjectGuid>{5D6A1CF7-1324-4996-AB04-F446BC5CD73B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Snowbull.Core</RootNamespace>
-    <AssemblyName>Snowbull</AssemblyName>
+    <AssemblyName>Snowbull.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -141,7 +141,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
