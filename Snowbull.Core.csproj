@@ -34,26 +34,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Collections.Immutable">
-      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data.Entity.EF6">
-      <HintPath>..\packages\MySql.Data.Entity.6.9.8\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Akka">
-      <HintPath>..\packages\Akka.1.0.8\lib\net45\Akka.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="Google.ProtocolBuffers">
@@ -62,11 +47,26 @@
     <Reference Include="Google.ProtocolBuffers.Serialization">
       <HintPath>..\packages\Google.ProtocolBuffers.2.4.1.555\lib\net40\Google.ProtocolBuffers.Serialization.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6">
+      <HintPath>..\packages\MySql.Data.Entity.6.9.9\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Akka">
+      <HintPath>..\packages\Akka.1.1.2\lib\net45\Akka.dll</HintPath>
+    </Reference>
     <Reference Include="Akka.Remote">
-      <HintPath>..\packages\Akka.Remote.1.0.8\lib\net45\Akka.Remote.dll</HintPath>
+      <HintPath>..\packages\Akka.Remote.1.1.2\lib\net45\Akka.Remote.dll</HintPath>
     </Reference>
     <Reference Include="Helios">
-      <HintPath>..\packages\Helios.2.1.1\lib\net45\Helios.dll</HintPath>
+      <HintPath>..\packages\Helios.2.1.3\lib\net45\Helios.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\packages\System.Collections.Immutable.1.2.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -138,10 +138,24 @@
     <Compile Include="NameNotFoundException.cs" />
     <Compile Include="Packets\Xt\Receive\Authentication\JoinServer.cs" />
     <Compile Include="Packets\Xt\Send\Authentication\JoinServer.cs" />
+    <Compile Include="Packets\Xt\Receive\Player\Inventory\GetInventory.cs" />
+    <Compile Include="Packets\Xt\Receive\Player\Relations\Buddies\GetBuddies.cs" />
+    <Compile Include="Packets\Xt\Receive\Player\Relations\Ignore\GetIgnored.cs" />
+    <Compile Include="Packets\Xt\Receive\GetLastRevision.cs" />
+    <Compile Include="Packets\Xt\Receive\Player\EPF\GetEPFPoints.cs" />
+    <Compile Include="Packets\Xt\Send\Player\Inventory\GetInventory.cs" />
+    <Compile Include="Packets\Xt\Send\Player\Relations\Buddies\GetBuddies.cs" />
+    <Compile Include="Packets\Xt\Send\Player\Relations\Ignore\GetIgnored.cs" />
+    <Compile Include="Packets\Xt\Send\GetLastRevision.cs" />
+    <Compile Include="Packets\Xt\Send\Player\EPF\GetEPFPoints.cs" />
+    <Compile Include="Game\Rooms\RoomActor.cs" />
+    <Compile Include="Game\Rooms\IRoom.cs" />
+    <Compile Include="Game\Rooms\Room.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
@@ -161,5 +175,18 @@
     <Folder Include="Packets\Xml\Send\Policy\" />
     <Folder Include="Packets\Xt\Receive\" />
     <Folder Include="Packets\Xt\Receive\Authentication\" />
+    <Folder Include="Packets\Xt\Receive\Player\" />
+    <Folder Include="Packets\Xt\Receive\Player\Inventory\" />
+    <Folder Include="Packets\Xt\Receive\Player\Relations\" />
+    <Folder Include="Packets\Xt\Receive\Player\Relations\Buddies\" />
+    <Folder Include="Packets\Xt\Receive\Player\Relations\Ignore\" />
+    <Folder Include="Packets\Xt\Receive\Player\EPF\" />
+    <Folder Include="Packets\Xt\Send\Player\" />
+    <Folder Include="Packets\Xt\Send\Player\Inventory\" />
+    <Folder Include="Packets\Xt\Send\Player\Relations\" />
+    <Folder Include="Packets\Xt\Send\Player\Relations\Buddies\" />
+    <Folder Include="Packets\Xt\Send\Player\Relations\Ignore\" />
+    <Folder Include="Packets\Xt\Send\Player\EPF\" />
+    <Folder Include="Game\Rooms\" />
   </ItemGroup>
 </Project>

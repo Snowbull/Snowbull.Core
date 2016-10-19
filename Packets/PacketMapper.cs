@@ -31,6 +31,11 @@ namespace Snowbull.Core.Packets {
         public static ImmutableDictionary<string, Func<Xt.XtData, Xt.XtPacket>> XtMap() {
             Dictionary<string, Func<Xt.XtData, Xt.XtPacket>> map = new Dictionary<string, Func<Xt.XtData, Xt.XtPacket>>();
             map.Add("j#js", xt => new Xt.Receive.Authentication.JoinServer(xt));
+            map.Add("i#gi", xt => new Xt.Receive.Player.Inventory.GetInventory(xt));
+            map.Add("b#gb", xt => new Xt.Receive.Player.Relations.Buddies.GetBuddies(xt));
+            map.Add("n#gn", xt => new Xt.Receive.Player.Relations.Ignore.GetIgnored(xt));
+            map.Add("u#glr", xt => new Xt.Receive.GetLastRevision(xt));
+            map.Add("f#epfgr", xt => new Xt.Receive.Player.EPF.GetEPFPoints(xt));
             return map.ToImmutableDictionary();
         }
 

@@ -13,6 +13,11 @@ namespace Snowbull.Core.Game {
 		protected override void Running() {
 			base.Running();
 			Receive<Packets.Xt.Receive.Authentication.JoinServer>(JoinServer);
+            Receive<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(GetBuddies);
+            Receive<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(GetIgnored);
+            Receive<Packets.Xt.Receive.Player.Inventory.GetInventory>(GetInventory);
+            Receive<Packets.Xt.Receive.GetLastRevision>(GetLastRevision);
+            Receive<Packets.Xt.Receive.Player.EPF.GetEPFPoints>(GetEPFPoints);
 		}
 
 		private void JoinServer(Packets.Xt.Receive.Authentication.JoinServer js) {
@@ -27,6 +32,36 @@ namespace Snowbull.Core.Game {
 				)
 			, Self);
 		}
+
+        private void GetBuddies(Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies gb) {
+            connection.ActorRef.Tell(
+                new Packets.Xt.Send.Player.Relations.Buddies.GetBuddies() // TODO - Load actual buddy list.
+            , Self);
+        }
+
+        private void GetIgnored(Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored gn) {
+            connection.ActorRef.Tell(
+                new Packets.Xt.Send.Player.Relations.Ignore.GetIgnored() // TODO - Load actual ignore list.
+            , Self);
+        }
+
+        private void GetInventory(Packets.Xt.Receive.Player.Inventory.GetInventory gi) {
+            connection.ActorRef.Tell(
+                new Packets.Xt.Send.Player.Inventory.GetInventory() // TODO - Load actual inventory list.
+            , Self);
+        }
+
+        private void GetLastRevision(Packets.Xt.Receive.GetLastRevision glr) {
+            connection.ActorRef.Tell(
+                new Packets.Xt.Send.GetLastRevision(3239)
+            , Self);
+        }
+
+        private void GetEPFPoints(Packets.Xt.Receive.Player.EPF.GetEPFPoints epfgr) {
+            connection.ActorRef.Tell(
+                new Packets.Xt.Send.Player.EPF.GetEPFPoints(0, 1) // TODO - Find out what these are?
+            , Self);
+        }
 	}
 }
 
