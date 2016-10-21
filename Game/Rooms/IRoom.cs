@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Snowbull.Core.Game.Room {
+namespace Snowbull.Core.Game.Rooms {
     public interface IRoom : IContext {
         int InternalID {
             get;

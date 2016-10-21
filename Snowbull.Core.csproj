@@ -151,6 +151,9 @@
     <Compile Include="Game\Rooms\RoomActor.cs" />
     <Compile Include="Game\Rooms\IRoom.cs" />
     <Compile Include="Game\Rooms\Room.cs" />
+    <Compile Include="Packets\Xt\Receive\Rooms\JoinRoom.cs" />
+    <Compile Include="Packets\Xt\Send\Rooms\AddPlayer.cs" />
+    <Compile Include="Packets\Xt\Send\Rooms\RemovePlayer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -188,5 +191,7 @@
     <Folder Include="Packets\Xt\Send\Player\Relations\Ignore\" />
     <Folder Include="Packets\Xt\Send\Player\EPF\" />
     <Folder Include="Game\Rooms\" />
+    <Folder Include="Packets\Xt\Receive\Rooms\" />
+    <Folder Include="Packets\Xt\Send\Rooms\" />
   </ItemGroup>
 </Project>

@@ -63,5 +63,27 @@ namespace Snowbull.Core.Game {
             , Self);
         }
 	}
+
+    internal class JoinedRoom {
+        public Rooms.Room Room {
+            get;
+            private set;
+        }
+
+        public JoinedRoom(Rooms.Room room) {
+            Room = room;
+        }
+    }
+
+    internal class RoomFull {
+        public Rooms.Room Room {
+            get;
+            private set;
+        }
+
+        public RoomFull(Rooms.Room room) {
+            Room = room;
+        }
+    }
 }
 

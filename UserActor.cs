@@ -1,4 +1,6 @@
-﻿using Akka.Event;
+﻿using System;
+using Akka.Actor;
+using Akka.Event;
 
 namespace Snowbull.Core {
 	public abstract class UserActor : SnowbullActor {
@@ -31,7 +33,13 @@ namespace Snowbull.Core {
         }
 
 		protected virtual void Running() {
+            Receive<Packets.ISendPacket>(new Action<Packets.ISendPacket>(Send));
 		}
+
+        private void Send(Packets.ISendPacket packet) {
+            // Forward on any packets sent to the user.
+            connection.ActorRef.Forward(packet);
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using Akka.Actor;
 
-namespace Snowbull.Core.Game.Room {
+namespace Snowbull.Core.Game.Rooms {
     public class Room : IRoom {
         public IActorRef ActorRef {
             get;

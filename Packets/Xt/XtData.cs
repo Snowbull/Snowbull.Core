@@ -88,7 +88,7 @@ namespace Snowbull.Core.Packets.Xt {
             if(data == null) throw new ArgumentNullException("data");
             string command;
             int room;
-            string[] args = new string[] {};
+            string[] args;
             string regex = sender == From.Client ? @"^(%xt%[s|z]%[a-zA-Z0-9#]*%[-.0-9]*%.*?)$" : @"^(%xt%[a-z|A-Z|0-9|#|_]*%-?[0-9]*%.*?)$";
             int cmdp = sender == From.Client ? 3 : 2;
             int roomp = sender == From.Client ? 4 : 3;
@@ -107,7 +107,9 @@ namespace Snowbull.Core.Packets.Xt {
             if(parts.Length - 1 > argp) {
                 args = new string[parts.Length - 1 - argp];
                 for(int i = argp; i < parts.Length - 1; i++)
-                    args[i-argp] = parts[i];
+                    args[i - argp] = parts[i];
+            }else{
+                args = new string[0];
             }
             return new XtData(sender, command, args, room);
         }
