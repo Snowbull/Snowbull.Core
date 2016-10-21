@@ -21,8 +21,6 @@
  * License: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>
  */
 
-using System;
-
 namespace Snowbull.Core.Packets.Xt.Send.Player.EPF {
     public class GetEPFPoints : XtPacket, ISendPacket {
         public GetEPFPoints(int first, int second) : base( // TODO - Find out what the arguments actually are. (if it ever matters)

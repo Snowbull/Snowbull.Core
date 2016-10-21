@@ -21,8 +21,6 @@
  * License: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>
  */
 
-using System;
-
 namespace Snowbull.Core.Packets.Xt.Send.Authentication {
     public class JoinServer : XtPacket, ISendPacket {
         public JoinServer(bool agent, bool guide, bool moderator, bool modifiedStampCover) : base(

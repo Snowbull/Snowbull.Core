@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Xml;
 
 namespace Snowbull.Core.Packets.Xml {
     public class MessageParseException : SnowbullException {

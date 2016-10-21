@@ -22,14 +22,9 @@
  */
 
 using System;
-using Akka;
 using Akka.IO;
 using Akka.Actor;
-using System.Net;
-using Akka.Event;
-using System.Collections.Immutable;
 using System.Collections.Generic;
-using System.Xml;
 using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<System.Xml.XmlDocument, Snowbull.Core.Packets.Xml.XmlPacket>>;
 using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Core.Packets.Xt.XtData, Snowbull.Core.Packets.Xt.XtPacket>>;
 

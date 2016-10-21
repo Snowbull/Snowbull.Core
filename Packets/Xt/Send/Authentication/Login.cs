@@ -21,8 +21,6 @@
  * License: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>
  */
 
-using System;
-
 namespace Snowbull.Core.Packets.Xt.Send.Authentication {
     public class Login : XtPacket, ISendPacket {
         public Login(int id, string key, string populations) : base(new XtData(From.Server, "l", new string[] { id.ToString(), key, "", populations })) {

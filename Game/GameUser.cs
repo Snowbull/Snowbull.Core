@@ -1,5 +1,4 @@
-﻿using System;
-using Akka.Actor;
+﻿using Akka.Actor;
 
 namespace Snowbull.Core.Game {
 	public class GameUser : User {

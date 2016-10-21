@@ -38,8 +38,7 @@
  *		</servers>
  *	</snowbull>
  */
-
-using System;
+ 
 using System.Configuration;
 
 namespace Snowbull.Core.Configuration {

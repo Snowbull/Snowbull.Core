@@ -20,9 +20,9 @@
  *
  * License: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>
  */
-
-using System;
+ 
 using System.Security.Cryptography;
+
 namespace Snowbull.Core.Cryptography {
     public static class Random {
         public static string GenerateRandomKey(int length) {

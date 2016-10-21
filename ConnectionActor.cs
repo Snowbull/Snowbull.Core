@@ -22,7 +22,6 @@
  */
 
 using System;
-using Akka;
 using Akka.Actor;
 using Akka.IO;
 using System.Text;
@@ -31,7 +30,6 @@ using XmlMap = System.Collections.Immutable.ImmutableDictionary<string, System.F
 using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Func<Snowbull.Core.Packets.Xt.XtData, Snowbull.Core.Packets.Xt.XtPacket>>;
 using System.Xml;
 using Snowbull.Core.Packets.Xml.Receive.Authentication;
-using System.Net;
 using Snowbull.Core.Packets;
 
 namespace Snowbull.Core {

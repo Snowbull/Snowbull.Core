@@ -1,11 +1,5 @@
 ﻿using System;
 using Akka.Actor;
-using Snowbull.Core.Packets.Xt.Receive;
-using Snowbull.Core.Packets.Xt.Receive.Authentication;
-using Snowbull.Core.Packets.Xt.Receive.Player.EPF;
-using Snowbull.Core.Packets.Xt.Receive.Player.Inventory;
-using Snowbull.Core.Packets.Xt.Receive.Player.Relations.Buddies;
-using Snowbull.Core.Packets.Xt.Receive.Player.Relations.Ignore;
 
 namespace Snowbull.Core.Game {
 	public class GameUserActor : UserActor {

@@ -20,9 +20,9 @@
  *
  * License: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>
  */
-
-using System;
+ 
 using System.Xml;
+
 namespace Snowbull.Core.Packets.Xml.Receive.Authentication {
     public class RandomKey : XmlMessage, IReceivePacket {
         public RandomKey(XmlDocument xml) : base(xml) {

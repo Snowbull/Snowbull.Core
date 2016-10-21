@@ -21,8 +21,6 @@
  * License: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>
  */
 
-using System;
-
 namespace Snowbull.Core.Packets.Xml.Send.Policy {
 	public sealed class Allow : Rule {
 		public Allow() : base("allow-access-from") {
