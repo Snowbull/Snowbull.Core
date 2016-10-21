@@ -32,6 +32,7 @@ using XtMap = System.Collections.Immutable.ImmutableDictionary<string, System.Fu
 using System.Xml;
 using Snowbull.Core.Packets.Xml.Receive.Authentication;
 using System.Net;
+using Snowbull.Core.Packets;
 
 namespace Snowbull.Core {
    	public sealed class ConnectionActor : SnowbullActor {
@@ -58,12 +59,12 @@ namespace Snowbull.Core {
         }
 
         private void Running() {
-            Receive<Tcp.Received>(Received);
-            Receive<Tcp.PeerClosed>(Closed);
-            Receive<Packets.ISendPacket>(Send);
+            Receive<Tcp.Received>(new Action<Tcp.Received>(Received));
+            Receive<Tcp.PeerClosed>(new Action<Tcp.PeerClosed>(Closed));
+            Receive<Packets.ISendPacket>(new Action<ISendPacket>(Send));
             Receive<RawPacketReceived>(user == null ? new Action<RawPacketReceived>(ProcessUnauthenticatedPacket) : new Action<RawPacketReceived>(ProcessAuthenticatedPacket));
-            Receive<Disconnect>(Disconnect);
-			Receive<Terminated>(Terminated);
+            Receive<Disconnect>(new Action<Disconnect>(Disconnect));
+			Receive<Terminated>(new Action<Terminated>(Terminated));
         }
 
         private void Received(Tcp.Received received) {
@@ -159,7 +160,7 @@ namespace Snowbull.Core {
         /// Sets the actor to expect an API version check.
         /// </summary>
         private void APICheck() {
-            Receive<VersionCheck>(VersionCheck);
+            Receive<VersionCheck>(new Action<VersionCheck>(VersionCheck));
             Running();
         }
 
@@ -180,7 +181,7 @@ namespace Snowbull.Core {
         /// Sets the actor to expect a random key request.
         /// </summary>
         private void KeyAgreement() {
-            Receive<RandomKey>(RandomKey);
+            Receive<RandomKey>(new Action<RandomKey>(RandomKey));
             Running();
         }
 
@@ -200,7 +201,7 @@ namespace Snowbull.Core {
         /// Sets the actor to expect an authentication packet.
         /// </summary>
         private void Authentication() {
-            Receive<Packets.Xml.Receive.Authentication.Login>(Login);
+            Receive<Packets.Xml.Receive.Authentication.Login>(new Action<Packets.Xml.Receive.Authentication.Login>(Login));
             Running();
         }
 
@@ -211,7 +212,7 @@ namespace Snowbull.Core {
         }
 
         private void Authenticating() {
-            Receive<Authenticated>(Authenticate);
+            Receive<Authenticated>(new Action<Authenticated>(Authenticate));
             Running();
         }
 

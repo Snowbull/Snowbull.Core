@@ -1,5 +1,11 @@
 ﻿using System;
 using Akka.Actor;
+using Snowbull.Core.Packets.Xt.Receive;
+using Snowbull.Core.Packets.Xt.Receive.Authentication;
+using Snowbull.Core.Packets.Xt.Receive.Player.EPF;
+using Snowbull.Core.Packets.Xt.Receive.Player.Inventory;
+using Snowbull.Core.Packets.Xt.Receive.Player.Relations.Buddies;
+using Snowbull.Core.Packets.Xt.Receive.Player.Relations.Ignore;
 
 namespace Snowbull.Core.Game {
 	public class GameUserActor : UserActor {
@@ -12,12 +18,12 @@ namespace Snowbull.Core.Game {
 
 		protected override void Running() {
 			base.Running();
-			Receive<Packets.Xt.Receive.Authentication.JoinServer>(JoinServer);
-            Receive<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(GetBuddies);
-            Receive<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(GetIgnored);
-            Receive<Packets.Xt.Receive.Player.Inventory.GetInventory>(GetInventory);
-            Receive<Packets.Xt.Receive.GetLastRevision>(GetLastRevision);
-            Receive<Packets.Xt.Receive.Player.EPF.GetEPFPoints>(GetEPFPoints);
+			Receive<Packets.Xt.Receive.Authentication.JoinServer>(new Action<Packets.Xt.Receive.Authentication.JoinServer>(JoinServer));
+            Receive<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(new Action<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(GetBuddies));
+            Receive<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(new Action<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(GetIgnored));
+            Receive<Packets.Xt.Receive.Player.Inventory.GetInventory>(new Action<Packets.Xt.Receive.Player.Inventory.GetInventory>(GetInventory));
+            Receive<Packets.Xt.Receive.GetLastRevision>(new Action<Packets.Xt.Receive.GetLastRevision>(GetLastRevision));
+            Receive<Packets.Xt.Receive.Player.EPF.GetEPFPoints>(new Action<Packets.Xt.Receive.Player.EPF.GetEPFPoints>(GetEPFPoints));
 		}
 
 		private void JoinServer(Packets.Xt.Receive.Authentication.JoinServer js) {

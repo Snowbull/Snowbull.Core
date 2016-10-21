@@ -46,11 +46,11 @@ namespace Snowbull.Core {
 
 		public ServerActor(Server server) : base() {
 			this.server = server;
-            Receive<Tcp.Bound>(Bound);
-            Receive<AddZone>(AddZone);
-            Receive<Tcp.Connected>(Connected);
-            Receive<Authenticate>(Authenticate);
-            Receive<Disconnected>(Disconnected);
+            Receive<Tcp.Bound>(new Action<Tcp.Bound>(Bound));
+            Receive<AddZone>(new Action<AddZone>(AddZone));
+            Receive<Tcp.Connected>(new Action<Tcp.Connected>(Connected));
+            Receive<Authenticate>(new Action<Authenticate>(Authenticate));
+            Receive<Disconnected>(new Action<Disconnected>(Disconnected));
         }
 
 		protected override SupervisorStrategy SupervisorStrategy() {
@@ -100,7 +100,7 @@ namespace Snowbull.Core {
 
     }
 
-    class AddZone {
+    internal class AddZone {
         public string Name {
             get;
             private set;
@@ -117,7 +117,7 @@ namespace Snowbull.Core {
         }
     }
 
-    public class Disconnected {
+    internal class Disconnected {
         public IActorRef Actor {
             get;
             private set;

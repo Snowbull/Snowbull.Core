@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
 
@@ -43,10 +44,10 @@ namespace Snowbull.Core {
         }
 
         protected virtual void Running() {
-			Receive<Authenticate>(Authenticate);
-			Receive<Authentication>(Authentication);
-			Receive<Packets.ISendPacket>(SendPacket);
-			Receive<Terminated>(Terminated);
+			Receive<Authenticate>(new Action<Authenticate>(Authenticate));
+			Receive<Authentication>(new Action<Authentication>(Authentication));
+			Receive<Packets.ISendPacket>(new Action<Packets.ISendPacket>(SendPacket));
+			Receive<Terminated>(new Action<Terminated>(Terminated));
         }
 
         protected abstract void Authenticate(Authenticate authenticate);
@@ -60,7 +61,7 @@ namespace Snowbull.Core {
 		protected abstract User Authentication(Authenticate request, Data.Models.Immutable.ImmutableCredentials credentials);
 
 		private void SendPacket(Packets.ISendPacket packet) {
-			foreach(IActorRef user in users.Values)
+			foreach(IActorRef user in users.Keys)
 				user.Forward(packet);
 		}
 
