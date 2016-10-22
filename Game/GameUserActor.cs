@@ -43,7 +43,7 @@ namespace Snowbull.Core.Game {
         }
 
         private void StashIncoming(Packets.IReceivePacket received) {
-            Stash.Stash(received);
+            Stash.Stash();
         }
 
 		private void JoinServer(Packets.Xt.Receive.Authentication.JoinServer js) {

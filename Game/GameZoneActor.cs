@@ -22,16 +22,23 @@
  */
  
 using System.Data.Entity;
+using System.Collections.Generic;
 using Akka.Actor;
 
 namespace Snowbull.Core.Game {
     sealed class GameZoneActor : ZoneActor {
+        private readonly Dictionary<int, Rooms.Room> rooms = new Dictionary<int, Rooms.Room>();
+
 		public static Props Props(GameZone zone) {
 			return Akka.Actor.Props.Create(() => new GameZoneActor(zone));
 		}
 
 		public GameZoneActor(GameZone zone) : base(zone) {
-
+            Configuration.SnowbullConfigurationSection config = Configuration.SnowbullConfigurationSection.GetConfiguration();
+            foreach(Configuration.Room setting in config.Rooms) {
+                Rooms.Room room = new Rooms.Room(int.Parse(setting.Id), int.Parse(setting.ExternalId), setting.Name, zone, int.Parse(setting.Capacity), Context);
+                rooms.Add(room.ExternalID, room);
+            }
         }
 
 		protected override void Authenticate(Authenticate auth) {
