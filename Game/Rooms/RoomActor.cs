@@ -24,39 +24,58 @@ namespace Snowbull.Core.Game.Rooms {
         public RoomActor(Room room, int capacity) {
             this.room = room;
             this.capacity = capacity;
-            Receive<JoinRoom>(new Action<JoinRoom>(JoinRoom));
-            Receive<LeaveRoom>(new Action<LeaveRoom>(LeaveRoom));
-            Receive<Packets.ISendPacket>(new Action<Packets.ISendPacket>(Send));
+            Become(Running);
         }
 
-        protected virtual void JoinRoom(JoinRoom jr) {
+        protected virtual void Running() {
+            Receive<JoinRoom>(new Action<JoinRoom>(Join));
+            Receive<LeaveRoom>(new Action<LeaveRoom>(Leave));
+            Receive<Packets.ISendPacket>(new Action<Packets.ISendPacket>(Send));
+            Receive<Terminated>(new Action<Terminated>(Terminated));
+        }
+
+        protected virtual void Join(JoinRoom jr) {
             if(players.Count < capacity) {
                 Send(new Packets.Xt.Send.Rooms.AddPlayer(jr.Player.User.Id, jr.Player.ToString(), InternalID));
                 players.Add(jr.Player);
-                jr.Player.User.ActorRef.Tell(new JoinedRoom(room, players.ToImmutableList()));
+                Sender.Tell(new JoinedRoom(room, players.ToImmutableList()));
+                Context.Watch(jr.Player.User.ActorRef);
             }else{
-                jr.Player.User.ActorRef.Tell(new RoomFull(room));
+                Sender.Tell(new RoomFull(room));
             }
         }
 
-        protected virtual void LeaveRoom(LeaveRoom lr) {
+        protected virtual void Leave(LeaveRoom lr) {
             foreach(Player.Player player in players) {
                 if(player.User == lr.User) {
-                    players.Remove(player);
-                    Send(new Packets.Xt.Send.Rooms.RemovePlayer(lr.User.Id, InternalID));
-                    return;
+                    Remove(player);
+                    break;
                 }
             }
         }
 
+        private void Terminated(Terminated t) {
+            foreach(Player.Player player in players) {
+                if(player.User.ActorRef == t.ActorRef) {
+                    Remove(player);
+                    break;
+                }
+            }
+        }
+
+        protected virtual void Remove(Player.Player player) {
+            players.Remove(player);
+            Send(new Packets.Xt.Send.Rooms.RemovePlayer(player.User.Id, InternalID));
+        }
+
         private void Send(Packets.ISendPacket packet) {
             foreach(Player.Player player in players)
-                player.User.Connection.ActorRef.Tell(packet, Self);
+                player.User.ActorRef.Tell(packet, Self);
         }
     }
 
     public sealed class JoinRoom {
-        public Packets.Xt.Receive.Rooms.JoinRoom Request {
+        public int ExternalID {
             get;
             private set;
         }
@@ -66,8 +85,8 @@ namespace Snowbull.Core.Game.Rooms {
             private set;
         }
 
-        public JoinRoom(Packets.Xt.Receive.Rooms.JoinRoom request, Player.Player player) {
-            Request = request;
+        public JoinRoom(int externalId, Player.Player player) {
+            ExternalID = externalId;
             Player = player;
         }
     }

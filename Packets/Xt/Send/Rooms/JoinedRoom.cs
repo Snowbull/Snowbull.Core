@@ -15,7 +15,7 @@ namespace Snowbull.Core.Packets.Xt.Send.Rooms {
             string data = "";
             for(int i = 0; i < players.Count; i++) {
                 Game.Player.Player player = players[i];
-                data += player.ToString() + (i != 0 ? "%" : "");
+                data += player.ToString() + ((i + 1) != players.Count ? "%" : "");
             }
             return data;
         }

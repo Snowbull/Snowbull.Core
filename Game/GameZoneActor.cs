@@ -20,7 +20,8 @@
  *
  * License: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>
  */
- 
+
+using System;
 using System.Data.Entity;
 using System.Collections.Generic;
 using Akka.Actor;
@@ -39,6 +40,11 @@ namespace Snowbull.Core.Game {
                 Rooms.Room room = new Rooms.Room(int.Parse(setting.Id), int.Parse(setting.ExternalId), setting.Name, zone, int.Parse(setting.Capacity), Context);
                 rooms.Add(room.ExternalID, room);
             }
+        }
+
+        protected override void Running() {
+            base.Running();
+            Receive<Rooms.JoinRoom>(new Action<Rooms.JoinRoom>(JoinRoom));
         }
 
 		protected override void Authenticate(Authenticate auth) {
@@ -65,6 +71,12 @@ namespace Snowbull.Core.Game {
 				throw new NameNotFoundException(request.Sender, request.Request.Username, string.Format("User '{0}' was not found!", request.Request.Username));
 			}
 		}
+
+        private void JoinRoom(Rooms.JoinRoom jr) {
+            Rooms.Room room = rooms[jr.ExternalID];
+            if(room != null)
+                room.ActorRef.Forward(jr);
+        }
     }
 }
 

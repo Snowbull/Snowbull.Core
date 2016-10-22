@@ -7,6 +7,7 @@ namespace Snowbull.Core.Game {
         private readonly Player.Player player;
         private Rooms.Room room = null;
         private int joining = -1;
+        private static readonly ImmutableArray<int> starts = (new int[] {100, 200, 300, 400, 800, 801, 802, 230, 810, 804}).ToImmutableArray(); // Starting rooms.
 
         public IStash Stash {
             get;
@@ -33,13 +34,13 @@ namespace Snowbull.Core.Game {
 
         private void Joined() {
             Running();
-            Receive<Packets.Xt.Receive.Rooms.JoinRoom>(JoinRoom);
+            Receive<Packets.Xt.Receive.Rooms.JoinRoom>(new Action<Packets.Xt.Receive.Rooms.JoinRoom>(JoinRoom));
         }
 
         private void Transitioning() {
             base.Running();
-            Receive<JoinedRoom>(JoinedRoom);
-            Receive<Packets.IReceivePacket>(StashIncoming);
+            Receive<JoinedRoom>(new Action<JoinedRoom>(JoinedRoom));
+            Receive<Packets.IReceivePacket>(new Action<Packets.IReceivePacket>(StashIncoming));
         }
 
         private void StashIncoming(Packets.IReceivePacket received) {
@@ -73,12 +74,19 @@ namespace Snowbull.Core.Game {
 
         private void GetLastRevision(Packets.Xt.Receive.GetLastRevision glr) {
             connection.ActorRef.Tell(new Packets.Xt.Send.GetLastRevision(3239), Self);
+            JoinStartRoom();
         }
 
         private void GetEPFPoints(Packets.Xt.Receive.Player.EPF.GetEPFPoints epfgr) {
             connection.ActorRef.Tell(
                 new Packets.Xt.Send.Player.EPF.GetEPFPoints(0, 1) // TODO - Find out what these are?
             , Self);
+        }
+
+        private void JoinStartRoom() {
+            BecomeStacked(Transitioning);
+            joining = starts[0];
+            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(joining, player), Self);
         }
 
         private void JoinedRoom(JoinedRoom jr) {
@@ -99,14 +107,20 @@ namespace Snowbull.Core.Game {
         }
 
         private void RoomFull(RoomFull rf) {
-            connection.ActorRef.Tell(new Packets.Xt.Send.Error(Errors.ROOM_FULL, rf.Room.InternalID));
-            joining = -1;
+            if(room == null) {
+                connection.ActorRef.Tell(new Packets.Xt.Send.Error(Errors.ROOM_FULL, rf.Room.InternalID));
+                joining = -1;
+            }else{
+                int i = starts.IndexOf(joining);
+                joining = starts[(i + 1) % starts.Length];
+                user.Zone.ActorRef.Tell(new Rooms.JoinRoom(joining, player), Self);
+            }
         }
 
         private void JoinRoom(Packets.Xt.Receive.Rooms.JoinRoom jr) {
             BecomeStacked(Transitioning);
             joining = jr.ExternalID;
-            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(jr, player));
+            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(joining, player));
         }
 	}
 
