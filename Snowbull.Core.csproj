@@ -154,6 +154,10 @@
     <Compile Include="Packets\Xt\Receive\Rooms\JoinRoom.cs" />
     <Compile Include="Packets\Xt\Send\Rooms\AddPlayer.cs" />
     <Compile Include="Packets\Xt\Send\Rooms\RemovePlayer.cs" />
+    <Compile Include="Game\Player\Player.cs" />
+    <Compile Include="Game\Player\Clothing.cs" />
+    <Compile Include="Game\Player\Position.cs" />
+    <Compile Include="Packets\Xt\Send\Rooms\JoinedRoom.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -193,5 +197,6 @@
     <Folder Include="Game\Rooms\" />
     <Folder Include="Packets\Xt\Receive\Rooms\" />
     <Folder Include="Packets\Xt\Send\Rooms\" />
+    <Folder Include="Game\Player\" />
   </ItemGroup>
 </Project>

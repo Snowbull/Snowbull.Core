@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Akka.Actor;
 
 namespace Snowbull.Core.Game.Rooms {
     public class RoomActor : SnowbullActor {
         protected readonly Room room;
-        protected readonly List<GameUser> users = new List<GameUser>();
+        protected readonly List<Player.Player> players = new List<Player.Player>();
         protected int capacity;
 
         protected int InternalID {
@@ -29,39 +30,50 @@ namespace Snowbull.Core.Game.Rooms {
         }
 
         protected virtual void JoinRoom(JoinRoom jr) {
-            if(users.Count < capacity) {
-                users.Add(jr.User);
-                jr.User.ActorRef.Tell(new JoinedRoom(room));
-                Send(new Packets.Xt.Send.Rooms.AddPlayer(jr.User.Id, "", InternalID));
+            if(players.Count < capacity) {
+                Send(new Packets.Xt.Send.Rooms.AddPlayer(jr.Player.User.Id, jr.Player.ToString(), InternalID));
+                players.Add(jr.Player);
+                jr.Player.User.ActorRef.Tell(new JoinedRoom(room, players.ToImmutableList()));
             }else{
-                jr.User.ActorRef.Tell(new RoomFull(room));
+                jr.Player.User.ActorRef.Tell(new RoomFull(room));
             }
         }
 
         protected virtual void LeaveRoom(LeaveRoom lr) {
-            users.Remove(lr.User);
-            Send(new Packets.Xt.Send.Rooms.RemovePlayer(lr.User.Id, InternalID));
+            foreach(Player.Player player in players) {
+                if(player.User == lr.User) {
+                    players.Remove(player);
+                    Send(new Packets.Xt.Send.Rooms.RemovePlayer(lr.User.Id, InternalID));
+                    return;
+                }
+            }
         }
 
         private void Send(Packets.ISendPacket packet) {
-            foreach(GameUser user in users)
-                user.ActorRef.Tell(packet);
+            foreach(Player.Player player in players)
+                player.User.Connection.ActorRef.Tell(packet, Self);
         }
     }
 
     public sealed class JoinRoom {
-        public GameUser User {
+        public Packets.Xt.Receive.Rooms.JoinRoom Request {
             get;
             private set;
         }
 
-        public JoinRoom(GameUser user) {
-            User = user;
+        public Player.Player Player {
+            get;
+            private set;
+        }
+
+        public JoinRoom(Packets.Xt.Receive.Rooms.JoinRoom request, Player.Player player) {
+            Request = request;
+            Player = player;
         }
     }
 
     public sealed class LeaveRoom {
-        public GameUser User {
+        public GameUser User { // It is safer to use User here because Player can change.
             get;
             private set;
         }
