@@ -135,6 +135,7 @@ namespace Snowbull.Core.Game {
                     Become(Joined);
                 }
                 room = jr.Room;
+                player = jr.Player;
                 connection.ActorRef.Tell(new Packets.Xt.Send.Rooms.JoinedRoom(jr.Room.ExternalID, jr.Players, jr.Room.InternalID), Self);
                 Stash.UnstashAll();
             }
@@ -154,7 +155,8 @@ namespace Snowbull.Core.Game {
         private void JoinRoom(Packets.Xt.Receive.Rooms.JoinRoom jr) {
             BecomeStacked(Transitioning);
             joining = jr.ExternalID;
-            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(joining, player));
+            Player.Player p = player.UpdatePosition(new Player.Position(jr.X, jr.Y, 0));
+            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(joining, p));
         }
 	}
 
@@ -164,13 +166,19 @@ namespace Snowbull.Core.Game {
             private set;
         }
 
+        public Player.Player Player {
+            get;
+            private set;
+        }
+
         public ImmutableList<Player.Player> Players {
             get;
             private set;
         }
 
-        public JoinedRoom(Rooms.Room room, ImmutableList<Player.Player> players) {
+        public JoinedRoom(Rooms.Room room, Player.Player player, ImmutableList<Player.Player> players) {
             Room = room;
+            Player = player;
             Players = players;
         }
     }

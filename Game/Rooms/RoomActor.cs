@@ -38,7 +38,7 @@ namespace Snowbull.Core.Game.Rooms {
             if(players.Count < capacity) {
                 Send(new Packets.Xt.Send.Rooms.AddPlayer(jr.Player.User.Id, jr.Player.ToString(), InternalID));
                 players.Add(jr.Player);
-                Sender.Tell(new JoinedRoom(room, players.ToImmutableList()));
+                Sender.Tell(new JoinedRoom(room, jr.Player, players.ToImmutableList()));
                 Context.Watch(jr.Player.User.ActorRef);
             }else{
                 Sender.Tell(new RoomFull(room));
@@ -66,6 +66,7 @@ namespace Snowbull.Core.Game.Rooms {
         protected virtual void Remove(Player.Player player) {
             players.Remove(player);
             Send(new Packets.Xt.Send.Rooms.RemovePlayer(player.User.Id, InternalID));
+            Context.Unwatch(player.User.ActorRef);
         }
 
         private void Send(Packets.ISendPacket packet) {
