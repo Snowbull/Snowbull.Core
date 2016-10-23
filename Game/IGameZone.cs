@@ -1,5 +1,5 @@
 ﻿/**
- * Observable Game Zone Interface for Snowbull's Plugin API ("Snowbull").
+ * Immutable game zone context interface for Snowbull's Plugin API ("Snowbull").
  *
  * Copyright 2016 by Lewis Hazell <staticabc@live.co.uk>
  *
@@ -22,6 +22,9 @@
  */
  
 namespace Snowbull.Core.Game {
+    /// <summary>
+    /// Immutable game zone context interface.
+    /// </summary>
     public interface IGameZone : IZone {
     }
 }

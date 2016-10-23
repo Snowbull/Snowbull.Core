@@ -22,36 +22,71 @@
  */
 
 namespace Snowbull.Core.Game.Player {
+    /// <summary>
+    /// Immutable player class, designed to be passed between UserActors and RoomActors to keep track of state.
+    /// </summary>
     public sealed class Player {
+        /// <summary>
+        /// Gets the user.
+        /// </summary>
+        /// <value>The user.</value>
         public GameUser User {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the player's clothing.
+        /// </summary>
+        /// <value>The player's clothing.</value>
         public Clothing Clothing {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the player's position.
+        /// </summary>
+        /// <value>The player's position.</value>
         public Position Position {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Snowbull.Core.Game.Player.Player"/> class.
+        /// </summary>
+        /// <param name="user">User.</param>
+        /// <param name="clothing">Player's clothing.</param>
+        /// <param name="position">Player's position.</param>
         public Player(GameUser user, Clothing clothing, Position position) {
             User = user;
             Clothing = clothing;
             Position = position;
         }
 
+        /// <summary>
+        /// Updates the player's clothing.
+        /// </summary>
+        /// <returns>A new Player instance containing the updated Clothing object.</returns>
+        /// <param name="clothing">Clothing.</param>
         public Player UpdateClothing(Clothing clothing) {
             return new Player(User, clothing, Position);
         }
 
+        /// <summary>
+        /// Updates the player's position.
+        /// </summary>
+        /// <returns>A new Player instance containing the updated Position object.</returns>
+        /// <param name="position">Position.</param>
         public Player UpdatePosition(Position position) {
             return new Player(User, Clothing, position);
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="Snowbull.Core.Game.Player.Player"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="Snowbull.Core.Game.Player.Player"/>.</returns>
         public override string ToString() {
             int days = 0; // Temporary, will add ranks/days.
             return string.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}", User.Id, User.Username, 1, Clothing, Position, 1, days, 0, 0);

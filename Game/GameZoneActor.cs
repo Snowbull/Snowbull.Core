@@ -1,5 +1,5 @@
 ﻿/**
- * Game Zone Akka Actor for Snowbull.
+ * Game zone actor for Snowbull.
  *
  * Copyright 2016 by Lewis Hazell <staticabc@live.co.uk>
  *
@@ -34,6 +34,10 @@ namespace Snowbull.Core.Game {
 			return Akka.Actor.Props.Create(() => new GameZoneActor(zone));
 		}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Snowbull.Core.Game.GameZoneActor"/> class.
+        /// </summary>
+        /// <param name="zone">Immutable zone context.</param>
 		public GameZoneActor(GameZone zone) : base(zone) {
             Configuration.SnowbullConfigurationSection config = Configuration.SnowbullConfigurationSection.GetConfiguration();
             foreach(Configuration.Room setting in config.Rooms) {
@@ -42,6 +46,9 @@ namespace Snowbull.Core.Game {
             }
         }
 
+        /// <summary>
+        /// Regular running state/behaviour.
+        /// </summary>
         protected override void Running() {
             base.Running();
             Receive<Rooms.JoinRoom>(new Action<Rooms.JoinRoom>(JoinRoom));

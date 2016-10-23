@@ -1,5 +1,5 @@
 ﻿/**
- * Observable Game Zone for Snowbull.
+ * Immutable Game Zone context for Snowbull.
  *
  * Copyright 2016 by Lewis Hazell <staticabc@live.co.uk>
  *
@@ -24,7 +24,10 @@
 using Akka.Actor;
 
 namespace Snowbull.Core.Game {
-	class GameZone : Zone, Game.IGameZone {
+    /// <summary>
+    /// Immutable game zone instance.
+    /// </summary>
+	public class GameZone : Zone, Game.IGameZone {
 		public GameZone(string name, IActorContext c, Server server) : base(name, server) {
             ActorRef = c.ActorOf(GameZoneActor.Props(this), string.Format("zone(Name={0})", Name));
 		}
