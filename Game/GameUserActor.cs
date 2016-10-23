@@ -1,10 +1,11 @@
 ﻿using System;
 using Akka.Actor;
+using System.Data.Entity;
 using System.Collections.Immutable;
 
 namespace Snowbull.Core.Game {
     public class GameUserActor : UserActor, IWithUnboundedStash {
-        private readonly Player.Player player;
+        private Player.Player player;
         private Rooms.Room room = null;
         private int joining = -1;
         private static readonly ImmutableArray<int> starts = (new int[] {100, 200, 300, 400, 800, 801, 802, 230, 810, 804}).ToImmutableArray(); // Starting rooms.
@@ -19,21 +20,52 @@ namespace Snowbull.Core.Game {
 		}
 
 		public GameUserActor(GameUser user) : base(user) {
-            player = new Player.Player(user, new Player.Clothing(1, 0, 0, 0, 0, 0, 0, 0, 0), new Position(0, 0, 0)); // Temporary.
+
 		}
 
+        protected override void PreStart() {
+            base.PreStart();
+            GameUser user = (GameUser) this.user;
+            Data.SnowbullContext db = new Data.SnowbullContext();
+            db.Users.FirstAsync<Data.Models.User>(u => u.Id == user.Id).ContinueWith<Player.Player>(
+                t => {
+                    return t.IsFaulted ? null : new Player.Player(
+                        user,
+                        new Player.Clothing(t.Result.Clothing),
+                        new Player.Position(0, 0, 0)
+                    );
+                }
+            ).PipeTo(Self);
+        }
+
 		protected override void Running() {
-			base.Running();
-			Receive<Packets.Xt.Receive.Authentication.JoinServer>(new Action<Packets.Xt.Receive.Authentication.JoinServer>(JoinServer));
+            Receive<Packets.IReceivePacket>(new Action<Packets.IReceivePacket>(StashIncoming));
+            Receive<Player.Player>(new Action<Player.Player>(Loaded));
+		}
+
+        private void Loaded(Player.Player player) {
+            if(player != null) {
+                this.player = player;
+                BecomeStacked(Ready);
+                Stash.UnstashAll();
+            }else{
+                connection.ActorRef.Tell(new Packets.Xt.Send.Error(Errors.NO_DB_CONNECTION, -1), Self);
+            }
+        }
+
+        private void Ready() {
+            base.Running();
+            Receive<Packets.Xt.Receive.Authentication.JoinServer>(new Action<Packets.Xt.Receive.Authentication.JoinServer>(JoinServer));
             Receive<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(new Action<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(GetBuddies));
             Receive<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(new Action<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(GetIgnored));
             Receive<Packets.Xt.Receive.Player.Inventory.GetInventory>(new Action<Packets.Xt.Receive.Player.Inventory.GetInventory>(GetInventory));
             Receive<Packets.Xt.Receive.GetLastRevision>(new Action<Packets.Xt.Receive.GetLastRevision>(GetLastRevision));
             Receive<Packets.Xt.Receive.Player.EPF.GetEPFPoints>(new Action<Packets.Xt.Receive.Player.EPF.GetEPFPoints>(GetEPFPoints));
-		}
+            Receive<Packets.Xt.Receive.Heartbeat>(new Action<Packets.Xt.Receive.Heartbeat>(Heartbeat));
+        }
 
         private void Joined() {
-            Running();
+            Ready();
             Receive<Packets.Xt.Receive.Rooms.JoinRoom>(new Action<Packets.Xt.Receive.Rooms.JoinRoom>(JoinRoom));
         }
 
@@ -74,7 +106,9 @@ namespace Snowbull.Core.Game {
 
         private void GetLastRevision(Packets.Xt.Receive.GetLastRevision glr) {
             connection.ActorRef.Tell(new Packets.Xt.Send.GetLastRevision(3239), Self);
-            JoinStartRoom();
+            BecomeStacked(Transitioning);
+            joining = starts[(new Random()).Next(0, starts.Length)];
+            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(joining, player), Self);
         }
 
         private void GetEPFPoints(Packets.Xt.Receive.Player.EPF.GetEPFPoints epfgr) {
@@ -83,10 +117,10 @@ namespace Snowbull.Core.Game {
             , Self);
         }
 
-        private void JoinStartRoom() {
-            BecomeStacked(Transitioning);
-            joining = starts[0];
-            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(joining, player), Self);
+        private void Heartbeat(Packets.Xt.Receive.Heartbeat h) {
+            connection.ActorRef.Tell(
+                new Packets.Xt.Send.Heartbeat(h.Room)
+            , Self);
         }
 
         private void JoinedRoom(JoinedRoom jr) {

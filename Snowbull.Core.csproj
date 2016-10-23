@@ -160,6 +160,9 @@
     <Compile Include="Packets\Xt\Send\Rooms\JoinedRoom.cs" />
     <Compile Include="Configuration\Rooms.cs" />
     <Compile Include="Configuration\Room.cs" />
+    <Compile Include="Packets\Xt\Receive\Heartbeat.cs" />
+    <Compile Include="Packets\Xt\Send\Heartbeat.cs" />
+    <Compile Include="Data\Models\Clothing.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

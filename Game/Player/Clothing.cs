@@ -80,6 +80,18 @@ namespace Snowbull.Core.Game.Player {
             Photo = photo;
         }
 
+        public Clothing(Data.Models.Clothing clothing) : this(
+            clothing.Colour,
+            clothing.Head,
+            clothing.Face,
+            clothing.Neck,
+            clothing.Body,
+            clothing.Hands,
+            clothing.Feet,
+            clothing.Pin,
+            clothing.Photo
+        ) {}
+
         public Clothing UpdateColour(int colour) {
             return new Clothing(colour, Head, Face, Neck, Body, Hands, Feet, Pin, Photo);
         }

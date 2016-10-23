@@ -70,6 +70,11 @@ namespace Snowbull.Core.Data.Models {
 			get;
 			set;
 		}
+
+        public virtual Clothing Clothing {
+            get;
+            set;
+        }
     }
 }
 

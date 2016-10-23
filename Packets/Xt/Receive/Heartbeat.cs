@@ -1,5 +1,5 @@
 ﻿/**
- * Get Last Revision Request Packet for Snowbull ("Snowbull").
+ * Heartbeat Request Packet for Snowbull ("Snowbull").
  *
  * Copyright 2016 by Lewis Hazell <staticabc@live.co.uk>
  *
@@ -22,7 +22,9 @@
  */
 
 namespace Snowbull.Core.Packets.Xt.Receive {
-    public sealed class GetLastRevision : XtPacket, IReceivePacket {
-        public GetLastRevision(XtData xt) : base(xt) {}
+    public class Heartbeat : XtPacket, IReceivePacket {
+        public Heartbeat(XtData xt) : base(xt) {
+        }
     }
 }
+

@@ -37,6 +37,7 @@ namespace Snowbull.Core.Packets {
             map.Add("u#glr", xt => new Xt.Receive.GetLastRevision(xt));
             map.Add("f#epfgr", xt => new Xt.Receive.Player.EPF.GetEPFPoints(xt));
             map.Add("j#jr", xt => new Xt.Receive.Rooms.JoinRoom(xt));
+            map.Add("u#h", xt => new Xt.Receive.Heartbeat(xt));
             return map.ToImmutableDictionary();
         }
 

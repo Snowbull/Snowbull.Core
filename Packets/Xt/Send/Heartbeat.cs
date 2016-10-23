@@ -1,5 +1,5 @@
 ﻿/**
- * Get Last Revision Request Packet for Snowbull ("Snowbull").
+ * Heartbeat Response Packet for Snowbull ("Snowbull").
  *
  * Copyright 2016 by Lewis Hazell <staticabc@live.co.uk>
  *
@@ -21,8 +21,16 @@
  * License: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>
  */
 
-namespace Snowbull.Core.Packets.Xt.Receive {
-    public sealed class GetLastRevision : XtPacket, IReceivePacket {
-        public GetLastRevision(XtData xt) : base(xt) {}
+namespace Snowbull.Core.Packets.Xt.Send {
+    public class Heartbeat : XtPacket, ISendPacket {
+        public Heartbeat(int room) : base(
+            new XtData(
+                From.Server,
+                "h",
+                null,
+                room
+            )
+        ) {}
     }
 }
+
