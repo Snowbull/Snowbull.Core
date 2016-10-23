@@ -79,6 +79,8 @@ namespace Snowbull.Core.Game.Rooms {
             Receive<LeaveRoom>(new Action<LeaveRoom>(Leave));
             Receive<Packets.ISendPacket>(new Action<Packets.ISendPacket>(Send));
             Receive<Terminated>(new Action<Terminated>(Terminated));
+            Receive<Move>(new Action<Move>(Move));
+            Receive<Frame>(new Action<Frame>(Frame));
         }
 
         /// <summary>
@@ -138,6 +140,24 @@ namespace Snowbull.Core.Game.Rooms {
             players.Remove(player); // Remove the player from the list.
             Send(new Packets.Xt.Send.Rooms.RemovePlayer(player.User.Id, InternalID));
             Context.Unwatch(player.User.ActorRef);
+        }
+
+        private bool Replace(Player.Player player) {
+            if(players.RemoveAll(p => p.User.Id == player.User.Id) != 0)
+                players.Add(player);
+            else
+                return false;
+            return true;
+        }
+
+        private void Move(Move m) {
+            Replace(m.Player);
+            Send(new Packets.Xt.Send.Player.Move(m.Player, InternalID));
+        }
+
+        private void Frame(Frame f) {
+            Replace(f.Player);
+            Send(new Packets.Xt.Send.Player.Frame(f.Player, f.Player.Position.Frame, InternalID));
         }
 
         /// <summary>
@@ -202,6 +222,28 @@ namespace Snowbull.Core.Game.Rooms {
         /// <param name="user">Leaving user.</param>
         public LeaveRoom(GameUser user) {
             User = user;
+        }
+    }
+
+    public sealed class Move {
+        public Player.Player Player {
+            get;
+            private set;
+        }
+
+        public Move(Player.Player player) {
+            Player = player;
+        }
+    }
+
+    public sealed class Frame {
+        public Player.Player Player {
+            get;
+            private set;
+        }
+
+        public Frame(Player.Player player) {
+            Player = player;
         }
     }
 }

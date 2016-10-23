@@ -120,6 +120,10 @@ namespace Snowbull.Core.Game {
         private void Joined() {
             Ready();
             Receive<Packets.Xt.Receive.Rooms.JoinRoom>(new Action<Packets.Xt.Receive.Rooms.JoinRoom>(JoinRoom));
+            Receive<Packets.Xt.Receive.Player.Move>(new Action<Packets.Xt.Receive.Player.Move>(Move));
+            Receive<Packets.Xt.Receive.Player.Say>(new Action<Packets.Xt.Receive.Player.Say>(s => room.ActorRef.Tell(new Packets.Xt.Send.Player.Say(player, s.Message, room.InternalID), Self)));
+            Receive<Packets.Xt.Receive.Player.Action>(new Action<Packets.Xt.Receive.Player.Action>(a => room.ActorRef.Tell(new Packets.Xt.Send.Player.Action(player, a.Id, room.InternalID), Self)));
+            Receive<Packets.Xt.Receive.Player.Frame>(new Action<Packets.Xt.Receive.Player.Frame>(Frame));
         }
 
         /// <summary>
@@ -251,6 +255,16 @@ namespace Snowbull.Core.Game {
             BecomeStacked(Transitioning); // Set the transistioning state.
             Player.Player p = player.UpdatePosition(new Player.Position(jr.X, jr.Y, 0)); // Set the player's position to that specified in the join room packet.
             user.Zone.ActorRef.Tell(new Rooms.JoinRoom(jr.ExternalID, p)); // Request to join the room.
+        }
+
+        private void Move(Packets.Xt.Receive.Player.Move m) {
+            player = player.UpdatePosition(player.Position.UpdateCoordinates(m.X, m.Y));
+            room.ActorRef.Tell(new Rooms.Move(player), Self);
+        }
+
+        private void Frame(Packets.Xt.Receive.Player.Frame f) {
+            player = player.UpdatePosition(player.Position.UpdateFrame(f.Id));
+            room.ActorRef.Tell(new Rooms.Frame(player));
         }
 	}
 

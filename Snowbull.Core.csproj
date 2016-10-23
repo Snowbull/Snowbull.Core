@@ -163,6 +163,14 @@
     <Compile Include="Packets\Xt\Receive\Heartbeat.cs" />
     <Compile Include="Packets\Xt\Send\Heartbeat.cs" />
     <Compile Include="Data\Models\Clothing.cs" />
+    <Compile Include="Packets\Xt\Receive\Player\Move.cs" />
+    <Compile Include="Packets\Xt\Send\Player\Move.cs" />
+    <Compile Include="Packets\Xt\Receive\Player\Say.cs" />
+    <Compile Include="Packets\Xt\Send\Player\Say.cs" />
+    <Compile Include="Packets\Xt\Receive\Player\Action.cs" />
+    <Compile Include="Packets\Xt\Receive\Player\Frame.cs" />
+    <Compile Include="Packets\Xt\Send\Player\Frame.cs" />
+    <Compile Include="Packets\Xt\Send\Player\Action.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
