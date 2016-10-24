@@ -27,7 +27,7 @@ namespace Snowbull.Core.Data.Models {
 	[Table("furniture")]
 	public class Furniture {
 		[Column("userID")]
-		public int OwnerID {
+		public int OwnerId {
 			get;
 			set;
 		}

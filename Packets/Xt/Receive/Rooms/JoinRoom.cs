@@ -1,6 +1,6 @@
 ﻿namespace Snowbull.Core.Packets.Xt.Receive.Rooms {
     public class JoinRoom : XtPacket, IReceivePacket {
-        public int ExternalID {
+        public int ExternalId {
             get;
             private set;
         }
@@ -16,7 +16,7 @@
         }
 
         public JoinRoom(XtData xt) : base(xt) {
-            ExternalID = int.Parse(xt.Arguments[0]);
+            ExternalId = int.Parse(xt.Arguments[0]);
             int x = 0, y = 0;
             if(xt.Arguments.Length >= 3) {
                 int.TryParse(xt.Arguments[1], out x);

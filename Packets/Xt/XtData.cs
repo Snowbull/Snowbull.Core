@@ -60,9 +60,9 @@ namespace Snowbull.Core.Packets.Xt {
         }
 
         /// <summary>
-        /// Gets the room.
+        /// Gets the Room.
         /// </summary>
-        /// <value>The room.</value>
+        /// <value>The Room.</value>
         public int Room {
             get;
             private set;
@@ -103,7 +103,7 @@ namespace Snowbull.Core.Packets.Xt {
             if(parts.Length > roomp)
                 room = int.Parse(parts[roomp]);
             else
-                throw new ParseException("Packet has no room.");
+                throw new ParseException("Packet has no Room.");
             if(parts.Length - 1 > argp) {
                 args = new string[parts.Length - 1 - argp];
                 for(int i = argp; i < parts.Length - 1; i++)

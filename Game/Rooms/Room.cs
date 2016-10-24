@@ -42,7 +42,7 @@ namespace Snowbull.Core.Game.Rooms {
         /// Gets the room's internal identifier.
         /// </summary>
         /// <value>The room's internal identifier.</value>
-        public int InternalID {
+        public int InternalId {
             get;
             private set;
         }
@@ -51,7 +51,7 @@ namespace Snowbull.Core.Game.Rooms {
         /// Gets the room's external identifier.
         /// </summary>
         /// <value>The room's external identifier.</value>
-        public int ExternalID {
+        public int ExternalId {
             get;
             private set;
         }
@@ -75,11 +75,11 @@ namespace Snowbull.Core.Game.Rooms {
         }
 
         protected Room(int internalId, int externalId, string name, IZone zone, int capacity, IActorContext c, Func<Room, Akka.Actor.Props> creator) {
-            InternalID = internalId;
-            ExternalID = externalId;
+            InternalId = internalId;
+            ExternalId = externalId;
             Name = name;
             Zone = zone;
-            ActorRef = c.ActorOf(creator(this), string.Format("room(Zone={0},Id={1},Name={2})", zone.Name, InternalID, Name));
+            ActorRef = c.ActorOf(creator(this), string.Format("room(Zone={0},Id={1},Name={2})", zone.Name, InternalId, Name));
         }
 
         public Room(int internalId, int externalId, string name, IZone zone, int capacity, IActorContext c) : this(internalId, externalId, name, zone, capacity, c, r => Akka.Actor.Props.Create(() => new RoomActor(r, capacity))) {

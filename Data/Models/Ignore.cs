@@ -29,30 +29,30 @@ namespace Snowbull.Core.Data.Models {
 	public class Ignore {
 		[Key]
 		[Column("ignoreID")]
-		public int ID {
+		public int Id {
 			get;
 			set;
 		}
 
 		[Column("userID")]
-		public int UserID {
+		public int UserId {
 			get;
 			set;
 		}
 
-		[ForeignKey("UserID")]
+		[ForeignKey("UserId")]
 		public User User {
 			get;
 			set;
 		}
 
 		[Column("ignoredID")]
-		public int IgnoredID {
+		public int IgnoredId {
 			get;
 			set;
 		}
 
-		[ForeignKey("IgnoredID")]
+		[ForeignKey("IgnoredId")]
 		public User Ignored {
 			get;
 			set;

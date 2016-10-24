@@ -42,7 +42,7 @@ namespace Snowbull.Core.Game {
             Configuration.SnowbullConfigurationSection config = Configuration.SnowbullConfigurationSection.GetConfiguration();
             foreach(Configuration.Room setting in config.Rooms) {
                 Rooms.Room room = new Rooms.Room(int.Parse(setting.Id), int.Parse(setting.ExternalId), setting.Name, zone, int.Parse(setting.Capacity), Context);
-                rooms.Add(room.ExternalID, room);
+                rooms.Add(room.ExternalId, room);
             }
         }
 
@@ -80,7 +80,7 @@ namespace Snowbull.Core.Game {
 		}
 
         private void JoinRoom(Rooms.JoinRoom jr) {
-            Rooms.Room room = rooms[jr.ExternalID];
+            Rooms.Room room = rooms[jr.ExternalId];
             if(room != null)
                 room.ActorRef.Forward(jr);
         }

@@ -1,5 +1,5 @@
 ﻿/**
- * Immutable room context interface for Snowbull.
+ * Immutable Room context interface for Snowbull.
  *
  * Copyright 2016 by Lewis Hazell <staticabc@live.co.uk>
  *
@@ -27,33 +27,33 @@ namespace Snowbull.Core.Game.Rooms {
     /// </summary>
     public interface IRoom : IContext {
         /// <summary>
-        /// Gets the room's internal identifier.
+        /// Gets the Room's internal identifier.
         /// </summary>
-        /// <value>The room's internal identifier.</value>
-        int InternalID {
+        /// <value>The Room's internal identifier.</value>
+        int InternalId {
             get;
         }
 
         /// <summary>
-        /// Gets the room's external identifier.
+        /// Gets the Room's external identifier.
         /// </summary>
-        /// <value>The room's external identifier.</value>
-        int ExternalID {
+        /// <value>The Room's external identifier.</value>
+        int ExternalId {
             get;
         }
 
         /// <summary>
-        /// Gets the room's name.
+        /// Gets the Room's name.
         /// </summary>
-        /// <value>The room's name.</value>
+        /// <value>The Room's name.</value>
         string Name {
             get;
         }
 
         /// <summary>
-        /// Gets the zone that the room is in.
+        /// Gets the zone that the Room is in.
         /// </summary>
-        /// <value>The zone that the room is in.</value>
+        /// <value>The zone that the Room is in.</value>
         IZone Zone {
             get;
         }

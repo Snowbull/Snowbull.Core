@@ -9,7 +9,7 @@ namespace Snowbull.Core.Data.Models {
         [Key]
         [Column("userID")]
         [ForeignKey("User")]
-        public int UserID {
+        public int UserId {
             get;
             set;
         }

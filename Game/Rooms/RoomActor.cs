@@ -31,24 +31,28 @@ namespace Snowbull.Core.Game.Rooms {
     /// Room actor.
     /// </summary>
     public class RoomActor : SnowbullActor {
-        protected readonly Room room;
-        protected readonly List<Player.Player> players = new List<Player.Player>();
-        protected int capacity;
+        protected readonly Room Room;
+        private readonly Dictionary<IActorRef, Player.Player> players = new Dictionary<IActorRef, Player.Player>();
+        protected int Capacity;
+
+        protected ImmutableList<Player.Player> Players {
+            get { return players.Values.ToImmutableList();  }
+        }
 
         /// <summary>
         /// Gets the internal identifier.
         /// </summary>
         /// <value>The internal identifier.</value>
-        protected int InternalID {
-            get { return room.InternalID; }
+        protected int InternalId {
+            get { return Room.InternalId; }
         }
 
         /// <summary>
         /// Gets the external identifier.
         /// </summary>
         /// <value>The external identifier.</value>
-        protected int ExternalID {
-            get { return room.ExternalID; }
+        protected int ExternalId {
+            get { return Room.ExternalId; }
         }
 
         /// <summary>
@@ -56,7 +60,7 @@ namespace Snowbull.Core.Game.Rooms {
         /// </summary>
         /// <value>The room's name.</value>
         protected string Name {
-            get { return room.Name; }
+            get { return Room.Name; }
         }
 
         /// <summary>
@@ -65,8 +69,8 @@ namespace Snowbull.Core.Game.Rooms {
         /// <param name="room">Immutable room context.</param>
         /// <param name="capacity">Room's capacity.</param>
         public RoomActor(Room room, int capacity) {
-            this.room = room;
-            this.capacity = capacity;
+            this.Room = room;
+            this.Capacity = capacity;
             Become(Running); // Switch to running state.
         }
 
@@ -88,11 +92,11 @@ namespace Snowbull.Core.Game.Rooms {
         /// </summary>
         /// <param name="jr">Join room request.</param>
         private void Join(JoinRoom jr) {
-            if(players.Count < capacity) {
+            if(players.Count < Capacity) {
                 Add(jr.Player);
                 Context.Watch(jr.Player.User.ActorRef); // Start watching user actor for termination.
             }else{
-                Sender.Tell(new RoomFull(room)); // Tell the user that the room is full, so they cannot join.
+                Sender.Tell(new RoomFull(Room)); // Tell the user that the room is full, so they cannot join.
             }
         }
 
@@ -101,9 +105,9 @@ namespace Snowbull.Core.Game.Rooms {
         /// </summary>
         /// <param name="player">Player to add.</param>
         protected virtual void Add(Player.Player player) { // protected virtual so Game rooms can override it.
-            Send(new Packets.Xt.Send.Rooms.AddPlayer(player.User.Id, player.ToString(), InternalID)); // Tell everyone a new player has joined the room.
-            players.Add(player); // Add the player to the list.
-            Sender.Tell(new JoinedRoom(room, player, players.ToImmutableList())); // Tell the user they have successfully joined the room.
+            Send(new Packets.Xt.Send.Rooms.AddPlayer(player.User.Id, player.ToString(), InternalId)); // Tell everyone a new player has joined the room.
+            players.Add(player.User.ActorRef, player); // Add the player to the list.
+            Sender.Tell(new JoinedRoom(Room, player, players.Values.ToImmutableList())); // Tell the user they have successfully joined the room.
         }
 
         /// <summary>
@@ -111,12 +115,7 @@ namespace Snowbull.Core.Game.Rooms {
         /// </summary>
         /// <param name="lr">Leave room notification.</param>
         private void Leave(LeaveRoom lr) {
-            foreach(Player.Player player in players) {
-                if(player.User == lr.User) { // If it's the player of the specified user...
-                    Remove(player); // Remove player
-                    break;
-                }
-            }
+            Remove(lr.Player.User.ActorRef);
         }
 
         /// <summary>
@@ -124,40 +123,30 @@ namespace Snowbull.Core.Game.Rooms {
         /// </summary>
         /// <param name="t">Actor termination notification.</param>
         private void Terminated(Terminated t) {
-            foreach(Player.Player player in players) {
-                if(player.User.ActorRef == t.ActorRef) { // If it's the player of the user of the specified actor...
-                    Remove(player); // Remove the player.
-                    break;
-                }
-            }
+            Remove(t.ActorRef);
         }
 
         /// <summary>
         /// Remove the specified player.
         /// </summary>
-        /// <param name="player">The player to remove.</param>
-        private void Remove(Player.Player player) {
-            players.Remove(player); // Remove the player from the list.
-            Send(new Packets.Xt.Send.Rooms.RemovePlayer(player.User.Id, InternalID));
-            Context.Unwatch(player.User.ActorRef);
-        }
-
-        private bool Replace(Player.Player player) {
-            if(players.RemoveAll(p => p.User.Id == player.User.Id) != 0)
-                players.Add(player);
-            else
-                return false;
-            return true;
+        /// <param name="actor">The actor of the player to remove.</param>
+        private void Remove(IActorRef actor) {
+            Player.Player player = players[actor];
+            if(player != null) {
+                players.Remove(actor); // Remove the player from the list.
+                Send(new Packets.Xt.Send.Rooms.RemovePlayer(player.User.Id, InternalId));
+                Context.Unwatch(player.User.ActorRef);
+            }
         }
 
         private void Move(Move m) {
-            Replace(m.Player);
-            Send(new Packets.Xt.Send.Player.Move(m.Player, InternalID));
+            players[m.Player.User.ActorRef] = m.Player;
+            Send(new Packets.Xt.Send.Player.Move(m.Player, InternalId));
         }
 
         private void Frame(Frame f) {
-            Replace(f.Player);
-            Send(new Packets.Xt.Send.Player.Frame(f.Player, f.Player.Position.Frame, InternalID));
+            players[f.Player.User.ActorRef] = f.Player;
+            Send(new Packets.Xt.Send.Player.Frame(f.Player, f.Player.Position.Frame, InternalId));
         }
 
         /// <summary>
@@ -165,7 +154,7 @@ namespace Snowbull.Core.Game.Rooms {
         /// </summary>
         /// <param name="packet">The packet to send.</param>
         private void Send(Packets.ISendPacket packet) {
-            foreach(Player.Player player in players)
+            foreach(Player.Player player in players.Values)
                 player.User.ActorRef.Tell(packet, Self);
         }
     }
@@ -178,7 +167,7 @@ namespace Snowbull.Core.Game.Rooms {
         /// Gets the external identifier.
         /// </summary>
         /// <value>The external identifier.</value>
-        public int ExternalID {
+        public int ExternalId {
             get;
             private set;
         }
@@ -198,7 +187,7 @@ namespace Snowbull.Core.Game.Rooms {
         /// <param name="externalId">External identifier.</param>
         /// <param name="player">Player.</param>
         public JoinRoom(int externalId, Player.Player player) {
-            ExternalID = externalId;
+            ExternalId = externalId;
             Player = player;
         }
     }
@@ -208,10 +197,10 @@ namespace Snowbull.Core.Game.Rooms {
     /// </summary>
     public sealed class LeaveRoom {
         /// <summary>
-        /// Gets the user to remove.
+        /// Gets the player to remove.
         /// </summary>
-        /// <value>The user to remove.</value>
-        public GameUser User { // It is safer to use User here because Player can change.
+        /// <value>The player to remove.</value>
+        public Player.Player Player {
             get;
             private set;
         }
@@ -219,9 +208,9 @@ namespace Snowbull.Core.Game.Rooms {
         /// <summary>
         /// Initializes a new instance of the <see cref="Snowbull.Core.Game.Rooms.LeaveRoom"/> class.
         /// </summary>
-        /// <param name="user">Leaving user.</param>
-        public LeaveRoom(GameUser user) {
-            User = user;
+        /// <param name="player">Leaving player.</param>
+        public LeaveRoom(Player.Player player) {
+            Player = player;
         }
     }
 

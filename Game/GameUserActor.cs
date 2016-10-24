@@ -115,19 +115,19 @@ namespace Snowbull.Core.Game {
         }
 
         /// <summary>
-        /// Joined state/behaviour (Become after joining the starting room).
+        /// Joined state/behaviour (Become after joining the starting Room).
         /// </summary>
         private void Joined() {
             Ready();
             Receive<Packets.Xt.Receive.Rooms.JoinRoom>(new Action<Packets.Xt.Receive.Rooms.JoinRoom>(JoinRoom));
             Receive<Packets.Xt.Receive.Player.Move>(new Action<Packets.Xt.Receive.Player.Move>(Move));
-            Receive<Packets.Xt.Receive.Player.Say>(new Action<Packets.Xt.Receive.Player.Say>(s => room.ActorRef.Tell(new Packets.Xt.Send.Player.Say(player, s.Message, room.InternalID), Self)));
-            Receive<Packets.Xt.Receive.Player.Action>(new Action<Packets.Xt.Receive.Player.Action>(a => room.ActorRef.Tell(new Packets.Xt.Send.Player.Action(player, a.Id, room.InternalID), Self)));
+            Receive<Packets.Xt.Receive.Player.Say>(new Action<Packets.Xt.Receive.Player.Say>(s => room.ActorRef.Tell(new Packets.Xt.Send.Player.Say(player, s.Message, room.InternalId), Self)));
+            Receive<Packets.Xt.Receive.Player.Action>(new Action<Packets.Xt.Receive.Player.Action>(a => room.ActorRef.Tell(new Packets.Xt.Send.Player.Action(player, a.Id, room.InternalId), Self)));
             Receive<Packets.Xt.Receive.Player.Frame>(new Action<Packets.Xt.Receive.Player.Frame>(Frame));
         }
 
         /// <summary>
-        /// Transition state/behaviour (Become while joining another room).
+        /// Transition state/behaviour (Become while joining another Room).
         /// </summary>
         private void Transitioning() {
             base.Running();
@@ -190,9 +190,9 @@ namespace Snowbull.Core.Game {
         /// <param name="glr">Get last revision packet.</param>
         private void GetLastRevision(Packets.Xt.Receive.GetLastRevision glr) {
             connection.ActorRef.Tell(new Packets.Xt.Send.GetLastRevision(3239), Self); // Who knows where 3239 from.
-            // Start joining a room.
+            // Start joining a Room.
             BecomeStacked(Transitioning);
-            // Join a random start room
+            // Join a random start Room
             user.Zone.ActorRef.Tell(new Rooms.JoinRoom(starts[(new Random()).Next(0, starts.Length)], player), Self);
         }
 
@@ -217,20 +217,20 @@ namespace Snowbull.Core.Game {
         }
 
         /// <summary>
-        /// Joined room handler. Called when a joining a room was successful.
+        /// Joined Room handler. Called when a joining a Room was successful.
         /// </summary>
-        /// <param name="jr">Joined room message.</param>
+        /// <param name="jr">Joined Room message.</param>
         private void JoinedRoom(JoinedRoom jr) {
-            if(room != null) { // If we were in a room before
-                room.ActorRef.Tell(new Rooms.LeaveRoom((GameUser)user), Self); // Tell the room we left.
+            if(room != null) { // If we were in a Room before
+                room.ActorRef.Tell(new Rooms.LeaveRoom(player), Self); // Tell the Room we left.
                 UnbecomeStacked(); // Go back to regular state/behaviour.
-            }else{ // If we weren't in a room before
+            }else{ // If we weren't in a Room before
                 Become(Joined); // Become the Joined state/behaviour.
             }
-            room = jr.Room; // Set the new room.
-            player = jr.Player; // Set our player object to the one sent back by the room, for consistency
+            room = jr.Room; // Set the new Room.
+            player = jr.Player; // Set our player object to the one sent back by the Room, for consistency
             // Tell the client.
-            connection.ActorRef.Tell(new Packets.Xt.Send.Rooms.JoinedRoom(jr.Room.ExternalID, jr.Players, jr.Room.InternalID), Self);
+            connection.ActorRef.Tell(new Packets.Xt.Send.Rooms.JoinedRoom(jr.Room.ExternalId, jr.Players, jr.Room.InternalId), Self);
             Stash.UnstashAll(); // Unstash any packets received in the meantime (should usually be none)
         }
 
@@ -240,21 +240,21 @@ namespace Snowbull.Core.Game {
         /// <param name="rf">Room full message.</param>
         private void RoomFull(RoomFull rf) {
             if(room != null) {
-                connection.ActorRef.Tell(new Packets.Xt.Send.Error(Errors.ROOM_FULL, rf.Room.InternalID));
+                connection.ActorRef.Tell(new Packets.Xt.Send.Error(Errors.ROOM_FULL, rf.Room.InternalId));
             }else{
-                // Join a random start room... again.
+                // Join a random start Room... again.
                 user.Zone.ActorRef.Tell(new Rooms.JoinRoom(starts[(new Random()).Next(0, starts.Length)], player), Self);
             }
         }
 
         /// <summary>
-        /// Join room handler.
+        /// Join Room handler.
         /// </summary>
-        /// <param name="jr">Join room packet.</param>
+        /// <param name="jr">Join Room packet.</param>
         private void JoinRoom(Packets.Xt.Receive.Rooms.JoinRoom jr) {
             BecomeStacked(Transitioning); // Set the transistioning state.
-            Player.Player p = player.UpdatePosition(new Player.Position(jr.X, jr.Y, 0)); // Set the player's position to that specified in the join room packet.
-            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(jr.ExternalID, p)); // Request to join the room.
+            Player.Player p = player.UpdatePosition(new Player.Position(jr.X, jr.Y, 0)); // Set the player's position to that specified in the join Room packet.
+            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(jr.ExternalId, p)); // Request to join the Room.
         }
 
         private void Move(Packets.Xt.Receive.Player.Move m) {
@@ -269,20 +269,20 @@ namespace Snowbull.Core.Game {
 	}
 
     /// <summary>
-    /// Joined room notification.
+    /// Joined Room notification.
     /// </summary>
     internal class JoinedRoom {
         /// <summary>
-        /// Gets the room that the player joined.
+        /// Gets the Room that the player joined.
         /// </summary>
-        /// <value>The room.</value>
+        /// <value>The Room.</value>
         public Rooms.Room Room {
             get;
             private set;
         }
 
         /// <summary>
-        /// Gets the player instance that the room holds for the user.
+        /// Gets the player instance that the Room holds for the user.
         /// </summary>
         /// <value>The player instance.</value>
         public Player.Player Player {
@@ -291,9 +291,9 @@ namespace Snowbull.Core.Game {
         }
 
         /// <summary>
-        /// Gets the room's player list.
+        /// Gets the Room's player list.
         /// </summary>
-        /// <value>The room's player list.</value>
+        /// <value>The Room's player list.</value>
         public ImmutableList<Player.Player> Players {
             get;
             private set;
@@ -303,8 +303,8 @@ namespace Snowbull.Core.Game {
         /// Initializes a new instance of the <see cref="Snowbull.Core.Game.JoinedRoom"/> class.
         /// </summary>
         /// <param name="room">Room that was joined.</param>
-        /// <param name="player">Player instance that the room has.</param>
-        /// <param name="players">List of players in the room.</param>
+        /// <param name="player">Player instance that the Room has.</param>
+        /// <param name="players">List of players in the Room.</param>
         public JoinedRoom(Rooms.Room room, Player.Player player, ImmutableList<Player.Player> players) {
             Room = room;
             Player = player;
@@ -317,9 +317,9 @@ namespace Snowbull.Core.Game {
     /// </summary>
     internal class RoomFull {
         /// <summary>
-        /// Gets the room that the user attempted to join.
+        /// Gets the Room that the user attempted to join.
         /// </summary>
-        /// <value>The room.</value>
+        /// <value>The Room.</value>
         public Rooms.Room Room {
             get;
             private set;
@@ -328,7 +328,7 @@ namespace Snowbull.Core.Game {
         /// <summary>
         /// Initializes a new instance of the <see cref="Snowbull.Core.Game.RoomFull"/> class.
         /// </summary>
-        /// <param name="room">The room the player attempted to join.</param>
+        /// <param name="room">The Room the player attempted to join.</param>
         public RoomFull(Rooms.Room room) {
             Room = room;
         }
