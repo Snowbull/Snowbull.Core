@@ -5,7 +5,7 @@ namespace Snowbull.Core.Packets.Xt.Send.Player {
         public Say(Game.Player.Player player, string message, int room) : base(
             new XtData(
                 From.Server,
-                "m#sm",
+                "sm",
                 new string[] { player.User.Id.ToString(), message },
                 room
             )
