@@ -32,7 +32,7 @@ namespace Snowbull.Core.Data.Models {
 			set;
 		}
 
-		[ForeignKey("OwnerID")]
+		[ForeignKey("OwnerId")]
 		public User Owner {
 			get;
 			set;
