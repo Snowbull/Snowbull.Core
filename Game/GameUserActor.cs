@@ -24,6 +24,7 @@
 using System;
 using Akka.Actor;
 using System.Data.Entity;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Snowbull.Core.Game {
@@ -32,6 +33,7 @@ namespace Snowbull.Core.Game {
         private Rooms.Room room = null;
         private static readonly ImmutableArray<int> starts = (new int[] {100, 200, 300, 400, 800, 801, 802, 230, 810, 804}).ToImmutableArray(); // Starting rooms.
         private ImmutableDictionary<int, Player.Clothing.Item> items;
+        private readonly Dictionary<int, Player.Clothing.Item> inventory = new Dictionary<int, Player.Clothing.Item>();
 
         /// <summary>
         /// Gets or sets the stash. This will be automatically populated by the framework AFTER the constructor has been run.
@@ -67,15 +69,22 @@ namespace Snowbull.Core.Game {
             GameUser user = (GameUser) this.user; // Keep a local copy, just in case... something.
             Data.SnowbullContext db = new Data.SnowbullContext();
             // Load the user from the database.
-            db.Users.Include("Clothing").FirstAsync<Data.Models.User>(u => u.Id == user.Id).ContinueWith<Player.Player>(
+            db.Users.Include("Clothing").Include("Inventory").FirstAsync<Data.Models.User>(u => u.Id == user.Id).ContinueWith<Loaded>(
                 t => {
-                    Player.Player player = t.IsFaulted ? null : new Player.Player(
-                        user,
-                        new Player.Clothing.Costume(t.Result.Clothing, items),
-                        new Player.Position(0, 0, 0)
-                    );
                     db.Dispose();
-                    return player;
+                    if(t.IsFaulted) {
+                        return null;
+                    }else{
+                        Player.Player player = new Player.Player(
+                            user,
+                            new Player.Clothing.Costume(t.Result.Clothing, items),
+                            new Player.Position(0, 0, 0)
+                        );
+                        List<Player.Clothing.Item> inventory = new List<Player.Clothing.Item>();
+                        foreach(Data.Models.Item item in t.Result.Inventory)
+                            inventory.Add(items[item.Id]);
+                        return new Loaded(player, inventory.ToImmutableList());
+                    }
                 }
             ).PipeTo(Self); // Sends the result of the async task to self.
         }
@@ -85,16 +94,18 @@ namespace Snowbull.Core.Game {
         /// </summary>
 		protected override void Running() {
             Receive<Packets.IReceivePacket>(new Action<Packets.IReceivePacket>(StashIncoming));
-            Receive<Player.Player>(new Action<Player.Player>(Loaded));
+            Receive<Loaded>(new Action<Loaded>(Loaded));
 		}
 
         /// <summary>
         /// Loaded the user's player.
         /// </summary>
         /// <param name="player">Player.</param>
-        private void Loaded(Player.Player player) {
-            if(player != null) {
-                this.player = player;
+        private void Loaded(Loaded l) {
+            if(l != null) {
+                this.player = l.Player;
+                foreach(Player.Clothing.Item item in l.Inventory)
+                    inventory.Add(item.Id, item);
                 BecomeStacked(Ready);
                 Stash.UnstashAll();
             }else{
@@ -186,7 +197,7 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="gi">Get inventory packet.</param>
         private void GetInventory(Packets.Xt.Receive.Player.Inventory.GetInventory gi) {
-            connection.ActorRef.Tell(new Packets.Xt.Send.Player.Inventory.GetInventory(), Self); // TODO - Load actual inventory list.
+            connection.ActorRef.Tell(new Packets.Xt.Send.Player.Inventory.GetInventory(inventory), Self); // TODO - Load actual inventory list.
         }
 
         /// <summary>
@@ -272,6 +283,23 @@ namespace Snowbull.Core.Game {
             room.ActorRef.Tell(new Rooms.Frame(player));
         }
 	}
+
+    internal class Loaded {
+        public Player.Player Player {
+            get;
+            private set;
+        }
+
+        public ImmutableList<Player.Clothing.Item> Inventory {
+            get;
+            private set;
+        }
+
+        public Loaded(Player.Player player, ImmutableList<Player.Clothing.Item> inventory) {
+            Player = player;
+            Inventory = inventory;
+        }
+    }
 
     /// <summary>
     /// Joined Room notification.

@@ -21,15 +21,24 @@
  * License: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>
  */
 
+using System.Collections.Generic;
+
 namespace Snowbull.Core.Packets.Xt.Send.Player.Inventory {
     public class GetInventory : XtPacket, ISendPacket {
-        public GetInventory() : base(
+        public GetInventory(Dictionary<int, Game.Player.Clothing.Item> inventory) : base(
             new XtData(
                 From.Server,
                 "gi",
-                new string[] { "" } // TODO - Load actual inventory list
+                InventoryToStringArray(inventory)
             )
-        ) {
+        ) {}
+
+        private static string[] InventoryToStringArray(Dictionary<int, Game.Player.Clothing.Item> inventory) {
+            string[] r = new string[inventory.Count];
+            int i = 0;
+            foreach(int id in inventory.Keys)
+                r[i++] = id.ToString();
+            return r;
         }
     }
 }
