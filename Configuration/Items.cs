@@ -1,19 +1,19 @@
 ﻿using System.Configuration;
 
-namespace Snowbull.Core.Configuration {
-    public class Rooms : ConfigurationElementCollection {
-        public Room this[int i] {
+namespace Snowbull.Core {
+    public class Items : ConfigurationElementCollection {
+        public Item this[int i] {
             get {
-                return (Room) BaseGet(i);
+                return (Item) BaseGet(i);
             }
         }
 
         protected override ConfigurationElement CreateNewElement() {
-            return new Room();
+            return new Item();
         }
 
         protected override object GetElementKey(ConfigurationElement element) {
-            return ((Server) element).Id;
+            return (element as Item).Id;
         }
     }
 }

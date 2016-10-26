@@ -172,6 +172,8 @@
     <Compile Include="Packets\Xt\Send\Player\Frame.cs" />
     <Compile Include="Packets\Xt\Send\Player\Action.cs" />
     <Compile Include="Configuration\ClubPenguinConfigurationSection.cs" />
+    <Compile Include="Configuration\Items.cs" />
+    <Compile Include="Configuration\Item.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

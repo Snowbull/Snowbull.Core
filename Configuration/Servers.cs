@@ -26,12 +26,7 @@ namespace Snowbull.Core.Configuration {
 	public class Servers : ConfigurationElementCollection {
 		public Server this[int i] {
 			get {
-				return BaseGet(i) as Server;
-			}
-			set {
-				if(BaseGet(i) != null)
-					BaseRemoveAt(i);
-				BaseAdd(i, value);
+                return (Server) BaseGet(i);
 			}
 		}
 
@@ -40,7 +35,7 @@ namespace Snowbull.Core.Configuration {
 		}
 
 		protected override object GetElementKey(ConfigurationElement element) {
-			return (element as Server).Id;
+            return ((Server) element).Id;
 		}
 	}
 }

@@ -25,7 +25,7 @@ using System.Configuration;
 
 namespace Snowbull.Core.Configuration {
 	public class Server : ConfigurationElement {
-		[ConfigurationProperty("id", IsRequired = true)]
+        [ConfigurationProperty("id", IsRequired = true, IsKey = true)]
 		public int Id {
 			get {
                 return (int) this["id"];

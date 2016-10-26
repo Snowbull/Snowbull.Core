@@ -27,12 +27,7 @@ namespace Snowbull.Core.Configuration {
 	public class Zones : ConfigurationElementCollection {
 		public Zone this[int i] {
 			get {
-				return BaseGet(i) as Zone;
-			}
-			set {
-				if(BaseGet(i) != null)
-					BaseRemoveAt(i);
-				BaseAdd(i, value);
+                return (Zone) BaseGet(i);
 			}
 		}
 
@@ -41,7 +36,7 @@ namespace Snowbull.Core.Configuration {
 		}
 
 		protected override object GetElementKey(ConfigurationElement element) {
-			return (element as Zone).Name;
+            return ((Zone) element).Name;
 		}
 	}
 }

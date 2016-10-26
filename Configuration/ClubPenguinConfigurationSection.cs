@@ -13,6 +13,14 @@ namespace Snowbull.Core.Configuration {
                 return this["rooms"] as Rooms;
             }
         }
+
+        [ConfigurationProperty("items")]
+        [ConfigurationCollection(typeof(Items), AddItemName = "item")]
+        public Items Items {
+            get {
+                return this["items"] as Items;
+            }
+        }
     }
 }
 

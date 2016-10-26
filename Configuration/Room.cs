@@ -2,7 +2,7 @@
 
 namespace Snowbull.Core.Configuration {
     public class Room : ConfigurationElement {
-        [ConfigurationProperty("id", IsRequired=true)]
+        [ConfigurationProperty("id", IsRequired=true, IsKey=true)]
         public int Id {
             get { return (int) this["id"]; }
         }
