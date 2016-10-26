@@ -13,7 +13,7 @@ namespace Snowbull.Core.Configuration {
         }
 
         protected override object GetElementKey(ConfigurationElement element) {
-            return ((Server) element).Id;
+            return ((Room) element).Id;
         }
     }
 }

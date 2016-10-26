@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace Snowbull.Core {
+namespace Snowbull.Core.Configuration {
     public class Item : ConfigurationElement {
         [ConfigurationProperty("id", IsRequired=true, IsKey=true)]
         public int Id {

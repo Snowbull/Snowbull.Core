@@ -24,11 +24,13 @@
 using System;
 using System.Data.Entity;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Akka.Actor;
 
 namespace Snowbull.Core.Game {
     sealed class GameZoneActor : ZoneActor {
         private readonly Dictionary<int, Rooms.Room> rooms = new Dictionary<int, Rooms.Room>();
+        private ImmutableDictionary<int, Player.Clothing.Item> items;
 
 		public static Props Props(GameZone zone) {
 			return Akka.Actor.Props.Create(() => new GameZoneActor(zone));
@@ -44,6 +46,12 @@ namespace Snowbull.Core.Game {
                 Rooms.Room room = new Rooms.Room(setting.Id, setting.ExternalId, setting.Name, zone, setting.Capacity, Context);
                 rooms.Add(room.ExternalId, room);
             }
+            Dictionary<int, Player.Clothing.Item> i = new Dictionary<int, Player.Clothing.Item>();
+            foreach(Configuration.Item setting in config.Items) {
+                Player.Clothing.Item item = new Player.Clothing.Item(setting.Id, setting.Description, setting.Price, (Player.Clothing.Type) Enum.Parse(typeof(Player.Clothing.Type), setting.Type), setting.Member);
+                i.Add(item.Id, item);
+            }
+            items = i.ToImmutableDictionary();
         }
 
         /// <summary>
@@ -71,7 +79,7 @@ namespace Snowbull.Core.Game {
 			if(credentials != null) {
 				// if(login key is correct) {
 					logger.Info("Sucessfully authenticated as '{0}'!", credentials.Username);
-					return new GameUser(credentials.Id, credentials.Username, Context, request.Sender, zone);
+					return new GameUser(credentials.Id, credentials.Username, Context, request.Sender, zone, items);
 				// }else{
 				//     throw new API.IncorrectPasswordException ...
 				// }

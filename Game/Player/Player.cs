@@ -39,7 +39,7 @@ namespace Snowbull.Core.Game.Player {
         /// Gets the player's clothing.
         /// </summary>
         /// <value>The player's clothing.</value>
-        public Clothing Clothing {
+        public Clothing.Costume Costume {
             get;
             private set;
         }
@@ -59,19 +59,19 @@ namespace Snowbull.Core.Game.Player {
         /// <param name="user">User.</param>
         /// <param name="clothing">Player's clothing.</param>
         /// <param name="position">Player's position.</param>
-        public Player(GameUser user, Clothing clothing, Position position) {
+        public Player(GameUser user, Clothing.Costume costume, Position position) {
             User = user;
-            Clothing = clothing;
+            Costume = costume;
             Position = position;
         }
 
         /// <summary>
-        /// Updates the player's clothing.
+        /// Updates the player's costume.
         /// </summary>
-        /// <returns>A new Player instance containing the updated Clothing object.</returns>
-        /// <param name="clothing">Clothing.</param>
-        public Player UpdateClothing(Clothing clothing) {
-            return new Player(User, clothing, Position);
+        /// <returns>A new Player instance containing the updated Costume object.</returns>
+        /// <param name="costume">Costume.</param>
+        public Player UpdateCostume(Clothing.Costume costume) {
+            return new Player(User, costume, Position);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Snowbull.Core.Game.Player {
         /// <returns>A new Player instance containing the updated Position object.</returns>
         /// <param name="position">Position.</param>
         public Player UpdatePosition(Position position) {
-            return new Player(User, Clothing, position);
+            return new Player(User, Costume, position);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Snowbull.Core.Game.Player {
         /// <returns>A <see cref="System.String"/> that represents the current <see cref="Snowbull.Core.Game.Player.Player"/>.</returns>
         public override string ToString() {
             int days = 0; // Temporary, will add ranks/days.
-            return string.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}", User.Id, User.Username, 1, Clothing, Position, 1, days, 0, 0);
+            return string.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}", User.Id, User.Username, 1, Costume, Position, 1, days, 0, 0);
         }
     }
 }

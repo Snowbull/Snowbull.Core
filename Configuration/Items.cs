@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace Snowbull.Core {
+namespace Snowbull.Core.Configuration {
     public class Items : ConfigurationElementCollection {
         public Item this[int i] {
             get {

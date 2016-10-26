@@ -31,6 +31,7 @@ namespace Snowbull.Core.Game {
         private Player.Player player;
         private Rooms.Room room = null;
         private static readonly ImmutableArray<int> starts = (new int[] {100, 200, 300, 400, 800, 801, 802, 230, 810, 804}).ToImmutableArray(); // Starting rooms.
+        private ImmutableDictionary<int, Player.Clothing.Item> items;
 
         /// <summary>
         /// Gets or sets the stash. This will be automatically populated by the framework AFTER the constructor has been run.
@@ -46,16 +47,16 @@ namespace Snowbull.Core.Game {
         /// Sets up props for the new actor.
         /// </summary>
         /// <param name="user">Immutable user context.</param>
-		public static Props Props(GameUser user) {
-			return Akka.Actor.Props.Create(() => new GameUserActor(user));
+        public static Props Props(GameUser user, ImmutableDictionary<int, Player.Clothing.Item> items) {
+			return Akka.Actor.Props.Create(() => new GameUserActor(user, items));
 		}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Snowbull.Core.Game.GameUserActor"/> class.
         /// </summary>
         /// <param name="user">Immutable user context.</param>
-		public GameUserActor(GameUser user) : base(user) {
-
+        public GameUserActor(GameUser user, ImmutableDictionary<int, Player.Clothing.Item> items) : base(user) {
+            this.items = items;
 		}
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace Snowbull.Core.Game {
                 t => {
                     Player.Player player = t.IsFaulted ? null : new Player.Player(
                         user,
-                        new Player.Clothing(t.Result.Clothing),
+                        new Player.Clothing.Costume(t.Result.Clothing, items),
                         new Player.Position(0, 0, 0)
                     );
                     db.Dispose();
