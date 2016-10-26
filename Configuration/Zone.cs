@@ -29,14 +29,14 @@ namespace Snowbull.Core.Configuration {
 		[ConfigurationProperty("name", IsRequired = true)]
 		public string Name {
 			get {
-				return this["name"] as string;
+                return (string) this["name"];
 			}
 		}
 
 		[ConfigurationProperty("type", IsRequired = true)]
 		public string Type {
 			get {
-				return this["type"] as string;
+                return (string) this["type"];
 			}
 		}
 	}

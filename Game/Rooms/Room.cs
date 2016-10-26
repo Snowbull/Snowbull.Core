@@ -79,7 +79,7 @@ namespace Snowbull.Core.Game.Rooms {
             ExternalId = externalId;
             Name = name;
             Zone = zone;
-            ActorRef = c.ActorOf(creator(this), string.Format("room(Zone={0},Id={1},Name={2})", zone.Name, InternalId, Name));
+            ActorRef = c.ActorOf(creator(this), string.Format("room(Id={0},Name={1})", InternalId, Name));
         }
 
         public Room(int internalId, int externalId, string name, IZone zone, int capacity, IActorContext c) : this(internalId, externalId, name, zone, capacity, c, r => Akka.Actor.Props.Create(() => new RoomActor(r, capacity))) {

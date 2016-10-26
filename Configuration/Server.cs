@@ -26,27 +26,23 @@ using System.Configuration;
 namespace Snowbull.Core.Configuration {
 	public class Server : ConfigurationElement {
 		[ConfigurationProperty("id", IsRequired = true)]
-		public string Id {
+		public int Id {
 			get {
-				// So I wanted this and other integers to be of type int
-				// but whether I put int.Parse() or Convert.ToInt32() here
-				// it would not work. So I've left it (in hacky fashion)
-				// as a string.
-				return this["id"] as string;
+                return (int) this["id"];
 			}
 		}
 
 		[ConfigurationProperty("name", IsRequired = true)]
-		public string Name {
+        public string Name {
 			get {
-				return this["name"] as string;
+                return (string) this["name"];
 			}
 		}
 
 		[ConfigurationProperty("port", IsRequired = true)]
-		public string Port {
+		public int Port {
 			get {
-				return this["port"] as string;
+                return (int) this["port"];
 			}
 		}
 
@@ -54,7 +50,7 @@ namespace Snowbull.Core.Configuration {
 		[ConfigurationCollection(typeof(Zones), AddItemName = "zone")]
 		public Zones Zones {
 			get {
-				return this["zones"] as Zones;
+                return (Zones) this["zones"];
 			}
 		}
 	}

@@ -3,13 +3,13 @@
 namespace Snowbull.Core.Configuration {
     public class Room : ConfigurationElement {
         [ConfigurationProperty("id", IsRequired=true)]
-        public string Id {
-            get { return this["id"] as string; }
+        public int Id {
+            get { return (int) this["id"]; }
         }
 
         [ConfigurationProperty("external", IsRequired=true)]
-        public string ExternalId {
-            get { return this["external"] as string; }
+        public int ExternalId {
+            get { return (int) this["external"]; }
         }
 
         [ConfigurationProperty("name", IsRequired=true)]
@@ -18,13 +18,13 @@ namespace Snowbull.Core.Configuration {
         }
 
         [ConfigurationProperty("capacity", IsRequired=true)]
-        public string Capacity {
-            get { return this["capacity"] as string; }
+        public int Capacity {
+            get { return (int) this["capacity"]; }
         }
 
         [ConfigurationProperty("member", IsRequired=true)]
-        public string Member {
-            get { return this["member"] as string; }
+        public bool Member {
+            get { return (bool) this["member"]; }
         }
     }
 }

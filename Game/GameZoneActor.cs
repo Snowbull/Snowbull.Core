@@ -41,7 +41,7 @@ namespace Snowbull.Core.Game {
 		public GameZoneActor(GameZone zone) : base(zone) {
             Configuration.ClubPenguinConfigurationSection config = Configuration.ClubPenguinConfigurationSection.GetConfiguration();
             foreach(Configuration.Room setting in config.Rooms) {
-                Rooms.Room room = new Rooms.Room(int.Parse(setting.Id), int.Parse(setting.ExternalId), setting.Name, zone, int.Parse(setting.Capacity), Context);
+                Rooms.Room room = new Rooms.Room(setting.Id, setting.ExternalId, setting.Name, zone, setting.Capacity, Context);
                 rooms.Add(room.ExternalId, room);
             }
         }
