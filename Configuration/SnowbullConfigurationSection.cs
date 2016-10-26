@@ -54,14 +54,6 @@ namespace Snowbull.Core.Configuration {
 				return this["servers"] as Servers;
 			}
 		}
-
-        [ConfigurationProperty("rooms")]
-        [ConfigurationCollection(typeof(Rooms), AddItemName = "room")]
-        public Rooms Rooms {
-            get {
-                return this["rooms"] as Rooms;
-            }
-        }
 	}
 }
 

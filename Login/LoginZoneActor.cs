@@ -42,6 +42,7 @@ namespace Snowbull.Core.Login {
             db.Users.FirstAsync<Data.Models.User>(u => u.Username == auth.Request.Username).ContinueWith<Authentication>(
                 t => {
                     Data.Models.Immutable.ImmutableCredentials credentials = t.IsFaulted ? null : new Data.Models.Immutable.ImmutableCredentials(t.Result);
+                    db.Dispose();
                     return new Authentication(credentials, auth);
                 }
             ).PipeTo(Self);

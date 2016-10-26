@@ -39,7 +39,7 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="zone">Immutable zone context.</param>
 		public GameZoneActor(GameZone zone) : base(zone) {
-            Configuration.SnowbullConfigurationSection config = Configuration.SnowbullConfigurationSection.GetConfiguration();
+            Configuration.ClubPenguinConfigurationSection config = Configuration.ClubPenguinConfigurationSection.GetConfiguration();
             foreach(Configuration.Room setting in config.Rooms) {
                 Rooms.Room room = new Rooms.Room(int.Parse(setting.Id), int.Parse(setting.ExternalId), setting.Name, zone, int.Parse(setting.Capacity), Context);
                 rooms.Add(room.ExternalId, room);
@@ -60,6 +60,7 @@ namespace Snowbull.Core.Game {
 			db.Users.FirstAsync<Data.Models.User>(u => u.Username == auth.Request.Username).ContinueWith<Authentication>(
 				t => {
 					Data.Models.Immutable.ImmutableCredentials credentials = t.IsFaulted ? null : new Data.Models.Immutable.ImmutableCredentials(t.Result);
+                    db.Dispose();
 					return new Authentication(credentials, auth);
 				}
 			).PipeTo(Self);

@@ -66,13 +66,15 @@ namespace Snowbull.Core.Game {
             GameUser user = (GameUser) this.user; // Keep a local copy, just in case... something.
             Data.SnowbullContext db = new Data.SnowbullContext();
             // Load the user from the database.
-            db.Users.FirstAsync<Data.Models.User>(u => u.Id == user.Id).ContinueWith<Player.Player>(
+            db.Users.Include("Clothing").FirstAsync<Data.Models.User>(u => u.Id == user.Id).ContinueWith<Player.Player>(
                 t => {
-                    return t.IsFaulted ? null : new Player.Player(
+                    Player.Player player = t.IsFaulted ? null : new Player.Player(
                         user,
                         new Player.Clothing(t.Result.Clothing),
                         new Player.Position(0, 0, 0)
                     );
+                    db.Dispose();
+                    return player;
                 }
             ).PipeTo(Self); // Sends the result of the async task to self.
         }
@@ -118,7 +120,9 @@ namespace Snowbull.Core.Game {
         /// Joined state/behaviour (Become after joining the starting Room).
         /// </summary>
         private void Joined() {
-            Ready();
+            base.Running();
+            Receive<Packets.Xt.Receive.Heartbeat>(new Action<Packets.Xt.Receive.Heartbeat>(Heartbeat));
+            Receive<JoinedRoom>(new Action<JoinedRoom>(JoinedRoom));
             Receive<Packets.Xt.Receive.Rooms.JoinRoom>(new Action<Packets.Xt.Receive.Rooms.JoinRoom>(JoinRoom));
             Receive<Packets.Xt.Receive.Player.Move>(new Action<Packets.Xt.Receive.Player.Move>(Move));
             Receive<Packets.Xt.Receive.Player.Say>(new Action<Packets.Xt.Receive.Player.Say>(s => room.ActorRef.Tell(new Packets.Xt.Send.Player.Say(player, s.Message, room.InternalId), Self)));
