@@ -37,7 +37,7 @@ namespace Snowbull.Core.Login {
 			return Akka.Actor.Props.Create(() => new LoginUserActor(user));
         }
 
-		public LoginUserActor(LoginUser user) : base(user) {
+        public LoginUserActor(LoginUser user) : base(user, string.Format("loginUser(Id={0},Username={1})", user.Id, user.Username)) {
         }
     }
 }

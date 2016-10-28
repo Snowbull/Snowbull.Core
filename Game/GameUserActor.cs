@@ -36,16 +36,6 @@ namespace Snowbull.Core.Game {
         private readonly Dictionary<int, Player.Clothing.Item> inventory = new Dictionary<int, Player.Clothing.Item>();
 
         /// <summary>
-        /// Gets or sets the stash. This will be automatically populated by the framework AFTER the constructor has been run.
-        ///  Implement this as an auto property.
-        /// </summary>
-        /// <value>The stash.</value>
-        public IStash Stash {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Sets up props for the new actor.
         /// </summary>
         /// <param name="user">Immutable user context.</param>
@@ -57,7 +47,7 @@ namespace Snowbull.Core.Game {
         /// Initializes a new instance of the <see cref="Snowbull.Core.Game.GameUserActor"/> class.
         /// </summary>
         /// <param name="user">Immutable user context.</param>
-        public GameUserActor(GameUser user, ImmutableDictionary<int, Player.Clothing.Item> items) : base(user) {
+        public GameUserActor(GameUser user, ImmutableDictionary<int, Player.Clothing.Item> items) : base(user, string.Format("user(Id={0},Username={1})", user.Id, user.Username)) {
             this.items = items;
 		}
 
@@ -93,8 +83,8 @@ namespace Snowbull.Core.Game {
         /// Initial running state/behaviour.
         /// </summary>
 		protected override void Running() {
-            Receive<Packets.IReceivePacket>(new Action<Packets.IReceivePacket>(StashIncoming));
-            Receive<Loaded>(new Action<Loaded>(Loaded));
+            Command<Packets.IReceivePacket>(new Action<Packets.IReceivePacket>(StashIncoming));
+            Command<Loaded>(new Action<Loaded>(Loaded));
 		}
 
         /// <summary>
@@ -118,14 +108,14 @@ namespace Snowbull.Core.Game {
         /// </summary>
         private void Ready() {
             base.Running();
-            Receive<Packets.Xt.Receive.Authentication.JoinServer>(new Action<Packets.Xt.Receive.Authentication.JoinServer>(JoinServer));
-            Receive<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(new Action<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(GetBuddies));
-            Receive<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(new Action<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(GetIgnored));
-            Receive<Packets.Xt.Receive.Player.Inventory.GetInventory>(new Action<Packets.Xt.Receive.Player.Inventory.GetInventory>(GetInventory));
-            Receive<Packets.Xt.Receive.GetLastRevision>(new Action<Packets.Xt.Receive.GetLastRevision>(GetLastRevision));
-            Receive<Packets.Xt.Receive.Player.EPF.GetEPFPoints>(new Action<Packets.Xt.Receive.Player.EPF.GetEPFPoints>(GetEPFPoints));
-            Receive<Packets.Xt.Receive.Heartbeat>(new Action<Packets.Xt.Receive.Heartbeat>(Heartbeat));
-            Receive<JoinedRoom>(new Action<JoinedRoom>(JoinedRoom));
+            Command<Packets.Xt.Receive.Authentication.JoinServer>(new Action<Packets.Xt.Receive.Authentication.JoinServer>(JoinServer));
+            Command<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(new Action<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(GetBuddies));
+            Command<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(new Action<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(GetIgnored));
+            Command<Packets.Xt.Receive.Player.Inventory.GetInventory>(new Action<Packets.Xt.Receive.Player.Inventory.GetInventory>(GetInventory));
+            Command<Packets.Xt.Receive.GetLastRevision>(new Action<Packets.Xt.Receive.GetLastRevision>(GetLastRevision));
+            Command<Packets.Xt.Receive.Player.EPF.GetEPFPoints>(new Action<Packets.Xt.Receive.Player.EPF.GetEPFPoints>(GetEPFPoints));
+            Command<Packets.Xt.Receive.Heartbeat>(new Action<Packets.Xt.Receive.Heartbeat>(Heartbeat));
+            Command<JoinedRoom>(new Action<JoinedRoom>(JoinedRoom));
         }
 
         /// <summary>
@@ -133,13 +123,13 @@ namespace Snowbull.Core.Game {
         /// </summary>
         private void Joined() {
             base.Running();
-            Receive<Packets.Xt.Receive.Heartbeat>(new Action<Packets.Xt.Receive.Heartbeat>(Heartbeat));
-            Receive<JoinedRoom>(new Action<JoinedRoom>(JoinedRoom));
-            Receive<Packets.Xt.Receive.Rooms.JoinRoom>(new Action<Packets.Xt.Receive.Rooms.JoinRoom>(JoinRoom));
-            Receive<Packets.Xt.Receive.Player.Move>(new Action<Packets.Xt.Receive.Player.Move>(Move));
-            Receive<Packets.Xt.Receive.Player.Say>(new Action<Packets.Xt.Receive.Player.Say>(s => room.ActorRef.Tell(new Packets.Xt.Send.Player.Say(player, s.Message, room.InternalId), Self)));
-            Receive<Packets.Xt.Receive.Player.Action>(new Action<Packets.Xt.Receive.Player.Action>(a => room.ActorRef.Tell(new Packets.Xt.Send.Player.Action(player, a.Id, room.InternalId), Self)));
-            Receive<Packets.Xt.Receive.Player.Frame>(new Action<Packets.Xt.Receive.Player.Frame>(Frame));
+            Command<Packets.Xt.Receive.Heartbeat>(new Action<Packets.Xt.Receive.Heartbeat>(Heartbeat));
+            Command<JoinedRoom>(new Action<JoinedRoom>(JoinedRoom));
+            Command<Packets.Xt.Receive.Rooms.JoinRoom>(new Action<Packets.Xt.Receive.Rooms.JoinRoom>(JoinRoom));
+            Command<Packets.Xt.Receive.Player.Move>(new Action<Packets.Xt.Receive.Player.Move>(Move));
+            Command<Packets.Xt.Receive.Player.Say>(new Action<Packets.Xt.Receive.Player.Say>(s => room.ActorRef.Tell(new Packets.Xt.Send.Player.Say(player, s.Message, room.InternalId), Self)));
+            Command<Packets.Xt.Receive.Player.Action>(new Action<Packets.Xt.Receive.Player.Action>(a => room.ActorRef.Tell(new Packets.Xt.Send.Player.Action(player, a.Id, room.InternalId), Self)));
+            Command<Packets.Xt.Receive.Player.Frame>(new Action<Packets.Xt.Receive.Player.Frame>(Frame));
         }
 
         /// <summary>
@@ -147,8 +137,8 @@ namespace Snowbull.Core.Game {
         /// </summary>
         private void Transitioning() {
             base.Running();
-            Receive<JoinedRoom>(new Action<JoinedRoom>(JoinedRoom));
-            Receive<Packets.IReceivePacket>(new Action<Packets.IReceivePacket>(StashIncoming));
+            Command<JoinedRoom>(new Action<JoinedRoom>(JoinedRoom));
+            Command<Packets.IReceivePacket>(new Action<Packets.IReceivePacket>(StashIncoming));
         }
 
         /// <summary>
