@@ -45,7 +45,6 @@ namespace Snowbull.Core {
             Receive<AddZone>(new Action<AddZone>(AddZone));
             Receive<Tcp.Connected>(new Action<Tcp.Connected>(Connected));
             Receive<Authenticate>(new Action<Authenticate>(Authenticate));
-            Receive<Disconnected>(new Action<Disconnected>(Disconnected));
         }
 
 		protected override SupervisorStrategy SupervisorStrategy() {
@@ -89,10 +88,6 @@ namespace Snowbull.Core {
                 zone.ActorRef.Forward(authenticate);
         }
 
-        private void Disconnected(Disconnected disconnected) {
-            Context.Stop(disconnected.Actor);
-        }
-
     }
 
     internal class AddZone {
@@ -109,17 +104,6 @@ namespace Snowbull.Core {
         public AddZone(string name, ZoneInitialiser zone) {
             Name = name;
             Zone = zone;
-        }
-    }
-
-    internal class Disconnected {
-        public IActorRef Actor {
-            get;
-            private set;
-        }
-
-        public Disconnected(IActorRef actor) {
-            Actor = actor;
         }
     }
 }

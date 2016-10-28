@@ -48,12 +48,13 @@ namespace Snowbull.Core.Login {
             ).PipeTo(Self);
         }
 
-		protected override User Authentication(Authenticate request, Data.Models.Immutable.ImmutableCredentials credentials) {
+		protected override void Authentication(Authenticate request, Data.Models.Immutable.ImmutableCredentials credentials) {
             if(credentials != null) {
 				string hash = Cryptography.Hashing.HashPassword(credentials.Password, request.Key);
                 if(request.Request.Password == hash) {
                     logger.Debug("Authenticated as '" + credentials.Username + "'!");
-					return new LoginUser(credentials.Id, credentials.Username, Context, request.Sender, (LoginZone) zone);
+                    request.Sender.ActorRef.Tell(new Packets.Xt.Send.Authentication.Login(credentials.Id, Cryptography.Random.GenerateRandomKey(32), ""), Self);
+                    request.Sender.ActorRef.Tell(PoisonPill.Instance, Self); // We're done, close the connection.
                 }else{
 					throw new IncorrectPasswordException(request.Sender, string.Format("Peer at {0} failed to identify as '{1}'.", request.Sender.Address, credentials.Username));
                 }

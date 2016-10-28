@@ -29,13 +29,8 @@ using Akka.Event;
 
 namespace Snowbull.Core {
 	abstract class ZoneActor : SnowbullActor {
-        private readonly Dictionary<IActorRef, User> users = new Dictionary<IActorRef, User>();
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
 		protected readonly Zone zone;
-
-		protected ImmutableDictionary<IActorRef, User> Users {
-			get { return users.ToImmutableDictionary(); }
-		}
 
 		public ZoneActor(Zone zone) {
 			this.zone = zone;
@@ -45,29 +40,15 @@ namespace Snowbull.Core {
         protected virtual void Running() {
 			Receive<Authenticate>(new Action<Authenticate>(Authenticate));
 			Receive<Authentication>(new Action<Authentication>(Authentication));
-			Receive<Packets.ISendPacket>(new Action<Packets.ISendPacket>(SendPacket));
-			Receive<Terminated>(new Action<Terminated>(Terminated));
         }
 
         protected abstract void Authenticate(Authenticate authenticate);
 
 		private void Authentication(Authentication auth) {
-			User user = Authentication(auth.Request, auth.Credentials);
-			users.Add(user.ActorRef, user);
-			Context.Watch(user.ActorRef);
+			Authentication(auth.Request, auth.Credentials);
 		}
 
-		protected abstract User Authentication(Authenticate request, Data.Models.Immutable.ImmutableCredentials credentials);
-
-		private void SendPacket(Packets.ISendPacket packet) {
-			foreach(IActorRef user in users.Keys)
-				user.Forward(packet);
-		}
-
-		private void Terminated(Terminated t) {
-			if(users.ContainsKey(t.ActorRef))
-				users.Remove(t.ActorRef);
-		}
+		protected abstract void Authentication(Authenticate request, Data.Models.Immutable.ImmutableCredentials credentials);
 			
     }
 

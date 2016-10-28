@@ -58,7 +58,7 @@ namespace Snowbull.Core {
 		}
 
 		public void Close() {
-			ActorRef.Tell(new Disconnect());
+            ActorRef.Tell(PoisonPill.Instance);
 		}
 	}
 }

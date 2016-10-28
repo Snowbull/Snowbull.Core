@@ -61,7 +61,6 @@ namespace Snowbull.Core {
             Receive<Tcp.PeerClosed>(new Action<Tcp.PeerClosed>(Closed));
             Receive<Packets.ISendPacket>(new Action<ISendPacket>(Send));
             Receive<RawPacketReceived>(user == null ? new Action<RawPacketReceived>(ProcessUnauthenticatedPacket) : new Action<RawPacketReceived>(ProcessAuthenticatedPacket));
-            Receive<Disconnect>(new Action<Disconnect>(Disconnect));
 			Receive<Terminated>(new Action<Terminated>(Terminated));
         }
 
@@ -85,7 +84,7 @@ namespace Snowbull.Core {
                     ProcessXml(packet);
             }else{
 				logger.Info("Client at '" + connection.Address + "' disconnected for sending too many authentication packets.");
-                Disconnect();
+                Self.Tell(PoisonPill.Instance);
             }
             authenticationPackets++;
         }
@@ -226,31 +225,15 @@ namespace Snowbull.Core {
         }
 
 		private void Terminated(Terminated t) {
-			if(user != null)
-				if(user.ActorRef == t.ActorRef)
-					Self.Tell(new Disconnect());
+            if(user != null)
+                if(user.ActorRef == t.ActorRef)
+                    Self.Tell(PoisonPill.Instance, Self);
 		}
-
-        private void Disconnect() {
-            UnbecomeStacked();
-			((Server) connection.Server).ActorRef.Tell(new Disconnected(Self));
-        }
-
-        private void Disconnect(Disconnect dis) {
-            Disconnect();
-        }
 
         private void Closed(Tcp.PeerClosed closed) {
             logger.Info("Peer at '" + connection.Address + "' closed the connection.");
             UnbecomeStacked();
-			((Server) connection.Server).ActorRef.Tell(new Disconnected(Self));
         }
-
-		protected override void PostStop() {
-			base.PostStop();
-			if(user != null)
-				user.ActorRef.Tell(PoisonPill.Instance);
-		}
     }
 
     public class RawPacketReceived {
@@ -290,10 +273,6 @@ namespace Snowbull.Core {
 		public Authenticated(User user) {
             User = user;
         }
-    }
-
-    public class Disconnect {
-
     }
 }
 

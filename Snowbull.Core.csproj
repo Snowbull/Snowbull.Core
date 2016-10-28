@@ -97,9 +97,7 @@
     <Compile Include="Server.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Login\LoginZoneActor.cs" />
-    <Compile Include="Login\LoginUserActor.cs" />
     <Compile Include="Game\GameZoneActor.cs" />
-    <Compile Include="Login\LoginUser.cs" />
     <Compile Include="Login\LoginZone.cs" />
     <Compile Include="Game\GameZone.cs" />
     <Compile Include="SnowbullActor.cs" />
