@@ -84,7 +84,7 @@ namespace Snowbull.Core {
                     ProcessXml(packet);
             }else{
 				logger.Info("Client at '" + connection.Address + "' disconnected for sending too many authentication packets.");
-                Self.Tell(PoisonPill.Instance);
+                socket.Tell(Tcp.Close.Instance);
             }
             authenticationPackets++;
         }
@@ -227,12 +227,13 @@ namespace Snowbull.Core {
 		private void Terminated(Terminated t) {
             if(user != null)
                 if(user.ActorRef == t.ActorRef)
-                    Self.Tell(PoisonPill.Instance, Self);
+                    socket.Tell(Tcp.Close.Instance);
 		}
 
         private void Closed(Tcp.PeerClosed closed) {
             logger.Info("Peer at '" + connection.Address + "' closed the connection.");
             UnbecomeStacked();
+            Context.Stop(Self);
         }
     }
 
@@ -247,24 +248,7 @@ namespace Snowbull.Core {
         }
     }
 
-	class Authentication {
-		public Data.Models.Immutable.ImmutableCredentials Credentials {
-			get;
-			private set;
-		}
-
-		public Authenticate Request {
-			get;
-			private set;
-		}
-
-		public Authentication(Data.Models.Immutable.ImmutableCredentials credentials, Authenticate request) {
-			Credentials = credentials;
-			Request = request;
-		}
-	}
-
-    public class Authenticated {
+    class Authenticated {
         public User User {
             get;
             private set;

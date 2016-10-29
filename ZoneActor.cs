@@ -52,7 +52,24 @@ namespace Snowbull.Core {
 			
     }
 
-    public class Authenticate {
+    class Authentication {
+        public Data.Models.Immutable.ImmutableCredentials Credentials {
+            get;
+            private set;
+        }
+
+        public Authenticate Request {
+            get;
+            private set;
+        }
+
+        public Authentication(Data.Models.Immutable.ImmutableCredentials credentials, Authenticate request) {
+            Credentials = credentials;
+            Request = request;
+        }
+    }
+
+    class Authenticate {
         /// <summary>
         /// Gets the sender.
         /// </summary>
