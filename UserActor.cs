@@ -6,7 +6,6 @@ using Akka.Event;
 namespace Snowbull.Core {
     public abstract class UserActor : ReceivePersistentActor {
 		protected readonly User user;
-		protected readonly Connection connection;
         protected readonly ILoggingAdapter logger = Logging.GetLogger(Context);
 
         public override string PersistenceId {
@@ -21,6 +20,10 @@ namespace Snowbull.Core {
 			get { return user.Username; }
 		}
 
+        protected Connection Connection {
+            get;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Snowbull.User"/> class.
         /// </summary>
@@ -32,17 +35,19 @@ namespace Snowbull.Core {
         public UserActor(User user, string persistenceId) : base() {
 			this.user = user;
             PersistenceId = persistenceId;
-			connection = (Connection) user.Connection;
+			Connection = (Connection) user.Connection;
+            Context.Watch(Connection.ActorRef);
 			BecomeStacked(Running);
         }
 
 		protected virtual void Running() {
             Command<Packets.ISendPacket>(new Action<Packets.ISendPacket>(Send));
+            Command<Terminated>(t => { if(t.ActorRef == Connection.ActorRef) Context.Stop(Self); });
 		}
 
         private void Send(Packets.ISendPacket packet) {
             // Forward on any packets sent to the user.
-            connection.ActorRef.Forward(packet);
+            Connection.ActorRef.Forward(packet);
         }
     }
 }

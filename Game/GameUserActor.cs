@@ -157,8 +157,15 @@ namespace Snowbull.Core.Game {
                     Stash.UnstashAll();
                 });
             }else{
-                connection.ActorRef.Tell(new Packets.Xt.Send.Error(Errors.NO_DB_CONNECTION, -1), Self);
+                Connection.ActorRef.Tell(new Packets.Xt.Send.Error(Errors.NO_DB_CONNECTION, -1), Self);
             }
+        }
+
+        private void Base() {
+            Command<SaveSnapshotSuccess>(success => {
+                DeleteMessages(success.Metadata.SequenceNr);
+                if(success.Metadata.SequenceNr > 0) DeleteSnapshots(new SnapshotSelectionCriteria(success.Metadata.SequenceNr - 1));
+            });
         }
 
         /// <summary>
@@ -166,6 +173,7 @@ namespace Snowbull.Core.Game {
         /// </summary>
         private void Ready() {
             base.Running();
+            Base();
             Command<Packets.Xt.Receive.Authentication.JoinServer>(new Action<Packets.Xt.Receive.Authentication.JoinServer>(JoinServer));
             Command<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(new Action<Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies>(GetBuddies));
             Command<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(new Action<Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored>(GetIgnored));
@@ -181,6 +189,7 @@ namespace Snowbull.Core.Game {
         /// </summary>
         private void Joined() {
             base.Running();
+            Base();
             Command<Packets.Xt.Receive.Heartbeat>(new Action<Packets.Xt.Receive.Heartbeat>(Heartbeat));
             Command<JoinedRoom>(new Action<JoinedRoom>(JoinedRoom));
             Command<Packets.Xt.Receive.Rooms.JoinRoom>(new Action<Packets.Xt.Receive.Rooms.JoinRoom>(JoinRoom));
@@ -214,7 +223,7 @@ namespace Snowbull.Core.Game {
 		private void JoinServer(Packets.Xt.Receive.Authentication.JoinServer js) {
 			// We'll check the login key again I GUESS
 			// But for now let's just accept it.
-			connection.ActorRef.Tell(
+			Connection.ActorRef.Tell(
 				new Packets.Xt.Send.Authentication.JoinServer(
 					agent: true, 
 					guide: true,
@@ -229,7 +238,7 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="gb">Get buddy packet.</param>
         private void GetBuddies(Packets.Xt.Receive.Player.Relations.Buddies.GetBuddies gb) {
-            connection.ActorRef.Tell(new Packets.Xt.Send.Player.Relations.Buddies.GetBuddies(), Self); // TODO - Load actual buddy list.
+            Connection.ActorRef.Tell(new Packets.Xt.Send.Player.Relations.Buddies.GetBuddies(), Self); // TODO - Load actual buddy list.
         }
 
         /// <summary>
@@ -237,7 +246,7 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="gn">Get ignore packet.</param>
         private void GetIgnored(Packets.Xt.Receive.Player.Relations.Ignore.GetIgnored gn) {
-            connection.ActorRef.Tell(new Packets.Xt.Send.Player.Relations.Ignore.GetIgnored(), Self); // TODO - Load actual ignore list.
+            Connection.ActorRef.Tell(new Packets.Xt.Send.Player.Relations.Ignore.GetIgnored(), Self); // TODO - Load actual ignore list.
         }
 
         /// <summary>
@@ -245,7 +254,7 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="gi">Get inventory packet.</param>
         private void GetInventory(Packets.Xt.Receive.Player.Inventory.GetInventory gi) {
-            connection.ActorRef.Tell(new Packets.Xt.Send.Player.Inventory.GetInventory(Inventory), Self); // TODO - Load actual inventory list.
+            Connection.ActorRef.Tell(new Packets.Xt.Send.Player.Inventory.GetInventory(Inventory), Self); // TODO - Load actual inventory list.
         }
 
         /// <summary>
@@ -253,7 +262,7 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="glr">Get last revision packet.</param>
         private void GetLastRevision(Packets.Xt.Receive.GetLastRevision glr) {
-            connection.ActorRef.Tell(new Packets.Xt.Send.GetLastRevision(3239), Self); // Who knows where 3239 from.
+            Connection.ActorRef.Tell(new Packets.Xt.Send.GetLastRevision(3239), Self); // Who knows where 3239 from.
             // Start joining a Room.
             BecomeStacked(Transitioning);
             // Join a random start Room
@@ -265,7 +274,7 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="epfgr">Get EPF points packet.</param>
         private void GetEPFPoints(Packets.Xt.Receive.Player.EPF.GetEPFPoints epfgr) {
-            connection.ActorRef.Tell(
+            Connection.ActorRef.Tell(
                 new Packets.Xt.Send.Player.EPF.GetEPFPoints(0, 1) // TODO - Find out what these are?
             , Self);
         }
@@ -275,7 +284,7 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="h">Heartbeat packet.</param>
         private void Heartbeat(Packets.Xt.Receive.Heartbeat h) {
-            connection.ActorRef.Tell(
+            Connection.ActorRef.Tell(
                 new Packets.Xt.Send.Heartbeat(h.Room)
             , Self);
         }
@@ -294,7 +303,7 @@ namespace Snowbull.Core.Game {
                 }
                 State = new GameUserState(jr.Player, Inventory, jr.Room);
                 // Tell the client.
-                connection.ActorRef.Tell(new Packets.Xt.Send.Rooms.JoinedRoom(jr.Room.ExternalId, jr.Players, jr.Room.InternalId), Self);
+                Connection.ActorRef.Tell(new Packets.Xt.Send.Rooms.JoinedRoom(jr.Room.ExternalId, jr.Players, jr.Room.InternalId), Self);
                 Stash.UnstashAll(); // Unstash any packets received in the meantime (should usually be none)
             });
         }
@@ -305,7 +314,7 @@ namespace Snowbull.Core.Game {
         /// <param name="rf">Room full message.</param>
         private void RoomFull(RoomFull rf) {
             if(State.Room != null) {
-                connection.ActorRef.Tell(new Packets.Xt.Send.Error(Errors.ROOM_FULL, rf.Room.InternalId));
+                Connection.ActorRef.Tell(new Packets.Xt.Send.Error(Errors.ROOM_FULL, rf.Room.InternalId));
                 UnbecomeStacked();
             }else{
                 // Join a random start Room... again.
@@ -334,6 +343,10 @@ namespace Snowbull.Core.Game {
         private void Frame(Packets.Xt.Receive.Player.Frame f) {
             State = State.UpdatePlayer(Player.UpdatePosition(Player.Position.UpdateFrame(f.Id)));
             Room.ActorRef.Tell(new Rooms.Frame(State.Player));
+        }
+
+        protected override void PostStop() {
+            DeleteSnapshots(new SnapshotSelectionCriteria(LastSequenceNr));
         }
 	}
 
