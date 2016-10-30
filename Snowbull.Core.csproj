@@ -74,6 +74,12 @@
     <Reference Include="Akka.Persistence">
       <HintPath>..\packages\Akka.Persistence.1.1.2.30-beta\lib\net45\Akka.Persistence.dll</HintPath>
     </Reference>
+    <Reference Include="Wire">
+      <HintPath>..\packages\Wire.0.7.1\lib\net45\Wire.dll</HintPath>
+    </Reference>
+    <Reference Include="Akka.Serialization.Wire">
+      <HintPath>..\packages\Akka.Serialization.Wire.1.1.2.30-beta\lib\net45\Akka.Serialization.Wire.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

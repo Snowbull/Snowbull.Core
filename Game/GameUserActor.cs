@@ -23,17 +23,68 @@
 
 using System;
 using Akka.Actor;
+using Akka.Persistence;
 using System.Data.Entity;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Snowbull.Core.Game {
+    public class GameUserState {
+        public Player.Player Player {
+            get;
+        }
+
+        public ImmutableDictionary<int, Player.Clothing.Item> Inventory {
+            get;
+        }
+
+        public Rooms.Room Room {
+            get;
+        }
+
+        public GameUserState(Player.Player player, ImmutableDictionary<int, Player.Clothing.Item> inventory, Rooms.Room room) {
+            Player = player;
+            Room = room;
+            Inventory = inventory;
+        }
+
+        public GameUserState UpdatePlayer(Player.Player player) {
+            return new GameUserState(player, Inventory, Room);
+        }
+
+        public GameUserState UpdateInventory(ImmutableDictionary<int, Player.Clothing.Item> inventory) {
+            return new GameUserState(Player, inventory, Room);
+        }
+
+        public GameUserState UpdateRoom(Rooms.Room room) {
+            return new GameUserState(Player, Inventory, room);
+        }
+    }
+
     public class GameUserActor : UserActor, IWithUnboundedStash {
-        private Player.Player player;
-        private Rooms.Room room = null;
+        private GameUserState state;
         private static readonly ImmutableArray<int> starts = (new int[] {100, 200, 300, 400, 800, 801, 802, 230, 810, 804}).ToImmutableArray(); // Starting rooms.
         private ImmutableDictionary<int, Player.Clothing.Item> items;
-        private readonly Dictionary<int, Player.Clothing.Item> inventory = new Dictionary<int, Player.Clothing.Item>();
+
+        private GameUserState State {
+            get { return state; }
+            set {
+                SaveSnapshot(value);
+                state = value;
+            }
+        }
+
+        private Player.Player Player {
+            get { return state.Player; }
+        }
+
+        private ImmutableDictionary<int, Player.Clothing.Item> Inventory {
+            get { return state.Inventory; }
+        }
+
+        private Rooms.Room Room {
+            get { return state.Room; }
+        }
 
         /// <summary>
         /// Sets up props for the new actor.
@@ -70,10 +121,10 @@ namespace Snowbull.Core.Game {
                             new Player.Clothing.Costume(t.Result.Clothing, items),
                             new Player.Position(0, 0, 0)
                         );
-                        List<Player.Clothing.Item> inventory = new List<Player.Clothing.Item>();
+                        Dictionary<int, Player.Clothing.Item> inventory = new Dictionary<int, Player.Clothing.Item>();
                         foreach(Data.Models.Item item in t.Result.Inventory)
-                            inventory.Add(items[item.Id]);
-                        return new Loaded(player, inventory.ToImmutableList());
+                            inventory.Add(item.Id, items[item.Id]);
+                        return new Loaded(player, inventory.ToImmutableDictionary());
                     }
                 }
             ).PipeTo(Self); // Sends the result of the async task to self.
@@ -85,6 +136,13 @@ namespace Snowbull.Core.Game {
 		protected override void Running() {
             Command<Packets.IReceivePacket>(new Action<Packets.IReceivePacket>(StashIncoming));
             Command<Loaded>(new Action<Loaded>(Loaded));
+            // Recovery handlers.
+            Recover<Loaded>(new Action<Loaded>(l => BecomeStacked(Ready)));
+            Recover<Rooms.JoinRoom>(new Action<Rooms.JoinRoom>(jr => BecomeStacked(Transitioning)));
+            Recover<SnapshotOffer>(offer => {
+                state = (GameUserState) offer.Snapshot;
+                BecomeStacked(State.Room == null ? new Action(Ready) : new Action(Joined));
+            });
 		}
 
         /// <summary>
@@ -93,11 +151,11 @@ namespace Snowbull.Core.Game {
         /// <param name="player">Player.</param>
         private void Loaded(Loaded l) {
             if(l != null) {
-                this.player = l.Player;
-                foreach(Player.Clothing.Item item in l.Inventory)
-                    inventory.Add(item.Id, item);
-                BecomeStacked(Ready);
-                Stash.UnstashAll();
+                PersistAsync<Loaded>(l, loaded => {
+                    BecomeStacked(Ready);
+                    State = l.State;
+                    Stash.UnstashAll();
+                });
             }else{
                 connection.ActorRef.Tell(new Packets.Xt.Send.Error(Errors.NO_DB_CONNECTION, -1), Self);
             }
@@ -127,8 +185,8 @@ namespace Snowbull.Core.Game {
             Command<JoinedRoom>(new Action<JoinedRoom>(JoinedRoom));
             Command<Packets.Xt.Receive.Rooms.JoinRoom>(new Action<Packets.Xt.Receive.Rooms.JoinRoom>(JoinRoom));
             Command<Packets.Xt.Receive.Player.Move>(new Action<Packets.Xt.Receive.Player.Move>(Move));
-            Command<Packets.Xt.Receive.Player.Say>(new Action<Packets.Xt.Receive.Player.Say>(s => room.ActorRef.Tell(new Packets.Xt.Send.Player.Say(player, s.Message, room.InternalId), Self)));
-            Command<Packets.Xt.Receive.Player.Action>(new Action<Packets.Xt.Receive.Player.Action>(a => room.ActorRef.Tell(new Packets.Xt.Send.Player.Action(player, a.Id, room.InternalId), Self)));
+            Command<Packets.Xt.Receive.Player.Say>(new Action<Packets.Xt.Receive.Player.Say>(s => Room.ActorRef.Tell(new Packets.Xt.Send.Player.Say(Player, s.Message, Room.InternalId), Self)));
+            Command<Packets.Xt.Receive.Player.Action>(new Action<Packets.Xt.Receive.Player.Action>(a => Room.ActorRef.Tell(new Packets.Xt.Send.Player.Action(Player, a.Id, Room.InternalId), Self)));
             Command<Packets.Xt.Receive.Player.Frame>(new Action<Packets.Xt.Receive.Player.Frame>(Frame));
         }
 
@@ -187,7 +245,7 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="gi">Get inventory packet.</param>
         private void GetInventory(Packets.Xt.Receive.Player.Inventory.GetInventory gi) {
-            connection.ActorRef.Tell(new Packets.Xt.Send.Player.Inventory.GetInventory(inventory), Self); // TODO - Load actual inventory list.
+            connection.ActorRef.Tell(new Packets.Xt.Send.Player.Inventory.GetInventory(Inventory), Self); // TODO - Load actual inventory list.
         }
 
         /// <summary>
@@ -199,7 +257,7 @@ namespace Snowbull.Core.Game {
             // Start joining a Room.
             BecomeStacked(Transitioning);
             // Join a random start Room
-            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(starts[(new Random()).Next(0, starts.Length)], player), Self);
+            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(starts[(new Random()).Next(0, starts.Length)], Player), Self);
         }
 
         /// <summary>
@@ -227,17 +285,18 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="jr">Joined Room message.</param>
         private void JoinedRoom(JoinedRoom jr) {
-            if(room != null) { // If we were in a Room before
-                room.ActorRef.Tell(new Rooms.LeaveRoom(player), Self); // Tell the Room we left.
-                UnbecomeStacked(); // Go back to regular state/behaviour.
-            }else{ // If we weren't in a Room before
-                Become(Joined); // Become the Joined state/behaviour.
-            }
-            room = jr.Room; // Set the new Room.
-            player = jr.Player; // Set our player object to the one sent back by the Room, for consistency
-            // Tell the client.
-            connection.ActorRef.Tell(new Packets.Xt.Send.Rooms.JoinedRoom(jr.Room.ExternalId, jr.Players, jr.Room.InternalId), Self);
-            Stash.UnstashAll(); // Unstash any packets received in the meantime (should usually be none)
+            PersistAsync<JoinedRoom>(jr, joined => {
+                if(Room != null) { // If we were in a Room before
+                    Room.ActorRef.Tell(new Rooms.LeaveRoom(Player), Self); // Tell the Room we left.
+                    UnbecomeStacked(); // Go back to regular state/behaviour.
+                }else{ // If we weren't in a Room before
+                    Become(Joined); // Become the Joined state/behaviour.
+                }
+                State = new GameUserState(jr.Player, Inventory, jr.Room);
+                // Tell the client.
+                connection.ActorRef.Tell(new Packets.Xt.Send.Rooms.JoinedRoom(jr.Room.ExternalId, jr.Players, jr.Room.InternalId), Self);
+                Stash.UnstashAll(); // Unstash any packets received in the meantime (should usually be none)
+            });
         }
 
         /// <summary>
@@ -245,11 +304,12 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="rf">Room full message.</param>
         private void RoomFull(RoomFull rf) {
-            if(room != null) {
+            if(State.Room != null) {
                 connection.ActorRef.Tell(new Packets.Xt.Send.Error(Errors.ROOM_FULL, rf.Room.InternalId));
+                UnbecomeStacked();
             }else{
                 // Join a random start Room... again.
-                user.Zone.ActorRef.Tell(new Rooms.JoinRoom(starts[(new Random()).Next(0, starts.Length)], player), Self);
+                user.Zone.ActorRef.Tell(new Rooms.JoinRoom(starts[(new Random()).Next(0, starts.Length)], Player), Self);
             }
         }
 
@@ -258,36 +318,32 @@ namespace Snowbull.Core.Game {
         /// </summary>
         /// <param name="jr">Join Room packet.</param>
         private void JoinRoom(Packets.Xt.Receive.Rooms.JoinRoom jr) {
-            BecomeStacked(Transitioning); // Set the transistioning state.
-            Player.Player p = player.UpdatePosition(new Player.Position(jr.X, jr.Y, 0)); // Set the player's position to that specified in the join Room packet.
-            user.Zone.ActorRef.Tell(new Rooms.JoinRoom(jr.ExternalId, p)); // Request to join the Room.
+            Player.Player p = Player.UpdatePosition(new Player.Position(jr.X, jr.Y, 0)); // Set the player's position to that specified in the join Room packet.
+            Rooms.JoinRoom request = new Rooms.JoinRoom(jr.ExternalId, p);
+            user.Zone.ActorRef.Tell(request, Self); // Request to join the Room.
+            Persist<Rooms.JoinRoom>(request, @join => {
+                BecomeStacked(Transitioning); // Set the transistioning state.
+            });
         }
 
         private void Move(Packets.Xt.Receive.Player.Move m) {
-            player = player.UpdatePosition(player.Position.UpdateCoordinates(m.X, m.Y));
-            room.ActorRef.Tell(new Rooms.Move(player), Self);
+            State = State.UpdatePlayer(Player.UpdatePosition(Player.Position.UpdateCoordinates(m.X, m.Y)));
+            Room.ActorRef.Tell(new Rooms.Move(State.Player), Self);
         }
 
         private void Frame(Packets.Xt.Receive.Player.Frame f) {
-            player = player.UpdatePosition(player.Position.UpdateFrame(f.Id));
-            room.ActorRef.Tell(new Rooms.Frame(player));
+            State = State.UpdatePlayer(Player.UpdatePosition(Player.Position.UpdateFrame(f.Id)));
+            Room.ActorRef.Tell(new Rooms.Frame(State.Player));
         }
 	}
 
     internal class Loaded {
-        public Player.Player Player {
+        public GameUserState State {
             get;
-            private set;
         }
 
-        public ImmutableList<Player.Clothing.Item> Inventory {
-            get;
-            private set;
-        }
-
-        public Loaded(Player.Player player, ImmutableList<Player.Clothing.Item> inventory) {
-            Player = player;
-            Inventory = inventory;
+        public Loaded(Player.Player player, ImmutableDictionary<int, Player.Clothing.Item> inventory) {
+            State = new GameUserState(player, inventory, null);
         }
     }
 
